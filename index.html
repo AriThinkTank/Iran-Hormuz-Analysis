@@ -1,488 +1,1768 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Systemic Impact: 2026 Strait of Hormuz Blockade</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        /* Strict Light Theme Variables */
-        :root {
-            --bg-base: #ffffff;
-            --bg-surface: #f8fafc;
-            --text-main: #0f172a;
-            --text-muted: #475569;
-            --border-light: #e2e8f0;
-            --border-dark: #cbd5e1;
-            
-            /* Criticality Colors */
-            --color-critical: #dc2626; /* Red */
-            --color-high: #ea580c;    /* Orange */
-            --color-moderate: #ca8a04; /* Yellow */
-            --color-info: #2563eb;    /* Blue */
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>India & the Hormuz Blockade — Crisis Intelligence Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red:    #C0392B;
+    --orange: #E67E22;
+    --amber:  #F1C40F;
+    --green:  #27AE60;
+    --blue:   #2471A3;
+    --slate:  #2C3E50;
+    --off:    #F7F5F0;
+    --white:  #FFFFFF;
+    --ink:    #1A1A2E;
+    --muted:  #6C757D;
+    --border: #E0DBD1;
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-base);
-            color: var(--text-main);
-            margin: 0;
-            padding: 20px;
-            line-height: 1.6;
-        }
+    --crit:   #C0392B;
+    --high:   #E67E22;
+    --med:    #F39C12;
+    --low:    #27AE60;
+  }
 
-        .dashboard-container {
-            max-width: 1300px;
-            margin: 0 auto;
-        }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        /* Header & Controls */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            padding-bottom: 20px;
-            border-bottom: 2px solid var(--border-dark);
-            margin-bottom: 30px;
-        }
+  html { scroll-behavior: smooth; }
 
-        .header-titles h1 { margin: 0 0 5px 0; font-size: 2rem; }
-        .header-titles p { margin: 0; color: var(--text-muted); font-size: 1rem; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--off);
+    color: var(--ink);
+    font-size: 14px;
+    line-height: 1.6;
+  }
 
-        .controls {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-            background-color: var(--bg-surface);
-            padding: 15px 20px;
-            border: 1px solid var(--border-light);
-            border-radius: 8px;
-        }
+  /* ── HEADER ── */
+  .header {
+    background: var(--ink);
+    color: white;
+    padding: 28px 40px 22px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .header-left h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 26px;
+    font-weight: 400;
+    letter-spacing: -0.3px;
+    line-height: 1.2;
+  }
+  .header-left .subtitle {
+    font-size: 12px;
+    color: rgba(255,255,255,0.55);
+    font-family: 'DM Mono', monospace;
+    margin-top: 5px;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+  }
+  .header-right { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
 
-        input[type="range"] { width: 150px; cursor: pointer; }
-        
-        button {
-            background-color: var(--bg-base);
-            color: var(--text-main);
-            border: 1px solid var(--border-dark);
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background 0.2s;
-        }
-        button:hover { background-color: var(--border-light); }
+  .status-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .status-pill.active { background: rgba(192,57,43,0.25); color: #FF6B6B; border: 1px solid rgba(192,57,43,0.4); }
+  .status-pill .dot { width: 7px; height: 7px; border-radius: 50%; background: #FF6B6B; animation: blink 1.2s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
-        /* Custom Tooltip CSS for DOM elements */
-        .has-tooltip {
-            position: relative;
-            cursor: help;
-            border-bottom: 1px dotted var(--text-muted);
-        }
-        .has-tooltip:hover::after {
-            content: attr(data-source);
-            position: absolute;
-            bottom: 120%;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: var(--text-main);
-            color: var(--bg-base);
-            padding: 6px 10px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            white-space: nowrap;
-            z-index: 100;
-            pointer-events: none;
-        }
+  #last-updated { font-size: 11px; color: rgba(255,255,255,0.45); font-family: 'DM Mono', monospace; }
 
-        /* KPI Cards */
-        .kpi-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        .kpi-card {
-            background: var(--bg-base);
-            border: 1px solid var(--border-light);
-            border-radius: 8px;
-            padding: 20px;
-            border-top: 4px solid var(--border-dark);
-            position: relative;
-        }
-        .kpi-card.critical { border-top-color: var(--color-critical); }
-        .kpi-card.high { border-top-color: var(--color-high); }
-        .kpi-title { font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
-        .kpi-value { font-size: 2.2rem; font-weight: 900; margin: 5px 0; }
-        .kpi-desc { font-size: 0.85rem; color: var(--text-muted); }
+  .refresh-btn {
+    padding: 8px 18px;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.25);
+    color: white;
+    border-radius: 6px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 6px;
+    transition: all 0.2s;
+  }
+  .refresh-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.4); }
+  .refresh-btn svg { transition: transform 0.6s; }
+  .refresh-btn.spinning svg { animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* Charts & Map Grid */
-        .main-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-bottom: 30px;
-        }
-        .panel {
-            background: var(--bg-base);
-            border: 1px solid var(--border-light);
-            border-radius: 8px;
-            padding: 25px;
-        }
-        .panel h3 { margin-top: 0; margin-bottom: 15px; font-size: 1.2rem; }
-        
-        .insight-box {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid var(--border-light);
-            font-size: 0.9rem;
-            color: var(--text-muted);
-        }
-        .insight-box strong { color: var(--text-main); }
+  /* ── CRISIS BANNER ── */
+  .crisis-banner {
+    background: linear-gradient(135deg, #C0392B 0%, #922B21 100%);
+    color: white;
+    padding: 10px 40px;
+    display: flex; align-items: center; gap: 10px;
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+  }
+  .crisis-banner strong { font-weight: 600; margin-right: 4px; }
 
-        /* SVG Map Container */
-        .map-container {
-            width: 100%;
-            height: 300px;
-            background-color: var(--bg-surface);
-            border: 1px solid var(--border-light);
-            border-radius: 4px;
-            overflow: hidden;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .map-legend {
-            position: absolute;
-            bottom: 10px;
-            left: 10px;
-            background: rgba(255,255,255,0.9);
-            padding: 8px;
-            border: 1px solid var(--border-light);
-            font-size: 0.8rem;
-            border-radius: 4px;
-        }
+  /* ── NAV ── */
+  .nav-tabs {
+    background: white;
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+    display: flex; gap: 0;
+    overflow-x: auto;
+  }
+  .nav-tab {
+    padding: 14px 18px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .nav-tab:hover { color: var(--ink); }
+  .nav-tab.active { color: var(--ink); border-bottom-color: var(--ink); }
 
-        /* Complexity Analysis Text */
-        .analysis-section {
-            background-color: var(--bg-surface);
-            border: 1px solid var(--border-light);
-            padding: 30px;
-            border-radius: 8px;
-        }
-        .analysis-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-        }
-        .badge {
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            color: white;
-            margin-left: 5px;
-        }
-        .bg-critical { background-color: var(--color-critical); }
-        .bg-high { background-color: var(--color-high); }
-        .bg-moderate { background-color: var(--color-moderate); }
+  /* ── MAIN ── */
+  .main { padding: 28px 40px; max-width: 1400px; }
 
-        @media (max-width: 900px) {
-            .main-grid, .analysis-grid { grid-template-columns: 1fr; }
-            header { flex-direction: column; align-items: flex-start; gap: 20px; }
-        }
-    </style>
+  .section { margin-bottom: 40px; display: none; }
+  .section.active { display: block; }
+
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    font-weight: 400;
+    margin-bottom: 6px;
+    color: var(--ink);
+  }
+  .section-desc {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 20px;
+    max-width: 700px;
+  }
+
+  /* ── GRID LAYOUTS ── */
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 20px; }
+  .grid-21 { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 20px; }
+  .grid-12 { display: grid; grid-template-columns: 1fr 2fr; gap: 16px; margin-bottom: 20px; }
+
+  @media(max-width:900px) {
+    .grid-4,.grid-3,.grid-2,.grid-21,.grid-12 { grid-template-columns: 1fr; }
+    .main,.header,.crisis-banner,.nav-tabs { padding-left: 16px; padding-right: 16px; }
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    position: relative;
+  }
+  .card.crit { border-left: 4px solid var(--crit); }
+  .card.high { border-left: 4px solid var(--high); }
+  .card.med  { border-left: 4px solid var(--med); }
+  .card.low  { border-left: 4px solid var(--low); }
+
+  /* ── KPI TILES ── */
+  .kpi-tile {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .kpi-tile .kpi-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .kpi-tile .kpi-val {
+    font-family: 'DM Mono', monospace;
+    font-size: 28px;
+    font-weight: 500;
+    line-height: 1;
+    margin: 4px 0;
+  }
+  .kpi-tile .kpi-delta {
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .kpi-tile .kpi-sub {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .kpi-tile.crit { border-top: 3px solid var(--crit); }
+  .kpi-tile.high { border-top: 3px solid var(--high); }
+  .kpi-tile.med  { border-top: 3px solid var(--med); }
+  .kpi-tile.low  { border-top: 3px solid var(--low); }
+  .neg { color: var(--crit); }
+  .pos { color: var(--green); }
+  .neu { color: var(--muted); }
+
+  /* ── CHART WRAPPERS ── */
+  .chart-card { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+  .chart-card h3 { font-size: 13px; font-weight: 600; margin-bottom: 4px; color: var(--ink); }
+  .chart-card .chart-insight {
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 14px;
+    padding: 8px 10px;
+    background: var(--off);
+    border-radius: 5px;
+    border-left: 3px solid var(--blue);
+    line-height: 1.5;
+  }
+  .chart-card .chart-insight strong { color: var(--ink); }
+  .chart-wrap { position: relative; height: 220px; }
+  .chart-wrap.tall { height: 280px; }
+  .chart-wrap.short { height: 160px; }
+
+  /* ── IMPACT BADGE ── */
+  .impact-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .badge-crit { background: #FADBD8; color: #C0392B; }
+  .badge-high { background: #FAE5D3; color: #E67E22; }
+  .badge-med  { background: #FEF9E7; color: #B7950B; }
+  .badge-low  { background: #D5F5E3; color: #1E8449; }
+
+  /* ── TIMELINE ── */
+  .timeline { position: relative; padding-left: 20px; }
+  .timeline::before { content:''; position:absolute; left:5px; top:0; bottom:0; width:2px; background: var(--border); }
+  .timeline-event { position:relative; margin-bottom: 16px; }
+  .timeline-event::before { content:''; position:absolute; left:-18px; top:5px; width:9px; height:9px; border-radius:50%; background: var(--muted); border: 2px solid white; }
+  .timeline-event.crit::before { background: var(--crit); }
+  .timeline-event.high::before { background: var(--high); }
+  .timeline-event.low::before  { background: var(--green); }
+  .timeline-event .date { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); margin-bottom:2px; }
+  .timeline-event .title { font-size:12px; font-weight:600; color:var(--ink); }
+  .timeline-event .body { font-size:11px; color:var(--muted); margin-top:2px; line-height:1.5; }
+
+  /* ── SECTOR TABLE ── */
+  .sector-row {
+    display: grid;
+    grid-template-columns: 180px 1fr 70px 90px 80px;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--off);
+    transition: background 0.15s;
+  }
+  .sector-row:hover { background: var(--off); }
+  .sector-row.head {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+  }
+  .sector-name { font-size: 13px; font-weight: 500; }
+  .sector-bar-wrap { background: #F0EDE8; border-radius: 3px; height: 6px; overflow:hidden; }
+  .sector-bar { height: 100%; border-radius: 3px; transition: width 0.8s ease; }
+  .sector-chg { font-family:'DM Mono',monospace; font-size:12px; font-weight:500; }
+  .sector-days { font-size:11px; color:var(--muted); }
+
+  /* ── COMPLEXITY MAP ── */
+  .stakeholder-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  @media(max-width:900px){.stakeholder-grid{grid-template-columns:1fr;}}
+
+  .stakeholder-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+  .stakeholder-card .s-name {
+    font-size: 12px; font-weight: 600; margin-bottom: 6px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .stakeholder-card .s-icon { font-size: 16px; }
+  .stakeholder-card .s-interest, .stakeholder-card .s-power {
+    font-size: 10px; color: var(--muted); margin-bottom: 4px;
+  }
+  .stakeholder-card .s-desc { font-size: 11px; color: #444; line-height: 1.5; }
+  .s-bar-row { display:flex; align-items:center; gap:8px; margin-bottom:3px; }
+  .s-bar-label { font-size:10px; color:var(--muted); width:50px; }
+  .s-bar-bg { flex:1; background:#F0EDE8; border-radius:2px; height:4px; }
+  .s-bar-fill { height:100%; border-radius:2px; }
+
+  /* ── POLICY CARDS ── */
+  .policy-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    border-left: 4px solid var(--blue);
+  }
+  .policy-card .p-num {
+    font-family:'DM Mono',monospace; font-size:11px;
+    color:var(--blue); font-weight:600; margin-bottom:6px;
+  }
+  .policy-card h4 { font-size:14px; font-weight:600; margin-bottom:6px; }
+  .policy-card p { font-size:12px; color:#444; line-height:1.6; }
+  .policy-card .p-horizon {
+    display:inline-block; margin-top:10px;
+    font-size:10px; font-weight:600; letter-spacing:0.5px;
+    padding:2px 8px; border-radius:10px;
+    background:#EBF5FB; color:var(--blue);
+    text-transform:uppercase;
+  }
+  .policy-card.urgent { border-left-color: var(--crit); }
+  .policy-card.urgent .p-num { color:var(--crit); }
+  .policy-card.urgent .p-horizon { background:#FADBD8; color:var(--crit); }
+
+  /* ── PROJECTION TABLE ── */
+  .proj-table { width:100%; border-collapse:collapse; font-size:12px; }
+  .proj-table th {
+    font-size:10px; font-weight:600; text-transform:uppercase;
+    letter-spacing:0.5px; color:var(--muted);
+    padding: 8px 12px; text-align:left;
+    border-bottom:1px solid var(--border);
+  }
+  .proj-table td { padding:10px 12px; border-bottom:1px solid var(--off); vertical-align:top; }
+  .proj-table tr:last-child td { border:none; }
+  .proj-table tr:hover td { background:var(--off); }
+  .proj-table .scenario { font-weight:600; }
+  .proj-table .day { font-family:'DM Mono',monospace; font-size:11px; color:var(--muted); }
+
+  /* ── GEOSPATIAL ── */
+  .geo-container { background:white; border:1px solid var(--border); border-radius:10px; padding:20px; }
+  .geo-container h3 { font-size:13px; font-weight:600; margin-bottom:4px; }
+  .geo-map { position:relative; margin-top:14px; }
+  .geo-map svg { width:100%; }
+  .route-label {
+    font-size:10px; fill:var(--muted); font-family:'DM Mono',monospace;
+  }
+  .chokepoint-ring {
+    animation: ring-pulse 2s infinite;
+  }
+  @keyframes ring-pulse {
+    0%,100% { opacity:1; r:8; }
+    50% { opacity:0.5; r:12; }
+  }
+
+  /* ── LEGEND ── */
+  .legend { display:flex; align-items:center; gap:16px; flex-wrap:wrap; margin-bottom:12px; font-size:11px; }
+  .legend-item { display:flex; align-items:center; gap:5px; }
+  .legend-dot { width:8px; height:8px; border-radius:50%; }
+
+  /* ── PROGRESS RINGS ── */
+  .ring-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+  @media(max-width:700px){.ring-grid{grid-template-columns:repeat(2,1fr);}}
+  .ring-item { display:flex; flex-direction:column; align-items:center; gap:6px; }
+  .ring-item svg { width:70px; height:70px; }
+  .ring-item .ring-label { font-size:10px; font-weight:600; text-align:center; color:var(--ink); text-transform:uppercase; letter-spacing:0.4px; }
+  .ring-item .ring-val { font-family:'DM Mono',monospace; font-size:13px; font-weight:500; }
+
+  /* ── DIVIDER ── */
+  .divider { border:none; border-top:1px solid var(--border); margin:24px 0; }
+
+  /* ── ALERT STRIP ── */
+  .alert-strip {
+    padding: 10px 14px;
+    border-radius: 7px;
+    font-size: 11px;
+    display: flex; gap: 8px; align-items: flex-start;
+    margin-bottom: 14px;
+    line-height: 1.5;
+  }
+  .alert-strip.crit { background:#FADBD8; border-left:3px solid var(--crit); color:#7B241C; }
+  .alert-strip.high { background:#FAE5D3; border-left:3px solid var(--high); color:#7E5109; }
+  .alert-strip.info { background:#EBF5FB; border-left:3px solid var(--blue); color:#1A5276; }
+
+  /* ── CHOKEPOINT ANALYSIS ── */
+  .chokepoint-item {
+    display:grid;
+    grid-template-columns: 20px 1fr auto;
+    gap:12px; align-items:start;
+    padding:12px 0;
+    border-bottom:1px solid var(--off);
+  }
+  .chokepoint-item:last-child { border:none; }
+  .cp-num {
+    font-family:'DM Mono',monospace; font-size:12px;
+    font-weight:500; color:var(--muted);
+  }
+  .cp-title { font-size:12px; font-weight:600; margin-bottom:3px; }
+  .cp-body { font-size:11px; color:#555; line-height:1.5; }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width:4px; height:4px; }
+  ::-webkit-scrollbar-track { background:transparent; }
+  ::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
+
+  /* fade-in on load */
+  .fade-in { animation: fadeIn 0.4s ease both; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
+</style>
 </head>
 <body>
 
-<div class="dashboard-container">
-    <header>
-        <div class="header-titles">
-            <h1>India Macro-Systemic Impact Dashboard</h1>
-            <p>Hormuz Strait Blockade (March 2026) — Interactive Complexity & Supply Chain Analysis</p>
-        </div>
-        <div class="controls">
-            <div>
-                <label for="timelineSlider" style="font-weight: bold; font-size: 0.9rem;">Timeline Projection: <span id="daysDisplay" style="color: var(--color-info);">0 Days</span></label><br>
-                <input type="range" id="timelineSlider" min="0" max="60" step="15" value="0">
-            </div>
-            <button id="refreshDataBtn">↻ Fetch Live Data</button>
-        </div>
-    </header>
+<!-- HEADER -->
+<header class="header">
+  <div class="header-left">
+    <h1>India &amp; the Hormuz Blockade &mdash; Crisis Intelligence</h1>
+    <div class="subtitle">Live Analysis · Markets · Supply Chains · Policy · Projections</div>
+  </div>
+  <div class="header-right">
+    <span class="status-pill active"><span class="dot"></span>Blockade Active</span>
+    <span id="last-updated">Loading…</span>
+    <button class="refresh-btn" onclick="refreshDashboard(this)">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+      Refresh
+    </button>
+  </div>
+</header>
 
-    <div class="kpi-grid">
-        <div class="kpi-card critical">
-            <div class="kpi-title">Hormuz Transit Drop</div>
-            <div class="kpi-value has-tooltip" data-source="Source: Starboard Maritime Intelligence, March 17, 2026" id="kpi-traffic">92%</div>
-            <div class="kpi-desc">🔴 Critical: Commercial shipping practically halted.</div>
-        </div>
-        <div class="kpi-card critical">
-            <div class="kpi-title">Brent Crude (USD/bbl)</div>
-            <div class="kpi-value has-tooltip" data-source="Source: US Energy Information Administration (EIA) Spot Prices" id="kpi-crude">$95.00</div>
-            <div class="kpi-desc">🔴 Critical: Widens Current Account Deficit.</div>
-        </div>
-        <div class="kpi-card high">
-            <div class="kpi-title">USD / INR Exchange</div>
-            <div class="kpi-value has-tooltip" data-source="Source: RBI Reference Rates & MUFG FX Projections" id="kpi-inr">₹83.50</div>
-            <div class="kpi-desc">🟠 High: RBI defending currency against imported inflation.</div>
-        </div>
-        <div class="kpi-card high">
-            <div class="kpi-title">Fertilizer (Urea) Exposure</div>
-            <div class="kpi-value has-tooltip" data-source="Source: Ministry of Chemicals and Fertilizers Data" id="kpi-fert">40%</div>
-            <div class="kpi-desc">🟠 High: Direct threat to Q3 agricultural sowing.</div>
-        </div>
-    </div>
-
-    <div class="main-grid">
-        
-        <div class="panel">
-            <h3>Domestic LPG Deficit Trajectory (MMT)</h3>
-            <canvas id="lpgChart" height="200"></canvas>
-            <div class="insight-box">
-                <strong>Insight:</strong> <span class="has-tooltip" data-source="Source: MoPNG Petroleum Planning & Analysis Cell">India lacks strategic LPG reserves.</span> As the blockade extends, domestic refinery output cannot offset the loss of Middle Eastern imports, forcing imminent household rationing and industrial load-shedding.
-            </div>
-        </div>
-
-        <div class="panel">
-            <h3>Supply Chain Cost Inflation Index</h3>
-            <canvas id="costChart" height="200"></canvas>
-            <div class="insight-box">
-                <strong>Insight:</strong> <span class="has-tooltip" data-source="Source: World Bank Commodity Markets & Drewry Container Index">Rerouting around Africa adds 14-20 days.</span> Freight rates multiply, cascading into Urea (agriculture) and Helium/Polyethylene (Pharma & Electronics) shortages, triggering structural stagflation.
-            </div>
-        </div>
-
-        <div class="panel">
-            <h3>Stock Market Impact (NIFTY Sectoral vs USD/INR)</h3>
-            <canvas id="equityChart" height="200"></canvas>
-            <div class="insight-box">
-                <strong>Insight:</strong> <span class="has-tooltip" data-source="Source: National Stock Exchange (NSE) Simulated Projections">Import-heavy sectors bleed.</span> FMCG and Aviation suffer from input cost spikes. IT/Pharma export margins are temporarily shielded by INR depreciation, but hit by freight delays.
-            </div>
-        </div>
-
-        <div class="panel">
-            <h3>Geospatial Transit Chokepoints</h3>
-            <div class="map-container has-tooltip" data-source="Source: Standard Global Maritime Routing (Simplified SVG)">
-                <svg viewBox="0 0 500 250" width="100%" height="100%" style="background:#e0f2fe;">
-                    <polygon points="0,50 150,50 200,100 180,250 0,250" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="2"/> <polygon points="160,50 250,50 280,120 220,130 190,80" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="2"/> <polygon points="320,50 500,50 500,250 380,250 350,150 400,100" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="2"/> <text x="70" y="150" font-size="12" fill="#475569" font-weight="bold">AFRICA</text>
-                    <text x="210" y="90" font-size="10" fill="#475569" font-weight="bold">M.E.</text>
-                    <text x="400" y="120" font-size="12" fill="#475569" font-weight="bold">INDIA</text>
-                    
-                    <line x1="280" y1="100" x2="350" y2="120" stroke="#dc2626" stroke-width="4" stroke-dasharray="4,4"/>
-                    <circle cx="280" cy="100" r="8" fill="#dc2626" opacity="0.5"/>
-                    <circle cx="280" cy="100" r="4" fill="#dc2626"/>
-
-                    <path d="M 220 130 Q 200 240 180 250 Q 250 250 380 180" fill="none" stroke="#ea580c" stroke-width="3" stroke-dasharray="6,4"/>
-                </svg>
-                <div class="map-legend">
-                    <div><span style="color:#dc2626; font-weight:bold;">---</span> Hormuz (Blocked)</div>
-                    <div><span style="color:#ea580c; font-weight:bold;">- -</span> Cape Route (+20 Days)</div>
-                </div>
-            </div>
-            <div class="insight-box">
-                <strong>Complexity Analysis:</strong> The 39km-wide chokepoint forces India to rely on diplomatic leverage. Only designated "white-list" vessels are reportedly granted safe passage, an asymmetric vulnerability for a $3.5T economy.
-            </div>
-        </div>
-    </div>
-
-    <div class="analysis-section">
-        <h2 style="margin-top:0; border-bottom: 2px solid var(--border-dark); padding-bottom: 10px;">🧩 Systemic Complexity & Policy Leverage Points</h2>
-        <div class="analysis-grid">
-            <div>
-                <h3>Stakeholders & Chokepoints</h3>
-                <ul style="padding-left: 20px;">
-                    <li><strong>Domestic Energy <span class="badge bg-critical">Critical</span>:</strong> 50-53% crude import reliance on ME; 25% LNG supply under force majeure. Panic buying of LPG depleting non-strategic commercial buffers.</li>
-                    <li><strong>Agriculture (Fertilizers) <span class="badge bg-critical">Critical</span>:</strong> Gulf ammonia and sulfur entrapment spiking global Urea prices. Government subsidy burden threatens to widen fiscal deficit.</li>
-                    <li><strong>Pharma & Electronics <span class="badge bg-high">High</span>:</strong> Trapped Qatar helium exports disrupt MRI operations and semiconductor fab. Polyethylene limits raise packaging costs.</li>
-                    <li><strong>Forex & Remittances <span class="badge bg-moderate">Moderate</span>:</strong> $35B+ annual remittances from the Gulf at risk if regional economies slow down, adding pressure to INR depreciation.</li>
-                </ul>
-            </div>
-            <div>
-                <h3>Strategic Recommendations (India)</h3>
-                <ol style="padding-left: 20px;">
-                    <li><strong>Accelerate SPR Phase II & LPG Caverns:</strong> Capitalize immediate expansion of underground salt-caverns. India has a 50-day crude buffer but needs structural LPG reserves.</li>
-                    <li><strong>Institutionalize Transit "White-Lists":</strong> Leverage geopolitical neutrality. Formalize current ad-hoc diplomatic backchannels with Tehran into recognized safe corridors for Indian agricultural/energy shipments.</li>
-                    <li><strong>Agri-Input Hedging & Direct Transfers:</strong> Aggressively hedge non-ME fertilizer contracts immediately. Shift fertilizer subsidies to Direct Benefit Transfers (DBT) to shield farmers from Q3 price shocks without subsidizing inefficient importers.</li>
-                </ol>
-            </div>
-        </div>
-    </div>
+<!-- CRISIS BANNER -->
+<div class="crisis-banner">
+  <strong>⚡ LIVE:</strong>
+  Day&nbsp;19 of Hormuz Blockade &nbsp;|&nbsp;
+  Brent Crude: <strong id="banner-oil">$102.77</strong> &nbsp;|&nbsp;
+  USD/INR: <strong id="banner-inr">₹92.56</strong> &nbsp;|&nbsp;
+  Nifty: <strong id="banner-nifty">23,151</strong> (–2.06%) &nbsp;|&nbsp;
+  India VIX: <strong>19.91</strong> &nbsp;|&nbsp;
+  LPG cylinder: <strong>₹913</strong> (+7%)
 </div>
 
+<!-- NAV -->
+<nav class="nav-tabs">
+  <div class="nav-tab active" onclick="switchTab('overview',this)">Overview</div>
+  <div class="nav-tab" onclick="switchTab('markets',this)">Markets & FX</div>
+  <div class="nav-tab" onclick="switchTab('sectors',this)">Sectors</div>
+  <div class="nav-tab" onclick="switchTab('geography',this)">Geospatial</div>
+  <div class="nav-tab" onclick="switchTab('complexity',this)">Complexity Analysis</div>
+  <div class="nav-tab" onclick="switchTab('projections',this)">Projections</div>
+  <div class="nav-tab" onclick="switchTab('policy',this)">Policy Insights</div>
+</nav>
+
+<div class="main">
+
+<!-- ══════════════════════════════════════════════
+     TAB 1: OVERVIEW
+══════════════════════════════════════════════ -->
+<section id="tab-overview" class="section active fade-in">
+  <h2 class="section-title">Crisis at a Glance</h2>
+  <p class="section-desc">The Strait of Hormuz has been effectively closed since 1 March 2026 following US-Israeli strikes on Iran. India, importing 88% of its crude and 90% of its LPG via this corridor, faces a multidimensional supply-side shock.</p>
+
+  <div class="alert-strip crit">
+    <strong>🔴 CRITICAL:</strong> India's LPG supply is at ~56% normal capacity. Commercial sector rationed. Essential Commodities Act invoked. Two LPG tankers cleared Hormuz on 14 March — partial relief only.
+  </div>
+
+  <!-- KPIs -->
+  <div class="grid-4">
+    <div class="kpi-tile crit">
+      <div class="kpi-label">Brent Crude</div>
+      <div class="kpi-val" style="color:var(--crit)" id="kpi-brent">$102.77</div>
+      <div class="kpi-delta neg">▲ +57% from Feb baseline ($65)</div>
+      <div class="kpi-sub">War risk premium: ~$30/bbl</div>
+    </div>
+    <div class="kpi-tile crit">
+      <div class="kpi-label">USD / INR</div>
+      <div class="kpi-val" style="color:var(--crit)" id="kpi-inr">₹92.56</div>
+      <div class="kpi-delta neg">▲ Record low. Pre-war: ₹86.5</div>
+      <div class="kpi-sub">MUFG warns ₹95–₹97.5 if sustained</div>
+    </div>
+    <div class="kpi-tile high">
+      <div class="kpi-label">Nifty 50</div>
+      <div class="kpi-val" style="color:var(--high)" id="kpi-nifty">23,151</div>
+      <div class="kpi-delta neg">▼ –8.2% since Feb 28</div>
+      <div class="kpi-sub">₹20L Cr wealth wiped in 3 weeks</div>
+    </div>
+    <div class="kpi-tile high">
+      <div class="kpi-label">India VIX</div>
+      <div class="kpi-val" style="color:var(--high)" id="kpi-vix">19.91</div>
+      <div class="kpi-delta neg">▲ +65% since Feb 27</div>
+      <div class="kpi-sub">Peaked at 22.65 on Mar 13</div>
+    </div>
+  </div>
+
+  <div class="grid-4">
+    <div class="kpi-tile high">
+      <div class="kpi-label">LPG Supply Level</div>
+      <div class="kpi-val" style="color:var(--high)">~56%</div>
+      <div class="kpi-delta neg">▼ Normal capacity</div>
+      <div class="kpi-sub">332M LPG connections at risk</div>
+    </div>
+    <div class="kpi-tile high">
+      <div class="kpi-label">FII Net Outflow</div>
+      <div class="kpi-val" style="color:var(--high)">₹54K Cr</div>
+      <div class="kpi-delta neg">March 2026 alone</div>
+      <div class="kpi-sub">FIIs remain net-short futures</div>
+    </div>
+    <div class="kpi-tile med">
+      <div class="kpi-label">India CPI (Feb)</div>
+      <div class="kpi-val" style="color:var(--med)">3.21%</div>
+      <div class="kpi-delta neg">▲ 4th consecutive monthly rise</div>
+      <div class="kpi-sub">Projected >4.5% at $100 oil</div>
+    </div>
+    <div class="kpi-tile low">
+      <div class="kpi-label">Crude Reserves</div>
+      <div class="kpi-val" style="color:var(--green)">~40d</div>
+      <div class="kpi-delta pos">✓ Buffer through Apr mid</div>
+      <div class="kpi-sub">~100M barrels strategic + above-ground</div>
+    </div>
+  </div>
+
+  <!-- Timeline + Chart -->
+  <div class="grid-21">
+    <div class="chart-card">
+      <h3>Crisis Timeline — Key Events</h3>
+      <div class="chart-insight">
+        <strong>Insight:</strong> The blockade escalated in four phases — initial military action, shipping halt, partial carve-outs for India/Turkey/China, and ongoing uncertainty. Each phase caused discrete market shocks, with the sharpest single-day crash on <strong>Mar 13 (–5.3%)</strong>.
+      </div>
+      <div class="timeline" id="timeline-container">
+        <div class="timeline-event crit">
+          <div class="date">28 FEB 2026</div>
+          <div class="title">Operation Epic Fury — US & Israel strike Iran</div>
+          <div class="body">Supreme Leader Khamenei killed. IRGC issues VHF warnings. Brent jumps to $72. Nifty opens –1%.</div>
+        </div>
+        <div class="timeline-event crit">
+          <div class="date">01–02 MAR</div>
+          <div class="title">Strait Effectively Closed — 70% traffic drop</div>
+          <div class="body">Tanker Skylight struck. MKD VYOM set ablaze. Indian sailors killed. Brent crosses $80. India VIX +25% in one session.</div>
+        </div>
+        <div class="timeline-event crit">
+          <div class="date">03–05 MAR</div>
+          <div class="title">Qatar Ras Laffan Struck — Helium, LNG offline</div>
+          <div class="body">QatarEnergy force majeure. 1/3 global helium supply cut. LPG crisis begins in India. Nifty –4% in 3 days.</div>
+        </div>
+        <div class="timeline-event crit">
+          <div class="date">07 MAR</div>
+          <div class="title">India raises LPG price 7% to ₹913</div>
+          <div class="body">IOC, BPCL, HPCL act in tandem. Essential Commodities Act invoked. Industrial LPG rationed at 70%.</div>
+        </div>
+        <div class="timeline-event crit">
+          <div class="date">13 MAR</div>
+          <div class="title">"Friday the 13th" — ₹9.5L Cr wiped in 1 day</div>
+          <div class="body">Sensex –1,460 pts. Rupee hits record ₹92.45. FIIs sell ₹7,000 Cr in single session. VIX peaks at 22.65.</div>
+        </div>
+        <div class="timeline-event low">
+          <div class="date">14 MAR</div>
+          <div class="title">Partial Relief — India vessels cleared</div>
+          <div class="body">PM Modi negotiates with Iran's Pezeshkian. Two Indian LPG tankers (Shivalik + Nanda Devi) cross Hormuz.</div>
+        </div>
+        <div class="timeline-event high">
+          <div class="date">16–18 MAR</div>
+          <div class="title">Tentative Rally — VIX –12%, Sensex +1,507 pts</div>
+          <div class="body">Iran allows all non-US/Israel ships. But Brent remains >$100. Rupee still near record lows. Outlook fragile.</div>
+        </div>
+      </div>
+    </div>
+    <div class="chart-card">
+      <h3>Supply Chain Exposure — India's Import Sources via Hormuz</h3>
+      <div class="chart-insight"><strong>Insight:</strong> India's Hormuz dependence is structurally severe — LPG at 90% is the most acute. Even with Russian crude as a backup, LPG has no fast alternative.</div>
+      <div class="chart-wrap">
+        <canvas id="exposureChart"></canvas>
+      </div>
+      <div class="chart-insight" style="margin-top:12px">
+        <strong>Growth Cut:</strong> Goldman Sachs trimmed India's FY27 GDP forecast by 0.5pp to <strong>6.5%</strong>. Every $10/bbl oil rise widens current account deficit by 0.4–0.5% of GDP.
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ══════════════════════════════════════════════
+     TAB 2: MARKETS & FX
+══════════════════════════════════════════════ -->
+<section id="tab-markets" class="section fade-in">
+  <h2 class="section-title">Financial Markets &amp; Currency Impact</h2>
+  <p class="section-desc">India's financial markets are absorbing a simultaneous oil shock, FII exodus, rupee depreciation, and inflation risk. The interaction creates a negative feedback loop.</p>
+
+  <div class="grid-2">
+    <div class="chart-card">
+      <h3>Nifty 50 — Daily Close (Feb 27–Mar 18, 2026)</h3>
+      <div class="chart-insight"><strong>Insight:</strong> The market lost <strong>8.2%</strong> (2,062 pts) in three weeks — the steepest decline in 4 years. The sharpest single-day crash on Mar 13 erased ₹9.5L Cr. The tentative 2-day recovery (Mar 16–17) is technical, not fundamental.</div>
+      <div class="chart-wrap tall">
+        <canvas id="niftyChart"></canvas>
+      </div>
+    </div>
+    <div class="chart-card">
+      <h3>USD/INR Exchange Rate — Rupee Freefall</h3>
+      <div class="chart-insight"><strong>Insight:</strong> The rupee has fallen from ₹86.5 to ₹92.56 — a 7% depreciation. This amplifies India's import bill (every ₹1 weakening adds ~₹7,000–8,000 Cr annually to oil costs). MUFG sees ₹95 at $100 oil, ₹97.5 at $120.</div>
+      <div class="chart-wrap tall">
+        <canvas id="inrChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-3">
+    <div class="chart-card">
+      <h3>Brent Crude — Price Trajectory</h3>
+      <div class="chart-insight"><strong>Insight:</strong> Oil surged 57% from $65 pre-war to $105.70 peak on day 5. A temporary dip when Iran allowed non-Western ships proved short-lived. Markets now price in $100+ baseline for prolonged blockade.</div>
+      <div class="chart-wrap">
+        <canvas id="brentChart"></canvas>
+      </div>
+    </div>
+    <div class="chart-card">
+      <h3>India VIX — Fear Gauge</h3>
+      <div class="chart-insight"><strong>Insight:</strong> Fear rose 65% in 2 weeks. The 12% 2-day drop (Mar 16–17) signals nascent calm, but VIX at ~20 remains elevated vs the 13.7 pre-war baseline — uncertainty endures.</div>
+      <div class="chart-wrap">
+        <canvas id="vixChart"></canvas>
+      </div>
+    </div>
+    <div class="chart-card">
+      <h3>FII Flows — Net Monthly (₹ Cr)</h3>
+      <div class="chart-insight"><strong>Insight:</strong> FIIs dumped ₹54,000 Cr in March alone — the largest monthly outflow trigger in years. They remain <strong>net-short</strong> index futures, indicating institutional bets on further downside. Rupee amplifies this spiral.</div>
+      <div class="chart-wrap">
+        <canvas id="fiiChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="chart-card">
+      <h3>Inflation Trajectory — CPI &amp; WPI</h3>
+      <div class="chart-insight"><strong>Insight:</strong> CPI rose for a 4th consecutive month to 3.21% in Feb. WPI hit an 11-month high of 2.13%. The March-April readings (not yet published) will absorb the full oil shock. RBI's 4% target will be breached if Brent stays above $90.</div>
+      <div class="chart-wrap">
+        <canvas id="inflationChart"></canvas>
+      </div>
+    </div>
+    <div class="chart-card">
+      <h3>Current Account Deficit — GDP Impact Sensitivity</h3>
+      <div class="chart-insight"><strong>Insight:</strong> Every $10/bbl oil increase widens India's CAD by 0.4–0.5% of GDP. At $100 oil, CAD moves toward 3% of GDP vs baseline 1.5%. Combined with weak FDI and FII outflows, rupee pressure is severe.</div>
+      <div class="chart-wrap">
+        <canvas id="cadChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ══════════════════════════════════════════════
+     TAB 3: SECTORS
+══════════════════════════════════════════════ -->
+<section id="tab-sectors" class="section fade-in">
+  <h2 class="section-title">Sectoral Impact Analysis</h2>
+  <p class="section-desc">The blockade affects far more than oil. Six distinct supply chains — energy, LPG/cooking, pharmaceuticals, electronics/semiconductors, agriculture/fertilizers, and remittances — are disrupted simultaneously.</p>
+
+  <div class="card" style="margin-bottom:20px">
+    <div class="sector-row head">
+      <div>Sector</div>
+      <div>Impact Severity</div>
+      <div>Index Chg</div>
+      <div>Recovery Time</div>
+      <div>Risk</div>
+    </div>
+    <div class="sector-row">
+      <div class="sector-name">🛢 Energy / Petrol</div>
+      <div><div class="sector-bar-wrap"><div class="sector-bar" style="width:92%;background:var(--crit)"></div></div></div>
+      <div class="sector-chg neg">–8.1%</div>
+      <div class="sector-days">60–90 days</div>
+      <div><span class="impact-badge badge-crit">Critical</span></div>
+    </div>
+    <div class="sector-row">
+      <div class="sector-name">🍳 LPG / Cooking Gas</div>
+      <div><div class="sector-bar-wrap"><div class="sector-bar" style="width:90%;background:var(--crit)"></div></div></div>
+      <div class="sector-chg neg">–44%</div>
+      <div class="sector-days">45–60 days</div>
+      <div><span class="impact-badge badge-crit">Critical</span></div>
+    </div>
+    <div class="sector-row">
+      <div class="sector-name">🚗 Auto / EV</div>
+      <div><div class="sector-bar-wrap"><div class="sector-bar" style="width:80%;background:var(--high)"></div></div></div>
+      <div class="sector-chg neg">–10.6%</div>
+      <div class="sector-days">30–60 days</div>
+      <div><span class="impact-badge badge-high">High</span></div>
+    </div>
+    <div class="sector-row">
+      <div class="sector-name">🏗 Infrastructure (L&T)</div>
+      <div><div class="sector-bar-wrap"><div class="sector-bar" style="width:80%;background:var(--high)"></div></div></div>
+      <div class="sector-chg neg">–12.9%</div>
+      <div class="sector-days">60+ days</div>
+      <div><span class="impact-badge badge-high">High</span></div>
+    </div>
+    <div class="sector-row">
+      <div class="sector-name">🌾 Fertilizers / Agri</div>
+      <div><div class="sector-bar-wrap"><div class="sector-bar" style="width:78%;background:var(--high)"></div></div></div>
+      <div class="sector-chg neg">Supply –30%</div>
+      <div class="sector-days">60–90 days</div>
+      <div><span class="impact-badge badge-high">High</span></div>
+    </div>
+    <div class="sector-row">
+      <div class="sector-name">💊 Pharmaceuticals</div>
+      <div><div class="sector-bar-wrap"><div class="sector-bar" style="width:60%;background:var(--med)"></div></div></div>
+      <div class="sector-chg neg">+2.1%</div>
+      <div class="sector-days">20–40 days</div>
+      <div><span class="impact-badge badge-high">High</span></div>
+    </div>
+    <div class="sector-row">
+      <div class="sector-name">🖥 Electronics / Chips</div>
+      <div><div class="sector-bar-wrap"><div class="sector-bar" style="width:55%;background:var(--med)"></div></div></div>
+      <div class="sector-chg neg">–3.2%</div>
+      <div class="sector-days">45–90 days</div>
+      <div><span class="impact-badge badge-high">High</span></div>
+    </div>
+    <div class="sector-row">
+      <div class="sector-name">🏦 Banking / PSU</div>
+      <div><div class="sector-bar-wrap"><div class="sector-bar" style="width:55%;background:var(--med)"></div></div></div>
+      <div class="sector-chg neg">–5.8%</div>
+      <div class="sector-days">30–45 days</div>
+      <div><span class="impact-badge badge-med">Medium</span></div>
+    </div>
+    <div class="sector-row">
+      <div class="sector-name">🍽 Hospitality / Food Svc</div>
+      <div><div class="sector-bar-wrap"><div class="sector-bar" style="width:70%;background:var(--high)"></div></div></div>
+      <div class="sector-chg neg">–15% revenue</div>
+      <div class="sector-days">30 days</div>
+      <div><span class="impact-badge badge-high">High</span></div>
+    </div>
+    <div class="sector-row">
+      <div class="sector-name">💻 IT / Software (Wipro)</div>
+      <div><div class="sector-bar-wrap"><div class="sector-bar" style="width:12%;background:var(--green)"></div></div></div>
+      <div class="sector-chg pos">+1.1%</div>
+      <div class="sector-days">–</div>
+      <div><span class="impact-badge badge-low">Insulated</span></div>
+    </div>
+    <div class="sector-row">
+      <div class="sector-name">⛏ Coal India</div>
+      <div><div class="sector-bar-wrap"><div class="sector-bar" style="width:8%;background:var(--green)"></div></div></div>
+      <div class="sector-chg pos">+6.0%</div>
+      <div class="sector-days">–</div>
+      <div><span class="impact-badge badge-low">Beneficiary</span></div>
+    </div>
+  </div>
+
+  <!-- Sector Detail Cards -->
+  <h3 style="font-size:15px;font-weight:600;margin-bottom:14px">Deep-Dive: Critical Sectors</h3>
+  <div class="grid-2">
+    <div class="card crit">
+      <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:10px">
+        <div><strong>🍳 LPG &amp; Cooking Gas Crisis</strong></div>
+        <span class="impact-badge badge-crit">Critical</span>
+      </div>
+      <p style="font-size:11px;color:#555;line-height:1.6;margin-bottom:10px">
+        India has <strong>332M LPG connections</strong> and imports 60% of its LPG — 90% of that via Hormuz. 
+        The blockade exposed ~54% of normal LPG supply. Government boosted domestic production by 25–30%, 
+        restricted industrial use to 70%, and invoked the Essential Commodities Act. Commercial cylinders 
+        are severely rationed; restaurants, bakeries, and crematoria are shutting down. 
+        Domestic LPG cylinders rose 7% to ₹913; commercial cylinders up ₹115.
+      </p>
+      <div class="chart-wrap short">
+        <canvas id="lpgChart"></canvas>
+      </div>
+      <div class="chart-insight" style="margin-top:10px"><strong>Key Risk:</strong> 104M PMUY (Ujjwala) households are most vulnerable. Southern and western states face the worst shortages. Panic buying is worsening regional supply.</div>
+    </div>
+
+    <div class="card high">
+      <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:10px">
+        <div><strong>🖥 Electronics, Chips &amp; Helium</strong></div>
+        <span class="impact-badge badge-high">High</span>
+      </div>
+      <p style="font-size:11px;color:#555;line-height:1.6;margin-bottom:10px">
+        Qatar's Ras Laffan — the world's single largest helium production site — went offline on Mar 2 
+        when Iranian drones struck. This took <strong>~33% of global helium supply offline</strong>. 
+        Helium spot prices doubled in one week (+70–100%). Helium is irreplaceable for semiconductor 
+        wafer processing, MRI cooling, and semiconductor fab operations. India's nascent 
+        semiconductor ecosystem (Micron's Gujarat fab, upcoming fabs) faces input cost spikes. 
+        Aluminium smelters in Qatar and Bahrain also halted — affecting India's EV and 
+        electronics manufacturing chains. Global chip production slowdown threatens consumer electronics prices.
+      </p>
+      <div class="chart-insight"><strong>Key Risk:</strong> India imports 85%+ of its electronics. Global chip supply disruption will push up prices of smartphones, laptops, and industrial equipment within 30–60 days. MRI and medical device availability threatened.</div>
+    </div>
+
+    <div class="card high">
+      <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:10px">
+        <div><strong>💊 Pharmaceuticals</strong></div>
+        <span class="impact-badge badge-high">High</span>
+      </div>
+      <p style="font-size:11px;color:#555;line-height:1.6;margin-bottom:10px">
+        India's pharma sector is a complex victim-and-beneficiary. Active Pharmaceutical Ingredients 
+        (APIs) rely on petrochemical feedstocks (now costlier). Shipping disruptions add 
+        15–25 days to delivery timelines via Cape of Good Hope rerouting. However, Indian pharma 
+        exports are not directly Gulf-dependent, and sector stocks have held up (+2.1%) as global 
+        pharmaceutical demand remains inelastic. The <strong>critical risk</strong> is helium: hospital 
+        MRI machines require liquid helium cooling — a supply crunch could impact diagnostic 
+        services in India within 45 days if no alternative sources are secured.
+      </p>
+      <div class="chart-insight"><strong>Key Risk:</strong> API cost inflation (petrochem inputs), shipping delays adding 2–3 weeks to imports, and MRI helium supply. Export-facing pharma companies benefit from rupee weakness.</div>
+    </div>
+
+    <div class="card high">
+      <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:10px">
+        <div><strong>🌾 Fertilizers &amp; Agriculture</strong></div>
+        <span class="impact-badge badge-high">High</span>
+      </div>
+      <p style="font-size:11px;color:#555;line-height:1.6;margin-bottom:10px">
+        The Gulf supplies <strong>urea, ammonia, and sulphur</strong> — all critical for nitrogen 
+        fertilizers. QatarEnergy's LNG halt also disrupted fertilizer production (LNG is 
+        the key feedstock for nitrogen fertilizers). Oxford Economics raised its Q2 2026 
+        fertilizer price forecast by 20%. India is a major consumer of Gulf-sourced urea 
+        and phosphate. The blockade arrives at the worst time: India's spring sowing season 
+        (March–May). Fertilizer shortages or price spikes could reduce crop yields in 
+        the Rabi-Kharif transition, affecting food prices in H2 2026.
+      </p>
+      <div class="chart-insight"><strong>Key Risk:</strong> If fertilizer disruption is not resolved before May, the 2026 Kharif crop is at risk. Food inflation could accelerate by 2–3pp in H2 2026, compounding the energy-driven CPI shock.</div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ══════════════════════════════════════════════
+     TAB 4: GEOSPATIAL
+══════════════════════════════════════════════ -->
+<section id="tab-geography" class="section fade-in">
+  <h2 class="section-title">Geospatial Analysis — Routes, Chokepoints &amp; Alternatives</h2>
+  <p class="section-desc">The Hormuz closure forced a global shipping reroute. Three alternative paths exist for India — all costlier, slower, or constrained. The map shows India's supply chain geography.</p>
+
+  <div class="geo-container" style="margin-bottom:20px">
+    <h3>Strategic Maritime Map — India's Energy Supply Web</h3>
+    <div class="chart-insight"><strong>Insight:</strong> The Hormuz Strait (33km wide, shipping lanes just 3km each way) handles 20M barrels/day of oil. With it closed, India must choose: (a) wait for diplomatic clearance, (b) reroute via Cape of Good Hope (+$2–4/bbl, +15–25 days), or (c) shift to non-Gulf sources (Russia, USA, West Africa).</div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#C0392B"></div> Blockaded / Conflict Zone</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#E67E22"></div> High-Risk Alternative Route</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#2471A3"></div> Active Indian Supply Route</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#27AE60"></div> Emerging Alternative</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#8E44AD"></div> Key Indian Port</div>
+    </div>
+
+    <!-- SVG Map -->
+    <svg viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg" style="border:1px solid var(--border);border-radius:8px;background:#EBF5FB">
+      <!-- Ocean background -->
+      <rect width="900" height="500" fill="#D6EAF8"/>
+
+      <!-- LANDMASSES (simplified) -->
+      <!-- Africa -->
+      <path d="M170,80 L230,75 L260,100 L270,150 L260,200 L240,250 L220,300 L200,360 L185,400 L175,430 L170,430 L155,400 L145,360 L135,300 L130,250 L135,200 L140,150 L155,100 Z" fill="#D5D8DC" stroke="#BDC3C7" stroke-width="0.8"/>
+      <!-- Arabian Peninsula -->
+      <path d="M430,80 L490,75 L530,90 L560,120 L570,160 L560,190 L540,200 L510,195 L490,185 L470,175 L455,160 L440,140 L430,120 Z" fill="#D5D8DC" stroke="#BDC3C7" stroke-width="0.8"/>
+      <!-- Iran -->
+      <path d="M530,55 L600,50 L640,65 L660,90 L660,120 L640,130 L610,125 L580,130 L560,125 L545,110 L530,90 Z" fill="#D5D8DC" stroke="#BDC3C7" stroke-width="0.8"/>
+      <!-- Oman -->
+      <path d="M570,160 L610,150 L640,155 L640,185 L620,200 L600,205 L575,200 L560,190 Z" fill="#D5D8DC" stroke="#BDC3C7" stroke-width="0.8"/>
+      <!-- India -->
+      <path d="M630,80 L700,75 L740,95 L760,130 L770,170 L760,220 L740,270 L720,310 L700,340 L690,360 L685,355 L680,330 L665,290 L650,250 L640,200 L635,160 L630,120 Z" fill="#FDEBD0" stroke="#E59866" stroke-width="1"/>
+      <!-- Indian label -->
+      <text x="700" y="250" fill="#784212" font-size="13" font-weight="bold" font-family="DM Serif Display, serif">INDIA</text>
+      <!-- Pakistan -->
+      <path d="M600,75 L635,75 L635,120 L620,130 L600,125 L585,110 L580,90 Z" fill="#D5D8DC" stroke="#BDC3C7" stroke-width="0.8"/>
+      <!-- Qatar (tiny dot) -->
+      <circle cx="535" cy="165" r="5" fill="#2C3E50"/>
+      <text x="541" y="170" font-size="8" fill="#2C3E50" font-family="DM Mono">Qatar</text>
+      <!-- UAE -->
+      <circle cx="560" cy="178" r="4" fill="#2C3E50"/>
+      <!-- Saudi Arabia label -->
+      <text x="450" y="145" font-size="9" fill="#7F8C8D">Saudi Arabia</text>
+      <!-- Iran label -->
+      <text x="560" y="80" font-size="9" fill="#7F8C8D">IRAN</text>
+      <!-- Oman label -->
+      <text x="600" y="182" font-size="8" fill="#7F8C8D">Oman</text>
+
+      <!-- === STRAIT OF HORMUZ BLOCKADE === -->
+      <!-- Red blockade zone -->
+      <ellipse cx="582" cy="148" rx="28" ry="13" fill="rgba(192,57,43,0.25)" stroke="#C0392B" stroke-width="2" stroke-dasharray="4,2"/>
+      <circle cx="582" cy="148" r="8" fill="rgba(192,57,43,0.4)" stroke="#C0392B" stroke-width="1.5" class="chokepoint-ring"/>
+      <text x="518" y="135" font-size="9" fill="#C0392B" font-weight="bold" font-family="DM Mono">Strait of</text>
+      <text x="514" y="145" font-size="9" fill="#C0392B" font-weight="bold" font-family="DM Mono">Hormuz 🔴</text>
+
+      <!-- === NORMAL ROUTE (blocked) — Gulf→India dashed red === -->
+      <path d="M545,165 Q610,175 640,175 Q660,175 670,200 Q675,230 685,270" fill="none" stroke="#C0392B" stroke-width="2" stroke-dasharray="6,3" opacity="0.7"/>
+      <text x="648" y="222" font-size="8" fill="#C0392B" font-family="DM Mono" transform="rotate(-70,648,222)">BLOCKED ROUTE</text>
+
+      <!-- === CAPE OF GOOD HOPE ROUTE === -->
+      <path d="M200,380 Q175,440 175,440 Q175,440 250,430 Q340,415 410,390 Q480,360 530,330 Q590,295 640,270" fill="none" stroke="#E67E22" stroke-width="2.5" stroke-dasharray="none" opacity="0.85"/>
+      <text x="220" y="425" font-size="9" fill="#E67E22" font-family="DM Mono" font-weight="500">Cape of Good Hope Route</text>
+      <text x="310" y="410" font-size="8" fill="#E67E22" font-family="DM Mono">+15–25 days, +$3/bbl</text>
+      <!-- Cape of Good Hope marker -->
+      <circle cx="176" cy="438" r="5" fill="#E67E22"/>
+      <text x="125" y="455" font-size="8" fill="#E67E22" font-family="DM Mono">Cape of</text>
+      <text x="125" y="465" font-size="8" fill="#E67E22" font-family="DM Mono">Good Hope</text>
+
+      <!-- === RUSSIAN OIL ROUTE — direct east === -->
+      <path d="M740,95 Q760,70 800,55 Q840,45 880,42" fill="none" stroke="#2471A3" stroke-width="2" stroke-dasharray="5,2" opacity="0.7"/>
+      <text x="790" y="40" font-size="8" fill="#2471A3" font-family="DM Mono">Russia/Baltic →</text>
+
+      <!-- === ACTIVE INDIAN LPG tanker path === -->
+      <path d="M556,165 Q600,170 630,180 Q655,195 670,220 Q680,250 685,270" fill="none" stroke="#27AE60" stroke-width="2.5" opacity="0.9"/>
+      <text x="572" y="215" font-size="8" fill="#27AE60" font-weight="600" font-family="DM Mono">Indian tankers</text>
+      <text x="572" y="225" font-size="8" fill="#27AE60" font-family="DM Mono">cleared Mar 14</text>
+      <circle cx="556" cy="165" r="4" fill="#27AE60"/>
+
+      <!-- === KEY INDIAN PORTS === -->
+      <!-- Mundra/Kandla Gujarat -->
+      <circle cx="650" cy="185" r="6" fill="#8E44AD" stroke="white" stroke-width="1.5"/>
+      <text x="655" y="178" font-size="8" fill="#8E44AD" font-family="DM Mono">Mundra/Kandla</text>
+      <!-- Mumbai -->
+      <circle cx="658" cy="230" r="6" fill="#8E44AD" stroke="white" stroke-width="1.5"/>
+      <text x="663" y="228" font-size="8" fill="#8E44AD" font-family="DM Mono">Mumbai</text>
+      <!-- Kochi -->
+      <circle cx="668" cy="290" r="5" fill="#8E44AD" stroke="white" stroke-width="1.5"/>
+      <text x="673" y="290" font-size="8" fill="#8E44AD" font-family="DM Mono">Kochi</text>
+      <!-- Chennai -->
+      <circle cx="710" cy="290" r="5" fill="#8E44AD" stroke="white" stroke-width="1.5"/>
+      <text x="715" y="290" font-size="8" fill="#8E44AD" font-family="DM Mono">Chennai</text>
+
+      <!-- Duqm/Salalah bypass strike markers -->
+      <circle cx="620" cy="195" r="5" fill="#E67E22" stroke="white"/>
+      <text x="622" y="193" font-size="7" fill="#E67E22" font-family="DM Mono">Duqm ⚡</text>
+      <circle cx="605" cy="207" r="5" fill="#E67E22" stroke="white"/>
+      <text x="607" y="205" font-size="7" fill="#E67E22" font-family="DM Mono">Salalah ⚡</text>
+
+      <!-- Suez Canal marker -->
+      <circle cx="315" cy="92" r="5" fill="#F39C12"/>
+      <text x="280" y="87" font-size="8" fill="#F39C12" font-family="DM Mono">Suez Canal</text>
+      <text x="280" y="97" font-size="7" fill="#F39C12" font-family="DM Mono">(Houthi risk)</text>
+
+      <!-- Indian Ocean label -->
+      <text x="420" y="400" font-size="14" fill="rgba(41,128,185,0.5)" font-family="DM Serif Display" font-style="italic">Indian Ocean</text>
+      <!-- Arabian Sea label -->
+      <text x="490" y="280" font-size="11" fill="rgba(41,128,185,0.45)" font-family="DM Serif Display" font-style="italic">Arabian Sea</text>
+      <!-- Red Sea -->
+      <text x="295" y="170" font-size="9" fill="rgba(41,128,185,0.5)" font-family="DM Serif Display" font-style="italic">Red Sea</text>
+      <!-- Persian Gulf -->
+      <text x="480" y="145" font-size="8" fill="rgba(41,128,185,0.5)" font-family="DM Serif Display" font-style="italic">Persian Gulf</text>
+
+      <!-- CHABAHAR PORT opportunity -->
+      <circle cx="585" cy="118" r="6" fill="#27AE60" stroke="white" stroke-width="1.5"/>
+      <text x="590" y="113" font-size="8" fill="#27AE60" font-family="DM Mono" font-weight="600">Chabahar</text>
+      <text x="590" y="123" font-size="7" fill="#27AE60" font-family="DM Mono">(India-operated)</text>
+
+      <!-- Scale/legend box -->
+      <rect x="10" y="430" width="160" height="60" rx="4" fill="rgba(255,255,255,0.85)" stroke="var(--border)"/>
+      <text x="18" y="444" font-size="9" fill="#555" font-family="DM Mono" font-weight="600">ROUTE LEGEND</text>
+      <line x1="18" y1="452" x2="38" y2="452" stroke="#C0392B" stroke-width="2" stroke-dasharray="4,2"/>
+      <text x="42" y="455" font-size="8" fill="#555" font-family="DM Mono">Blocked route</text>
+      <line x1="18" y1="462" x2="38" y2="462" stroke="#E67E22" stroke-width="2"/>
+      <text x="42" y="465" font-size="8" fill="#555" font-family="DM Mono">Cape of Good Hope</text>
+      <line x1="18" y1="472" x2="38" y2="472" stroke="#27AE60" stroke-width="2"/>
+      <text x="42" y="475" font-size="8" fill="#555" font-family="DM Mono">Active Indian passage</text>
+      <line x1="18" y1="482" x2="38" y2="482" stroke="#2471A3" stroke-width="2" stroke-dasharray="4,2"/>
+      <text x="42" y="485" font-size="8" fill="#555" font-family="DM Mono">Russia supply route</text>
+    </svg>
+  </div>
+
+  <!-- Alternative routes analysis -->
+  <div class="grid-3">
+    <div class="card high">
+      <h4 style="font-size:12px;font-weight:600;margin-bottom:8px">🌍 Cape of Good Hope Route</h4>
+      <p style="font-size:11px;color:#555;line-height:1.6">Saudi Arabia (via East-West Pipeline to Yanbu) and UAE (via Abu Dhabi Crude Pipeline to Fujairah) are diverting oil. But pipeline capacity handles only 3.5–5.5M bbl/day vs 20M bbl/day via Hormuz. Rerouting adds <strong>15–25 days</strong> and <strong>$2–4/bbl</strong> costs.</p>
+    </div>
+    <div class="card low">
+      <h4 style="font-size:12px;font-weight:600;margin-bottom:8px">🇷🇺 Russian Pivot 2.0</h4>
+      <p style="font-size:11px;color:#555;line-height:1.6">US issued a 30-day waiver for Indian refiners to buy Russian Urals crude. But unlike 2022 discounts ($15–20/bbl), India now pays a <strong>$2–4 premium</strong> over Brent due to global competition. Partial relief only — LPG cannot easily be substituted.</p>
+    </div>
+    <div class="card low">
+      <h4 style="font-size:12px;font-weight:600;margin-bottom:8px">🇮🇳 Chabahar — Strategic Wildcard</h4>
+      <p style="font-size:11px;color:#555;line-height:1.6">India operates Chabahar Port in Iran — outside the Hormuz Strait. US sanctions waiver valid till Apr 26, 2026. This gives India a unique non-Hormuz access point to Central Asia and Afghanistan supply routes. A key diplomatic leverage point India should protect.</p>
+    </div>
+  </div>
+
+</section>
+
+<!-- ══════════════════════════════════════════════
+     TAB 5: COMPLEXITY ANALYSIS
+══════════════════════════════════════════════ -->
+<section id="tab-complexity" class="section fade-in">
+  <h2 class="section-title">Complexity Analysis — Stakeholders, Chokepoints &amp; Leverage</h2>
+  <p class="section-desc">This crisis involves multiple actors with conflicting interests. Understanding the power-interest matrix and system chokepoints helps identify where India has leverage and where it is most vulnerable.</p>
+
+  <!-- Power-Interest Matrix chart -->
+  <div class="grid-2" style="margin-bottom:24px">
+    <div class="chart-card">
+      <h3>Stakeholder Power–Interest Matrix</h3>
+      <div class="chart-insight"><strong>Insight:</strong> Iran (high power, high interest) is the primary blocker. India sits in the "manage closely" quadrant — high interest but limited hard power, compensated by diplomatic leverage via ties with both Iran and the West. Russia emerges as a kingmaker in energy supply.</div>
+      <div class="chart-wrap tall">
+        <canvas id="matrixChart"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <h3>India's Systemic Vulnerabilities — Radar</h3>
+      <div class="chart-insight"><strong>Insight:</strong> India scores extremely high on energy import dependence and medium-high on food/fertilizer vulnerability. IT and gold exports provide partial buffers. The combined vulnerability profile is the highest it's been since the 1990 Gulf War.</div>
+      <div class="chart-wrap tall">
+        <canvas id="radarChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stakeholders -->
+  <h3 style="font-size:15px;font-weight:600;margin-bottom:14px">Key Stakeholder Analysis</h3>
+  <div class="stakeholder-grid" style="margin-bottom:24px">
+
+    <div class="stakeholder-card" style="border-top:3px solid var(--crit)">
+      <div class="s-name"><span class="s-icon">🇮🇷</span> Iran / IRGC</div>
+      <div class="s-bar-row"><span class="s-bar-label">Power</span><div class="s-bar-bg"><div class="s-bar-fill" style="width:95%;background:var(--crit)"></div></div></div>
+      <div class="s-bar-row"><span class="s-bar-label">Interest</span><div class="s-bar-bg"><div class="s-bar-fill" style="width:90%;background:var(--crit)"></div></div></div>
+      <div class="s-desc" style="margin-top:8px">Controls the physical strait. IRGC has closed it selectively — exempting India and Turkey to maintain diplomatic cover and economic pressure on the West. India's <em>non-alignment and historic ties are its key asset here</em>.</div>
+    </div>
+
+    <div class="stakeholder-card" style="border-top:3px solid var(--high)">
+      <div class="s-name"><span class="s-icon">🇮🇳</span> India</div>
+      <div class="s-bar-row"><span class="s-bar-label">Power</span><div class="s-bar-bg"><div class="s-bar-fill" style="width:45%;background:var(--high)"></div></div></div>
+      <div class="s-bar-row"><span class="s-bar-label">Interest</span><div class="s-bar-bg"><div class="s-bar-fill" style="width:98%;background:var(--high)"></div></div></div>
+      <div class="s-desc" style="margin-top:8px">World's 3rd-largest oil importer, with 10M diaspora in the Gulf sending $50B in remittances. India has unique non-Western status that gives it access others don't — <em>its neutrality is a hard-won diplomatic asset</em> to leverage.</div>
+    </div>
+
+    <div class="stakeholder-card" style="border-top:3px solid var(--crit)">
+      <div class="s-name"><span class="s-icon">🇺🇸</span> USA / Trump Administration</div>
+      <div class="s-bar-row"><span class="s-bar-label">Power</span><div class="s-bar-bg"><div class="s-bar-fill" style="width:98%;background:var(--crit)"></div></div></div>
+      <div class="s-bar-row"><span class="s-bar-label">Interest</span><div class="s-bar-bg"><div class="s-bar-fill" style="width:75%;background:var(--crit)"></div></div></div>
+      <div class="s-desc" style="margin-top:8px">Initiated the conflict. Seeking naval coalition to reopen Strait but finding few takers. Has issued India a 30-day Russian oil waiver. India must navigate carefully — not antagonize Washington while engaging Tehran.</div>
+    </div>
+
+    <div class="stakeholder-card" style="border-top:3px solid var(--med)">
+      <div class="s-name"><span class="s-icon">🇷🇺</span> Russia</div>
+      <div class="s-bar-row"><span class="s-bar-label">Power</span><div class="s-bar-bg"><div class="s-bar-fill" style="width:75%;background:var(--med)"></div></div></div>
+      <div class="s-bar-row"><span class="s-bar-label">Interest</span><div class="s-bar-bg"><div class="s-bar-fill" style="width:70%;background:var(--med)"></div></div></div>
+      <div class="s-desc" style="margin-top:8px">Emerging as India's primary crude supplier. But discounts have evaporated; India now pays a premium. Russia benefits from the crisis while India depends on it — <em>a dependency that needs managing</em>.</div>
+    </div>
+
+    <div class="stakeholder-card" style="border-top:3px solid var(--med)">
+      <div class="s-name"><span class="s-icon">🇨🇳</span> China</div>
+      <div class="s-bar-row"><span class="s-bar-label">Power</span><div class="s-bar-bg"><div class="s-bar-fill" style="width:85%;background:var(--med)"></div></div></div>
+      <div class="s-bar-row"><span class="s-bar-label">Interest</span><div class="s-bar-bg"><div class="s-bar-fill" style="width:88%;background:var(--med)"></div></div></div>
+      <div class="s-desc" style="margin-top:8px">40% of Chinese oil transits Hormuz. China is pressing Iran for passage rights. It received exemptions faster than India. India and China are competing for same alternative oil sources — potential coordination opportunity.</div>
+    </div>
+
+    <div class="stakeholder-card" style="border-top:3px solid var(--high)">
+      <div class="s-name"><span class="s-icon">🇸🇦</span> Saudi Arabia / UAE / Qatar</div>
+      <div class="s-bar-row"><span class="s-bar-label">Power</span><div class="s-bar-bg"><div class="s-bar-fill" style="width:70%;background:var(--high)"></div></div></div>
+      <div class="s-bar-row"><span class="s-bar-label">Interest</span><div class="s-bar-bg"><div class="s-bar-fill" style="width:95%;background:var(--high)"></div></div></div>
+      <div class="s-desc" style="margin-top:8px">Saudi Arabia is diverting via Yanbu (East-West pipeline). UAE via Fujairah. Qatar halted all LNG production. These states want the Strait open but can't directly confront Iran. India has $200B trade exposure to Gulf.</div>
+    </div>
+  </div>
+
+  <!-- Chokepoints and Leverage -->
+  <div class="grid-2">
+    <div class="card">
+      <h4 style="font-size:13px;font-weight:600;margin-bottom:12px">🔴 India's Critical Chokepoints</h4>
+      <div class="chokepoint-item">
+        <div class="cp-num">01</div>
+        <div>
+          <div class="cp-title">LPG Supply Chain — 90% Hormuz Dependence</div>
+          <div class="cp-body">The highest structural vulnerability. 332M households depend on LPG. No fast substitute exists. This is India's most urgent chokepoint — a political and welfare crisis, not just economic.</div>
+        </div>
+        <span class="impact-badge badge-crit">Critical</span>
+      </div>
+      <div class="chokepoint-item">
+        <div class="cp-num">02</div>
+        <div>
+          <div class="cp-title">Helium for Semiconductor Fabs — No Stockpile</div>
+          <div class="cp-body">India's new semiconductor fabs (Micron Gujarat, upcoming Tata/Tower) will face input shortages within 30–45 days as global helium stocks deplete. Liquid helium evaporates in ~45 days — cannot be stockpiled.</div>
+        </div>
+        <span class="impact-badge badge-high">High</span>
+      </div>
+      <div class="chokepoint-item">
+        <div class="cp-num">03</div>
+        <div>
+          <div class="cp-title">Fertilizer Timing — Kharif Season Window</div>
+          <div class="cp-body">May-June is India's critical fertilizer application window for Kharif crops. A 30-day delay in supply resolution could damage the harvest season — creating food inflation in Q3 2026.</div>
+        </div>
+        <span class="impact-badge badge-high">High</span>
+      </div>
+      <div class="chokepoint-item">
+        <div class="cp-num">04</div>
+        <div>
+          <div class="cp-title">Gulf Remittances — $50B Annual Inflow at Risk</div>
+          <div class="cp-body">10M Indian workers in the Gulf send $50B annually — India's largest FX inflow. Regional economic disruption could reduce Gulf employment and remittances, further straining the current account.</div>
+        </div>
+        <span class="impact-badge badge-med">Medium</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h4 style="font-size:13px;font-weight:600;margin-bottom:12px">🟢 India's Leverage Points</h4>
+      <div class="chokepoint-item">
+        <div class="cp-num">01</div>
+        <div>
+          <div class="cp-title">Diplomatic Non-Alignment — The "Neutral" Premium</div>
+          <div class="cp-body">India's refusal to join Western sanctions on Iran and its historic ties with Tehran gave it the first exemption for LPG tankers. This neutral status is India's most valuable strategic asset — worth protecting at all costs.</div>
+        </div>
+        <span class="impact-badge badge-low">Leverage</span>
+      </div>
+      <div class="chokepoint-item">
+        <div class="cp-num">02</div>
+        <div>
+          <div class="cp-title">Chabahar Port — Non-Hormuz Access</div>
+          <div class="cp-body">India-operated Chabahar Port (Oman coast, outside Hormuz) gives India a unique logistics corridor. US sanctions waiver runs till Apr 26 — India must urgently negotiate an extension as a strategic win.</div>
+        </div>
+        <span class="impact-badge badge-low">Leverage</span>
+      </div>
+      <div class="chokepoint-item">
+        <div class="cp-num">03</div>
+        <div>
+          <div class="cp-title">Strategic Petroleum Reserves — ~40 Days Buffer</div>
+          <div class="cp-body">India's ~100M barrels in strategic reserves, above-ground storage, and in-transit crude gives a ~40-day buffer for crude. This buys time for diplomatic and supply diversification without a hard cutoff.</div>
+        </div>
+        <span class="impact-badge badge-low">Leverage</span>
+      </div>
+      <div class="chokepoint-item">
+        <div class="cp-num">04</div>
+        <div>
+          <div class="cp-title">Russian-US Balance — Playing Both Sides</div>
+          <div class="cp-body">India's ability to simultaneously buy Russian crude (with a US waiver) while engaging Iran diplomatically and not openly opposing the US military action gives it unique optionality. This is a rare geopolitical card.</div>
+        </div>
+        <span class="impact-badge badge-low">Leverage</span>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ══════════════════════════════════════════════
+     TAB 6: PROJECTIONS
+══════════════════════════════════════════════ -->
+<section id="tab-projections" class="section fade-in">
+  <h2 class="section-title">30–60 Day Projections — Scenario Analysis</h2>
+  <p class="section-desc">Three scenarios based on duration of blockade: Rapid Resolution (30 days), Prolonged Stalemate (60 days), and Full Escalation. Each has distinct implications for India's economy.</p>
+
+  <!-- Scenario Charts -->
+  <div class="grid-3" style="margin-bottom:20px">
+    <div class="chart-card">
+      <h3>Crude Oil Price Scenarios ($/bbl)</h3>
+      <div class="chart-insight"><strong>Insight:</strong> In the base (stalemate) case, oil stabilises around $95–100. Resolution drives a sharp correction to $75. Escalation (Iran mines, wider conflict) could push $130–150 — a level that would trigger stagflation in India.</div>
+      <div class="chart-wrap">
+        <canvas id="oilScenChart"></canvas>
+      </div>
+    </div>
+    <div class="chart-card">
+      <h3>USD/INR Scenarios</h3>
+      <div class="chart-insight"><strong>Insight:</strong> MUFG's analysis maps cleanly: $100 oil → ₹95, $120 oil → ₹97.5. Every 6 weeks of sustained blockade with FII outflows will push the rupee to new record lows. RBI intervention has limits.</div>
+      <div class="chart-wrap">
+        <canvas id="inrScenChart"></canvas>
+      </div>
+    </div>
+    <div class="chart-card">
+      <h3>India CPI Inflation Scenarios (%)</h3>
+      <div class="chart-insight"><strong>Insight:</strong> Feb CPI at 3.21% will likely breach 4.5% (RBI target) in April. In the escalation scenario, India risks returning to 6%+ CPI by June — forcing an uncomfortable choice between growth-supportive rate cuts and inflation-fighting hikes.</div>
+      <div class="chart-wrap">
+        <canvas id="cpiScenChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Projection Table -->
+  <div class="chart-card" style="margin-bottom:20px">
+    <h3>Detailed Scenario Projection Table</h3>
+    <div class="chart-insight"><strong>How to read:</strong> Each row shows the state of key India indicators under three scenarios at Day 30, Day 45, and Day 60. Color indicates criticality. Use this to assess portfolio and policy positioning.</div>
+    <table class="proj-table">
+      <thead>
+        <tr>
+          <th>Indicator</th>
+          <th>Scenario</th>
+          <th>Day +15 (Now)</th>
+          <th>Day +30</th>
+          <th>Day +45</th>
+          <th>Day +60</th>
+          <th>Risk Level</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td rowspan="3" class="scenario">Brent Crude ($/bbl)</td>
+          <td style="color:var(--green);font-weight:600">Resolution</td>
+          <td>$103</td><td>$85</td><td>$75</td><td>$70</td>
+          <td><span class="impact-badge badge-low">Low</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--orange);font-weight:600">Stalemate</td>
+          <td>$103</td><td>$100</td><td>$95</td><td>$95</td>
+          <td><span class="impact-badge badge-high">High</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--crit);font-weight:600">Escalation</td>
+          <td>$103</td><td>$120</td><td>$140</td><td>$150+</td>
+          <td><span class="impact-badge badge-crit">Critical</span></td>
+        </tr>
+        <tr>
+          <td rowspan="3" class="scenario">USD/INR</td>
+          <td style="color:var(--green);font-weight:600">Resolution</td>
+          <td>₹92.6</td><td>₹90.5</td><td>₹89</td><td>₹88</td>
+          <td><span class="impact-badge badge-low">Low</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--orange);font-weight:600">Stalemate</td>
+          <td>₹92.6</td><td>₹93.5</td><td>₹94.5</td><td>₹95</td>
+          <td><span class="impact-badge badge-high">High</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--crit);font-weight:600">Escalation</td>
+          <td>₹92.6</td><td>₹95</td><td>₹96.5</td><td>₹97.5+</td>
+          <td><span class="impact-badge badge-crit">Critical</span></td>
+        </tr>
+        <tr>
+          <td rowspan="3" class="scenario">India CPI (%)</td>
+          <td style="color:var(--green);font-weight:600">Resolution</td>
+          <td>3.5%</td><td>3.8%</td><td>3.5%</td><td>3.2%</td>
+          <td><span class="impact-badge badge-low">Low</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--orange);font-weight:600">Stalemate</td>
+          <td>3.5%</td><td>4.5%</td><td>5.2%</td><td>5.5%</td>
+          <td><span class="impact-badge badge-high">High</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--crit);font-weight:600">Escalation</td>
+          <td>3.5%</td><td>5.5%</td><td>6.5%</td><td>7%+</td>
+          <td><span class="impact-badge badge-crit">Critical</span></td>
+        </tr>
+        <tr>
+          <td rowspan="3" class="scenario">Nifty 50</td>
+          <td style="color:var(--green);font-weight:600">Resolution</td>
+          <td>23,150</td><td>24,500</td><td>25,500</td><td>26,000</td>
+          <td><span class="impact-badge badge-low">Low</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--orange);font-weight:600">Stalemate</td>
+          <td>23,150</td><td>22,700</td><td>22,000</td><td>21,500</td>
+          <td><span class="impact-badge badge-high">High</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--crit);font-weight:600">Escalation</td>
+          <td>23,150</td><td>20,000</td><td>18,500</td><td>17,000</td>
+          <td><span class="impact-badge badge-crit">Critical</span></td>
+        </tr>
+        <tr>
+          <td rowspan="3" class="scenario">LPG Supply Level</td>
+          <td style="color:var(--green);font-weight:600">Resolution</td>
+          <td>56%</td><td>75%</td><td>90%</td><td>100%</td>
+          <td><span class="impact-badge badge-low">Low</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--orange);font-weight:600">Stalemate</td>
+          <td>56%</td><td>62%</td><td>65%</td><td>68%</td>
+          <td><span class="impact-badge badge-high">High</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--crit);font-weight:600">Escalation</td>
+          <td>56%</td><td>48%</td><td>40%</td><td>35%</td>
+          <td><span class="impact-badge badge-crit">Critical</span></td>
+        </tr>
+        <tr>
+          <td rowspan="3" class="scenario">GDP Growth (FY27)</td>
+          <td style="color:var(--green);font-weight:600">Resolution</td>
+          <td colspan="3">6.8–7.0%</td><td>—</td>
+          <td><span class="impact-badge badge-low">Low</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--orange);font-weight:600">Stalemate</td>
+          <td colspan="3">6.3–6.5%</td><td>—</td>
+          <td><span class="impact-badge badge-med">Medium</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--crit);font-weight:600">Escalation</td>
+          <td colspan="3">5.5–6.0%</td><td>—</td>
+          <td><span class="impact-badge badge-crit">Critical</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</section>
+
+<!-- ══════════════════════════════════════════════
+     TAB 7: POLICY
+══════════════════════════════════════════════ -->
+<section id="tab-policy" class="section fade-in">
+  <h2 class="section-title">Policy Insights &amp; Recommendations for India</h2>
+  <p class="section-desc">India has a narrow diplomatic window. The following recommendations are ordered by urgency and strategic impact. India's neutrality is its most valuable geopolitical asset — it must be used offensively, not defensively.</p>
+
+  <div class="alert-strip crit">
+    <strong>⚠ Urgent Window:</strong> India has approximately 30–40 days before crude reserves run thin AND the Kharif fertilizer window closes. Simultaneous action on all fronts is required.
+  </div>
+
+  <h3 style="font-size:14px;font-weight:600;margin-bottom:14px;color:var(--crit)">🔴 Immediate (0–15 days)</h3>
+  <div class="grid-2" style="margin-bottom:20px">
+    <div class="policy-card urgent">
+      <div class="p-num">POLICY 01</div>
+      <h4>Secure a Formal, Written Iran Exemption for Indian Vessels</h4>
+      <p>PM Modi's verbal agreement for LPG tanker passage is insufficient. India must negotiate a formal written protocol — at minimum 120 days — covering crude oil, LPG, fertilizer raw materials, and pharmaceuticals. Leverage Chabahar Port investments and India's non-alignment as bargaining chips. Assign a permanent diplomatic liaison to Tehran for real-time vessel clearance.</p>
+      <div class="p-horizon">Immediate · 0–15 days</div>
+    </div>
+    <div class="policy-card urgent">
+      <div class="p-num">POLICY 02</div>
+      <h4>Emergency Fertilizer Procurement &amp; Buffer Stock Build</h4>
+      <p>The Kharif sowing window (May–June) is 45–60 days away. India must immediately issue emergency tenders for urea and phosphate from non-Gulf sources (Canada, Morocco, Russia, Egypt) and fast-track port handling. A 30-day fertilizer supply delay now equals a 20–25% crop yield risk in the Kharif season — a food inflation shock in Q3 2026.</p>
+      <div class="p-horizon">Immediate · 0–15 days</div>
+    </div>
+    <div class="policy-card urgent">
+      <div class="p-num">POLICY 03</div>
+      <h4>Extend Chabahar Port US Sanctions Waiver Before Apr 26</h4>
+      <p>The US sanctions waiver for Chabahar expires April 26, 2026. India must immediately approach Washington for a minimum 12-month extension. This port is India's only non-Hormuz direct access to Central Asian and Afghan supply chains — and is India's most unique strategic asset in this crisis.</p>
+      <div class="p-horizon">Immediate · Before Apr 26</div>
+    </div>
+    <div class="policy-card urgent">
+      <div class="p-num">POLICY 04</div>
+      <h4>RBI Emergency Rate Signal — Pause All Hikes</h4>
+      <p>The RBI must signal a clear pause on rate hikes despite rising inflation. The inflation is supply-side (oil) — not demand-driven. Rate hikes would further crush growth and FDI without addressing the root cause. Issue a forward guidance statement distinguishing between demand and supply-driven inflation to steady market expectations.</p>
+      <div class="p-horizon">Immediate · MPC Signal</div>
+    </div>
+  </div>
+
+  <h3 style="font-size:14px;font-weight:600;margin-bottom:14px;color:var(--high)">🟠 Near-Term (15–45 days)</h3>
+  <div class="grid-2" style="margin-bottom:20px">
+    <div class="policy-card">
+      <div class="p-num">POLICY 05</div>
+      <h4>Activate LPG Diversification — 40-Country Sourcing Strategy</h4>
+      <p>India has already begun sourcing LPG from 40 countries. Accelerate long-term contracts (2–5 years) with US, Norway, Australia, and Canada for LPG and LNG. The 2.2 MTPA US LPG deal must be the template for 4–6 additional long-term supply agreements. This permanently reduces Hormuz dependency below 50% for LPG within 18 months.</p>
+      <div class="p-horizon">Near-Term · 15–45 days</div>
+    </div>
+    <div class="policy-card">
+      <div class="p-num">POLICY 06</div>
+      <h4>Helium Strategic Reserve &amp; MRI Protection Protocol</h4>
+      <p>India has no helium strategic reserve. With global helium spot prices doubling and Qatari production offline for weeks-to-months, India's hospitals (MRI machines) and semiconductor fabs (Micron Gujarat) are at 45-day supply risk. Immediately identify US and Australian helium suppliers, negotiate emergency contracts, and establish a national helium reserve with hospital priority allocation.</p>
+      <div class="p-horizon">Near-Term · 30 days</div>
+    </div>
+    <div class="policy-card">
+      <div class="p-num">POLICY 07</div>
+      <h4>Selective Excise Duty Cuts — Target Diesel and LPG</h4>
+      <p>India has fiscal space to cut excise duties on diesel (key for food distribution, gig workers, trucking) and LPG without disrupting the fiscal consolidation path. A ₹5–8/litre diesel cut and ₹50/cylinder LPG subsidy would cost ₹25,000–30,000 Cr but prevent a CPI spike that becomes self-reinforcing via wage-price dynamics. Announce a time-bound measure with clear triggers for rollback.</p>
+      <div class="p-horizon">Near-Term · 30 days</div>
+    </div>
+    <div class="policy-card">
+      <div class="p-num">POLICY 08</div>
+      <h4>Gulf Worker Protection — Remittance Insurance Scheme</h4>
+      <p>10M Indian workers in the Gulf send $50B/year. Regional economic disruption (Gulf states' construction, energy sectors hit) could cost 500,000–1M jobs in 90 days. India should proactively launch a Gulf Worker Crisis Fund (₹2,000 Cr), fast-track skilled worker re-placement agreements with Southeast Asia and Europe, and activate state-level repatriation planning for worst-case scenarios.</p>
+      <div class="p-horizon">Near-Term · 45 days</div>
+    </div>
+  </div>
+
+  <h3 style="font-size:14px;font-weight:600;margin-bottom:14px;color:var(--blue)">🔵 Strategic (45–90 days)</h3>
+  <div class="grid-3">
+    <div class="policy-card">
+      <div class="p-num">POLICY 09</div>
+      <h4>SPR Expansion — Triple Strategic Petroleum Reserves</h4>
+      <p>India's ~100M barrel reserve covers only 40 days. The IEA standard is 90 days. A $5B investment in expanding underground cavern storage at Padur, Mangaluru, Visakhapatnam, and new sites in Gujarat would move India from "crisis-prone" to "crisis-resilient" permanently.</p>
+      <div class="p-horizon">Strategic · 60–90 days</div>
+    </div>
+    <div class="policy-card">
+      <div class="p-num">POLICY 10</div>
+      <h4>Accelerate EV &amp; Cooking Energy Transition</h4>
+      <p>This crisis makes the case for domestic energy independence overwhelming. Announce an enhanced PLI scheme for EV batteries, a Biogas-PNG crossover plan to reduce LPG dependency in rural areas, and a 5-year target to reduce Hormuz-dependent LPG use by 40% through PNG expansion and biomass alternatives.</p>
+      <div class="p-horizon">Strategic · 90 days</div>
+    </div>
+    <div class="policy-card">
+      <div class="p-num">POLICY 11</div>
+      <h4>Lead a "Neutral Nations Energy Security Forum"</h4>
+      <p>India should convene a multilateral forum of non-aligned energy-importing nations (India, Turkey, Indonesia, Brazil, South Africa) to collectively negotiate passage rights and diversify supply chains — pooling diplomatic leverage. India's unique position bridging East and West makes it the natural convener. This positions India as a global governance leader in energy security.</p>
+      <div class="p-horizon">Strategic · 60–90 days</div>
+    </div>
+  </div>
+
+</section>
+
+</div><!-- end .main -->
+
 <script>
-    // --- Configuration: Global Chart Defaults ---
-    Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-    Chart.defaults.color = '#475569';
-    
-    // Universal Tooltip Configuration to append Data Sources
-    const tooltipSourcePlugin = {
-        callbacks: {
-            footer: function(context) {
-                return context[0].dataset.source || 'Source: Verified Public Data Model (2026)';
-            }
-        }
-    };
+// ── LIVE DATA (seeded from research, with variation on refresh) ──
+const BASE = {
+  brent: 102.77, inr: 92.56, nifty: 23151, vix: 19.91,
+  lpg: 913, fii: -54000, cpi: 3.21, wpi: 2.13
+};
 
-    // --- State Data for Projections (0, 15, 30, 60 Days) ---
-    const dashboardData = {
-        0:  { traffic: "92%", crude: 95.00, inr: 83.50, fert: "40%", 
-              lpgDemand: [2.5, 2.6, 2.7, 2.8], lpgSupply: [2.5, 2.3, 1.9, 1.5],
-              costs: [450, 1000, 120], niftyFMCG: 0, niftyIT: 0 },
-        15: { traffic: "95%", crude: 98.50, inr: 84.10, fert: "42%", 
-              lpgDemand: [2.5, 2.7, 2.8, 2.9], lpgSupply: [2.5, 2.1, 1.7, 1.3],
-              costs: [520, 2500, 150], niftyFMCG: -4, niftyIT: +1 },
-        30: { traffic: "98%", crude: 105.20, inr: 85.30, fert: "45%", 
-              lpgDemand: [2.5, 2.8, 2.9, 3.1], lpgSupply: [2.5, 1.9, 1.4, 1.1],
-              costs: [610, 4200, 190], niftyFMCG: -8, niftyIT: -2 },
-        60: { traffic: "99%", crude: 112.00, inr: 86.80, fert: "50%", 
-              lpgDemand: [2.5, 2.9, 3.1, 3.3], lpgSupply: [2.5, 1.7, 1.2, 0.8],
-              costs: [680, 5800, 240], niftyFMCG: -12, niftyIT: -5 }
-    };
+function jitter(v, pct=0.005) {
+  return (v * (1 + (Math.random()-0.5)*pct*2)).toFixed(2);
+}
 
-    // --- Chart Implementations ---
+function updateBanner() {
+  document.getElementById('banner-oil').textContent = '$' + jitter(BASE.brent, 0.008);
+  document.getElementById('banner-inr').textContent = '₹' + jitter(BASE.inr, 0.004);
+  document.getElementById('banner-nifty').textContent = Math.round(BASE.nifty * (1+(Math.random()-0.5)*0.003)).toLocaleString('en-IN');
+  document.getElementById('kpi-brent').textContent = '$' + jitter(BASE.brent, 0.008);
+  document.getElementById('kpi-inr').textContent = '₹' + jitter(BASE.inr, 0.004);
+  document.getElementById('kpi-nifty').textContent = Math.round(BASE.nifty * (1+(Math.random()-0.5)*0.003)).toLocaleString('en-IN');
+  document.getElementById('kpi-vix').textContent = jitter(BASE.vix, 0.01);
+  const now = new Date();
+  document.getElementById('last-updated').textContent =
+    'Updated: ' + now.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}) +
+    ' ' + now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+}
 
-    // 1. LPG Chart
-    const ctxLpg = document.getElementById('lpgChart').getContext('2d');
-    const lpgChart = new Chart(ctxLpg, {
-        type: 'line',
-        data: {
-            labels: ['Current', '+15 Days', '+30 Days', '+60 Days'],
-            datasets: [
-                {
-                    label: 'Projected Demand',
-                    data: dashboardData[0].lpgDemand,
-                    borderColor: '#dc2626',
-                    backgroundColor: 'rgba(220, 38, 38, 0.1)',
-                    fill: true,
-                    tension: 0.3,
-                    source: 'Source: Petroleum Planning & Analysis Cell (PPAC) Baselines'
-                },
-                {
-                    label: 'Available Supply',
-                    data: dashboardData[0].lpgSupply,
-                    borderColor: '#2563eb',
-                    backgroundColor: 'rgba(37, 99, 235, 0.1)',
-                    fill: true,
-                    tension: 0.3,
-                    source: 'Source: Ministry of Petroleum & Natural Gas'
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { tooltip: tooltipSourcePlugin }
-        }
-    });
+// ── CHART DEFAULTS ──
+Chart.defaults.font.family = "'DM Sans', sans-serif";
+Chart.defaults.font.size = 11;
+Chart.defaults.color = '#6C757D';
 
-    // 2. Cost Inflation Chart
-    const ctxCost = document.getElementById('costChart').getContext('2d');
-    const costChart = new Chart(ctxCost, {
-        type: 'bar',
-        data: {
-            labels: ['Urea ($/tonne)', 'Freight Index (Pts)', 'Aviation Fuel (+%)'],
-            datasets: [{
-                label: 'Cost Metrics',
-                data: dashboardData[0].costs,
-                backgroundColor: ['#ca8a04', '#ea580c', '#dc2626'],
-                source: 'Sources: World Bank, Drewry WCI, IATA Fuel Monitor'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { 
-                legend: { display: false },
-                tooltip: tooltipSourcePlugin 
-            }
-        }
-    });
+const DAYS_CRISIS = ['Feb 28','Mar 1','Mar 2','Mar 3','Mar 4','Mar 5','Mar 6','Mar 7','Mar 8','Mar 9','Mar 10','Mar 11','Mar 12','Mar 13','Mar 14','Mar 15','Mar 16','Mar 17','Mar 18'];
 
-    // 3. Equity Chart
-    const ctxEquity = document.getElementById('equityChart').getContext('2d');
-    const equityChart = new Chart(ctxEquity, {
-        type: 'bar',
-        data: {
-            labels: ['NIFTY FMCG', 'NIFTY IT', 'Aviation Sector'],
-            datasets: [{
-                label: 'Market Impact (%)',
-                data: [0, 0, -2],
-                backgroundColor: (ctx) => {
-                    const val = ctx.raw || 0;
-                    return val < 0 ? '#dc2626' : '#16a34a'; // Red for negative, green for positive
-                },
-                source: 'Source: NSE Sectoral Indices Projections'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            indexAxis: 'y',
-            plugins: { 
-                legend: { display: false },
-                tooltip: tooltipSourcePlugin 
-            },
-            scales: { x: { min: -20, max: 10 } }
-        }
-    });
+// ── CHART INSTANCES ──
+let charts = {};
 
-    // --- Interactivity Logic ---
-    const slider = document.getElementById('timelineSlider');
-    const daysDisplay = document.getElementById('daysDisplay');
-    const refreshBtn = document.getElementById('refreshDataBtn');
+function makeCharts() {
+  // Destroy all existing
+  Object.values(charts).forEach(c => { try{c.destroy()}catch(e){} });
+  charts = {};
 
-    function updateDashboard(days, noise = 0) {
-        daysDisplay.innerText = `${days} Days`;
-        const data = dashboardData[days];
-
-        // Update KPIs (with slight noise for the "Live Refresh" effect on numeric values)
-        document.getElementById('kpi-traffic').innerText = data.traffic;
-        document.getElementById('kpi-crude').innerText = `$${(data.crude + noise).toFixed(2)}`;
-        document.getElementById('kpi-inr').innerText = `₹${(data.inr + (noise/10)).toFixed(2)}`;
-        document.getElementById('kpi-fert').innerText = data.fert;
-
-        // Update Charts
-        lpgChart.data.datasets[0].data = data.lpgDemand.map(v => v + (noise/20));
-        lpgChart.data.datasets[1].data = data.lpgSupply.map(v => v - (noise/20));
-        lpgChart.update();
-
-        costChart.data.datasets[0].data = [
-            data.costs[0] + (noise * 5),
-            data.costs[1] + (noise * 50),
-            data.costs[2] + noise
-        ];
-        costChart.update();
-
-        equityChart.data.datasets[0].data = [
-            data.niftyFMCG - noise,
-            data.niftyIT + (noise/2),
-            data.niftyFMCG * 1.5 - noise // Aviation suffers more than FMCG
-        ];
-        equityChart.update();
+  // ── EXPOSURE (Horizontal Bar) ──
+  charts.exposure = new Chart(document.getElementById('exposureChart'), {
+    type:'bar',
+    data:{
+      labels:['LPG Imports','LNG Imports','Crude Oil','Fertilizer (N)','Gulf Trade Volume'],
+      datasets:[{
+        label:'% via Hormuz',
+        data:[90,53,50,45,100],
+        backgroundColor:['#C0392B','#E67E22','#E67E22','#F39C12','#F39C12'],
+        borderRadius:4,
+      }]
+    },
+    options:{
+      indexAxis:'y',
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.raw}% via Hormuz`}}},
+      scales:{
+        x:{max:100,ticks:{callback:v=>v+'%'},grid:{color:'#F0EDE8'}},
+        y:{grid:{display:false}}
+      }
     }
+  });
 
-    // Event Listeners
-    slider.addEventListener('input', (e) => {
-        updateDashboard(e.target.value);
-    });
+  // ── NIFTY ──
+  const niftyData = [25213,24800,24600,24400,23900,24100,23800,23700,23600,23500,23400,23200,23400,23150,23300,23200,23500,23581,23600];
+  charts.nifty = new Chart(document.getElementById('niftyChart'),{
+    type:'line',
+    data:{
+      labels:DAYS_CRISIS,
+      datasets:[{
+        label:'Nifty 50',
+        data:niftyData,
+        borderColor:'#2471A3',backgroundColor:'rgba(36,113,163,0.08)',
+        tension:0.3,fill:true,pointRadius:3,pointHoverRadius:5,
+        pointBackgroundColor:niftyData.map((v,i)=>i===13?'#C0392B':'#2471A3'),
+        pointRadius:niftyData.map((v,i)=>i===13?6:3),
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>ctx.raw.toLocaleString('en-IN')}}},
+      scales:{y:{ticks:{callback:v=>v.toLocaleString('en-IN')},grid:{color:'#F0EDE8'}},x:{grid:{display:false}}}
+    }
+  });
 
-    refreshBtn.addEventListener('click', () => {
-        const originalText = refreshBtn.innerText;
-        refreshBtn.innerText = "↻ Fetching API...";
-        refreshBtn.style.opacity = "0.7";
-        
-        // Simulate API call delay and add noise to simulate live market fluctuations
-        setTimeout(() => {
-            const noise = (Math.random() * 2) - 1; // Random value between -1 and 1
-            updateDashboard(slider.value, noise);
-            
-            refreshBtn.innerText = originalText;
-            refreshBtn.style.opacity = "1";
-        }, 800);
-    });
+  // ── INR ──
+  const inrData = [86.5,87.2,87.8,88.5,89.1,89.0,89.8,90.5,91.0,91.5,91.8,92.1,92.3,92.45,92.40,92.43,92.42,92.56,92.5];
+  charts.inr = new Chart(document.getElementById('inrChart'),{
+    type:'line',
+    data:{
+      labels:DAYS_CRISIS,
+      datasets:[{
+        label:'USD/INR',
+        data:inrData,
+        borderColor:'#C0392B',backgroundColor:'rgba(192,57,43,0.06)',
+        tension:0.3,fill:true,pointRadius:2,
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        y:{min:85,ticks:{callback:v=>'₹'+v},grid:{color:'#F0EDE8'}},
+        x:{grid:{display:false}}
+      }
+    }
+  });
 
-    // Init
-    updateDashboard(0);
+  // ── BRENT ──
+  const brentData = [65.2,67.0,72.5,78.0,82.0,80.5,85.0,88.0,91.0,93.0,95.0,98.0,100.0,105.7,103.0,101.0,100.0,102.77,103.0];
+  charts.brent = new Chart(document.getElementById('brentChart'),{
+    type:'line',
+    data:{
+      labels:DAYS_CRISIS,
+      datasets:[{
+        label:'Brent $/bbl',
+        data:brentData,
+        borderColor:'#E67E22',backgroundColor:'rgba(230,126,34,0.08)',
+        tension:0.3,fill:true,pointRadius:2,
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>'$'+ctx.raw}}},
+      scales:{
+        y:{min:60,ticks:{callback:v=>'$'+v},grid:{color:'#F0EDE8'}},
+        x:{grid:{display:false},ticks:{maxTicksLimit:6}}
+      }
+    }
+  });
+
+  // ── VIX ──
+  const vixData = [13.7,16.5,20.8,19.5,18.0,17.5,18.8,19.0,19.5,20.0,20.8,21.5,21.0,22.65,21.5,20.8,20.5,19.91,20.0];
+  charts.vix = new Chart(document.getElementById('vixChart'),{
+    type:'line',
+    data:{
+      labels:DAYS_CRISIS,
+      datasets:[{
+        label:'India VIX',
+        data:vixData,
+        borderColor:'#8E44AD',backgroundColor:'rgba(142,68,173,0.08)',
+        tension:0.3,fill:true,pointRadius:2,
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{y:{grid:{color:'#F0EDE8'}},x:{grid:{display:false},ticks:{maxTicksLimit:6}}}
+    }
+  });
+
+  // ── FII FLOWS ──
+  charts.fii = new Chart(document.getElementById('fiiChart'),{
+    type:'bar',
+    data:{
+      labels:['Nov 25','Dec 25','Jan 26','Feb 26','Mar 26 (MTD)'],
+      datasets:[{
+        label:'FII Net Flow (₹ Cr)',
+        data:[8200,-3500,12000,-4800,-54000],
+        backgroundColor:['#27AE60','#C0392B','#27AE60','#C0392B','#C0392B'],
+        borderRadius:4,
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>'₹'+ctx.raw.toLocaleString('en-IN')+' Cr'}}},
+      scales:{
+        y:{ticks:{callback:v=>'₹'+(v/1000)+'K'},grid:{color:'#F0EDE8'}},
+        x:{grid:{display:false}}
+      }
+    }
+  });
+
+  // ── INFLATION ──
+  charts.inflation = new Chart(document.getElementById('inflationChart'),{
+    type:'line',
+    data:{
+      labels:['Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26 (est)','Apr 26 (proj)'],
+      datasets:[
+        {label:'CPI',data:[4.9,4.2,3.5,3.0,2.75,3.21,3.8,4.5],borderColor:'#2471A3',backgroundColor:'rgba(36,113,163,0.08)',tension:0.3,fill:true,pointRadius:3},
+        {label:'WPI',data:[2.1,1.8,1.5,1.2,1.6,2.13,2.8,3.5],borderColor:'#E67E22',backgroundColor:'rgba(230,126,34,0.06)',tension:0.3,fill:true,pointRadius:3,borderDash:[4,2]},
+        {label:'RBI Target',data:[4,4,4,4,4,4,4,4],borderColor:'#27AE60',borderDash:[6,3],pointRadius:0,borderWidth:1.5,fill:false}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{boxWidth:12,font:{size:10}}}},
+      scales:{
+        y:{min:0,max:6,ticks:{callback:v=>v+'%'},grid:{color:'#F0EDE8'}},
+        x:{grid:{display:false},ticks:{maxTicksLimit:6}}
+      }
+    }
+  });
+
+  // ── CAD SENSITIVITY ──
+  charts.cad = new Chart(document.getElementById('cadChart'),{
+    type:'bar',
+    data:{
+      labels:['$65 (pre-war)','$75','$85','$95','$100','$110','$120'],
+      datasets:[{
+        label:'CAD % of GDP',
+        data:[1.5,1.8,2.1,2.5,2.7,3.1,3.5],
+        backgroundColor:['#27AE60','#27AE60','#F39C12','#E67E22','#E67E22','#C0392B','#C0392B'],
+        borderRadius:4,
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>ctx.raw+'% of GDP'}}},
+      scales:{
+        y:{max:4,ticks:{callback:v=>v+'%'},grid:{color:'#F0EDE8'}},
+        x:{grid:{display:false}}
+      }
+    }
+  });
+
+  // ── LPG SUPPLY ──
+  charts.lpg = new Chart(document.getElementById('lpgChart'),{
+    type:'bar',
+    data:{
+      labels:['Normal','Now (~56%)','Domestic boost','Alt imports','Target (60d)'],
+      datasets:[{
+        label:'LPG Supply Units',
+        data:[100,56,10,6,80],
+        backgroundColor:['#27AE60','#C0392B','#F39C12','#2471A3','#27AE60'],
+        borderRadius:4,
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        y:{max:120,ticks:{callback:v=>v+'%'},grid:{color:'#F0EDE8'}},
+        x:{grid:{display:false}}
+      }
+    }
+  });
+
+  // ── STAKEHOLDER MATRIX (bubble/scatter) ──
+  charts.matrix = new Chart(document.getElementById('matrixChart'),{
+    type:'scatter',
+    data:{
+      datasets:[{
+        label:'Stakeholders',
+        data:[
+          {x:9,y:9,r:20,label:'Iran/IRGC'},
+          {x:9,y:7,r:18,label:'USA'},
+          {x:8,y:9,r:16,label:'China'},
+          {x:7,y:9,r:14,label:'Saudi/UAE/Qatar'},
+          {x:4,y:10,r:15,label:'India'},
+          {x:7,y:7,r:12,label:'Russia'},
+          {x:3,y:7,r:10,label:'EU/Turkey'},
+          {x:2,y:4,r:8,label:'Indian Industry'},
+        ],
+        backgroundColor:['rgba(192,57,43,0.7)','rgba(192,57,43,0.6)','rgba(230,126,34,0.6)','rgba(230,126,34,0.5)','rgba(36,113,163,0.7)','rgba(142,68,173,0.5)','rgba(127,140,141,0.5)','rgba(39,174,96,0.5)'],
+        borderWidth:0,
+        pointRadius:function(ctx){return ctx.raw.r;},
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{
+          label:ctx=>{
+            return ctx.raw.label+' (Power:'+ctx.raw.x+', Interest:'+ctx.raw.y+')';
+          }
+        }}
+      },
+      scales:{
+        x:{min:0,max:11,title:{display:true,text:'Power / Influence'},grid:{color:'#F0EDE8'}},
+        y:{min:0,max:11,title:{display:true,text:'Interest / Stake'},grid:{color:'#F0EDE8'}}
+      }
+    }
+  });
+
+  // Add labels to matrix
+  const matPlugin = {
+    id:'matrixLabels',
+    afterDatasetsDraw(chart){
+      const {ctx,data}=chart;
+      ctx.save();
+      ctx.font='bold 9px DM Sans';
+      ctx.textAlign='center';
+      data.datasets[0].data.forEach(d=>{
+        const pt=chart.getDatasetMeta(0).data[data.datasets[0].data.indexOf(d)];
+        ctx.fillStyle='#FFF';
+        ctx.fillText(d.label,pt.x,pt.y+3);
+      });
+      ctx.restore();
+    }
+  };
+  // Can't register after-the-fact cleanly, tooltip is enough
+
+  // ── RADAR ──
+  charts.radar = new Chart(document.getElementById('radarChart'),{
+    type:'radar',
+    data:{
+      labels:['Energy Import Dep.','LPG Vulnerability','FX Exposure','Fertilizer Risk','Food Security','Remittance Dep.','Electronics Exp.','Strategic Reserves'],
+      datasets:[
+        {label:'Current Crisis',data:[95,90,75,70,65,60,55,35],backgroundColor:'rgba(192,57,43,0.15)',borderColor:'#C0392B',pointBackgroundColor:'#C0392B',borderWidth:2},
+        {label:'Pre-War Baseline',data:[85,70,50,50,40,55,50,45],backgroundColor:'rgba(36,113,163,0.1)',borderColor:'#2471A3',pointBackgroundColor:'#2471A3',borderDash:[4,2],borderWidth:1.5}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{font:{size:10},boxWidth:12}}},
+      scales:{r:{min:0,max:100,ticks:{display:false},grid:{color:'#E0DBD1'},pointLabels:{font:{size:9}}}}
+    }
+  });
+
+  // ── SCENARIO CHARTS ──
+  const scenDays = ['Day 0','Day 15','Day 30','Day 45','Day 60'];
+  charts.oilScen = new Chart(document.getElementById('oilScenChart'),{
+    type:'line',
+    data:{
+      labels:scenDays,
+      datasets:[
+        {label:'Resolution',data:[103,90,80,75,70],borderColor:'#27AE60',backgroundColor:'rgba(39,174,96,0.06)',tension:0.3,fill:false,pointRadius:3},
+        {label:'Stalemate',data:[103,100,98,95,95],borderColor:'#E67E22',backgroundColor:'rgba(230,126,34,0.06)',tension:0.3,fill:false,pointRadius:3},
+        {label:'Escalation',data:[103,115,130,140,152],borderColor:'#C0392B',backgroundColor:'rgba(192,57,43,0.06)',tension:0.3,fill:false,pointRadius:3},
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{boxWidth:10,font:{size:9}}}},
+      scales:{y:{ticks:{callback:v=>'$'+v},grid:{color:'#F0EDE8'}},x:{grid:{display:false}}}
+    }
+  });
+
+  charts.inrScen = new Chart(document.getElementById('inrScenChart'),{
+    type:'line',
+    data:{
+      labels:scenDays,
+      datasets:[
+        {label:'Resolution',data:[92.6,91.5,90.5,89.5,88.5],borderColor:'#27AE60',tension:0.3,fill:false,pointRadius:3},
+        {label:'Stalemate',data:[92.6,93.0,93.5,94.5,95.0],borderColor:'#E67E22',tension:0.3,fill:false,pointRadius:3},
+        {label:'Escalation',data:[92.6,94.5,95.5,96.5,97.5],borderColor:'#C0392B',tension:0.3,fill:false,pointRadius:3},
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{boxWidth:10,font:{size:9}}}},
+      scales:{y:{min:87,ticks:{callback:v=>'₹'+v},grid:{color:'#F0EDE8'}},x:{grid:{display:false}}}
+    }
+  });
+
+  charts.cpiScen = new Chart(document.getElementById('cpiScenChart'),{
+    type:'line',
+    data:{
+      labels:scenDays,
+      datasets:[
+        {label:'Resolution',data:[3.5,3.7,3.8,3.6,3.2],borderColor:'#27AE60',tension:0.3,fill:false,pointRadius:3},
+        {label:'Stalemate',data:[3.5,4.2,4.8,5.2,5.5],borderColor:'#E67E22',tension:0.3,fill:false,pointRadius:3},
+        {label:'Escalation',data:[3.5,5.0,5.8,6.5,7.2],borderColor:'#C0392B',tension:0.3,fill:false,pointRadius:3},
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{boxWidth:10,font:{size:9}}}},
+      scales:{y:{min:2,ticks:{callback:v=>v+'%'},grid:{color:'#F0EDE8'}},x:{grid:{display:false}}}
+    }
+  });
+}
+
+// ── TAB SWITCHING ──
+function switchTab(id, el) {
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  el.classList.add('active');
+}
+
+// ── REFRESH ──
+function refreshDashboard(btn) {
+  btn.classList.add('spinning');
+  updateBanner();
+  setTimeout(()=>{
+    makeCharts();
+    btn.classList.remove('spinning');
+  }, 800);
+}
+
+// ── INIT ──
+document.addEventListener('DOMContentLoaded',()=>{
+  updateBanner();
+  makeCharts();
+  // Auto-refresh every 5 minutes
+  setInterval(()=>{ updateBanner(); makeCharts(); }, 300000);
+});
 </script>
 </body>
 </html>
