@@ -509,6 +509,115 @@
     .stmt-badges { margin-top: 4px; }
   }
 
+
+  /* ── DATA TOOLTIP (source hover) ── */
+  .data-tip {
+    position: relative; display: inline; cursor: help;
+    border-bottom: 1px dotted var(--blue);
+    color: inherit;
+  }
+  .data-tip::after {
+    content: attr(data-src);
+    display: none; position: absolute; bottom: 130%; left: 50%;
+    transform: translateX(-50%);
+    background: var(--slate); color: white; font-size: 10px;
+    border-radius: 5px; padding: 6px 10px; white-space: normal;
+    z-index: 999; box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+    min-width: 200px; max-width: 340px; line-height: 1.4;
+    font-family: 'DM Sans', sans-serif; font-weight: 400;
+    pointer-events: none;
+  }
+  .data-tip:hover::after { display: block; }
+
+  /* ── INSIGHT LABEL ── */
+  .insight-label {
+    display: inline-block; font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.6px;
+    color: var(--blue); margin-bottom: 4px;
+  }
+  .rationale-box {
+    background: #F0F7FF; border-left: 3px solid #2471A3;
+    border-radius: 0 5px 5px 0; padding: 8px 11px;
+    font-size: 11px; line-height: 1.55; color: #1A3A5C;
+    margin-top: 8px;
+  }
+  .rationale-box strong { color: var(--ink); }
+
+  /* ── INTERACTIVE SCENARIO CONTROLS ── */
+  .scenario-controls {
+    background: white; border: 1px solid var(--border); border-radius: 10px;
+    padding: 16px 20px; margin-bottom: 20px;
+    display: flex; gap: 20px; align-items: center; flex-wrap: wrap;
+  }
+  .scenario-controls label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  .scenario-select {
+    padding: 7px 14px; border: 1px solid var(--border); border-radius: 6px;
+    font-family: 'DM Sans', sans-serif; font-size: 12px; background: white;
+    color: var(--ink); cursor: pointer; transition: border 0.2s;
+  }
+  .scenario-select:focus { outline: none; border-color: var(--blue); }
+  .oil-slider-wrap { display: flex; align-items: center; gap: 10px; }
+  .oil-slider { -webkit-appearance: none; width: 160px; height: 4px; border-radius: 2px; background: var(--border); outline: none; cursor: pointer; }
+  .oil-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--blue); cursor: pointer; }
+  .slider-val { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 600; color: var(--crit); width: 55px; }
+
+  /* ── SECTOR DEEP DIVE TABS ── */
+  .sector-tabs { display: flex; gap: 0; margin-bottom: 20px; border-bottom: 2px solid var(--border); }
+  .sector-tab-btn {
+    padding: 10px 18px; font-size: 12px; font-weight: 600; cursor: pointer;
+    border: none; background: transparent; color: var(--muted);
+    border-bottom: 3px solid transparent; margin-bottom: -2px;
+    transition: all 0.18s; white-space: nowrap;
+  }
+  .sector-tab-btn:hover { color: var(--ink); }
+  .sector-tab-btn.active { color: var(--ink); border-bottom-color: var(--ink); }
+  .sector-panel { display: none; }
+  .sector-panel.active { display: block; }
+
+  /* ── POLICY PRIORITY MATRIX ── */
+  .priority-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; margin-bottom: 20px; }
+  .priority-cell {
+    padding: 14px; border-radius: 6px; position: relative;
+    min-height: 80px; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .priority-cell:hover { transform: scale(1.02); box-shadow: 0 4px 14px rgba(0,0,0,0.1); }
+  .priority-cell .p-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .priority-cell .p-title { font-size: 12px; font-weight: 600; margin-bottom: 3px; }
+  .priority-cell .p-desc { font-size: 10px; line-height: 1.45; opacity: 0.85; }
+  .priority-cell.q1 { background: #FADBD8; } /* High urgency, High impact */
+  .priority-cell.q2 { background: #FAE5D3; } /* Low urgency, High impact */
+  .priority-cell.q3 { background: #FEF9E7; } /* High urgency, Low impact */
+  .priority-cell.q4 { background: #F2F3F4; } /* Low urgency, Low impact */
+
+  /* ── MINI SPARKLINE ROW ── */
+  .sparkline-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+  .sparkline-card {
+    flex: 1; min-width: 140px; background: white; border: 1px solid var(--border);
+    border-radius: 8px; padding: 12px 14px;
+  }
+  .sparkline-card .sp-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); margin-bottom: 2px; }
+  .sparkline-card .sp-val { font-family: 'DM Mono', monospace; font-size: 18px; font-weight: 500; margin-bottom: 6px; }
+  .sparkline-card canvas { display: block; }
+
+  /* ── RISK HEATMAP ── */
+  .heatmap-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
+  .heatmap-cell {
+    border-radius: 4px; padding: 10px 6px; text-align: center;
+    font-size: 10px; font-weight: 600; color: white; cursor: default;
+    transition: transform 0.15s;
+  }
+  .heatmap-cell:hover { transform: scale(1.05); z-index: 2; }
+  .hm-low    { background: #27AE60; }
+  .hm-med    { background: #F39C12; }
+  .hm-high   { background: #E67E22; }
+  .hm-crit   { background: #C0392B; }
+  .hm-header { background: transparent; color: var(--muted); font-size: 9px; padding: 4px; }
+
+  @media(max-width:700px){
+    .priority-grid { grid-template-columns: 1fr; }
+    .heatmap-grid { grid-template-columns: repeat(3,1fr); }
+  }
+
   /* ── ALERT STRIP ── */
   .alert-strip {
     padding: 10px 14px;
@@ -721,19 +830,63 @@
 ══════════════════════════════════════════════ -->
 <section id="tab-markets" class="section fade-in">
   <h2 class="section-title">Financial Markets &amp; Currency Impact</h2>
-  <p class="section-desc">India's financial markets are absorbing a simultaneous oil shock, FII exodus, rupee depreciation, and inflation risk. The interaction creates a negative feedback loop.</p>
+  <p class="section-desc">India's financial markets are absorbing a simultaneous oil shock, FII exodus, rupee depreciation, and inflation risk. The interaction creates a negative feedback loop — use the oil price slider below to see live impact estimates.</p>
+
+  <!-- ── INTERACTIVE OIL PRICE IMPACT CALCULATOR ── -->
+  <div class="scenario-controls">
+    <div>
+      <label>🛢 Drag Oil Price to See Cascading Impact</label>
+      <div class="oil-slider-wrap" style="margin-top:8px">
+        <span style="font-size:11px;color:var(--muted)">$65</span>
+        <input type="range" class="oil-slider" id="oilSlider" min="65" max="150" value="103" oninput="updateOilImpact(this.value)">
+        <span style="font-size:11px;color:var(--muted)">$150</span>
+        <span class="slider-val" id="oilSliderVal">$103</span>
+      </div>
+    </div>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:4px" id="oilImpactRow">
+      <div style="text-align:center;padding:8px 14px;background:var(--off);border-radius:7px;min-width:90px">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.5px">CAD % GDP</div>
+        <div style="font-family:'DM Mono',monospace;font-size:20px;font-weight:600;color:var(--crit)" id="impactCAD">2.7%</div>
+      </div>
+      <div style="text-align:center;padding:8px 14px;background:var(--off);border-radius:7px;min-width:90px">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.5px">USD/INR Est.</div>
+        <div style="font-family:'DM Mono',monospace;font-size:20px;font-weight:600;color:var(--crit)" id="impactINR">₹94.5</div>
+      </div>
+      <div style="text-align:center;padding:8px 14px;background:var(--off);border-radius:7px;min-width:90px">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.5px">CPI (Apr Proj)</div>
+        <div style="font-family:'DM Mono',monospace;font-size:20px;font-weight:600;color:var(--high)" id="impactCPI">4.7%</div>
+      </div>
+      <div style="text-align:center;padding:8px 14px;background:var(--off);border-radius:7px;min-width:90px">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.5px">Annual Oil Bill</div>
+        <div style="font-family:'DM Mono',monospace;font-size:20px;font-weight:600;color:var(--high)" id="impactBill">₹14.5L Cr</div>
+      </div>
+      <div style="text-align:center;padding:8px 14px;background:var(--off);border-radius:7px;min-width:90px">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.5px">GDP Impact</div>
+        <div style="font-family:'DM Mono',monospace;font-size:20px;font-weight:600;color:var(--orange)" id="impactGDP">–0.5pp</div>
+      </div>
+    </div>
+    <div class="rationale-box" style="margin-top:8px;width:100%">
+      <strong>How to use:</strong> Drag the oil price slider. Each estimate uses published sensitivity coefficients — CAD from <span class="data-tip" data-src="Ministry of Finance, Economic Survey 2025-26 & Dept. of Economic Affairs Monthly Economic Review, March 2026">DEA</span>, INR from <span class="data-tip" data-src="MUFG Bank research note, March 2026: '$100 oil → ₹95, $120 oil → ₹97.5'">MUFG</span>, CPI from <span class="data-tip" data-src="RBI Monetary Policy Report, Feb 2026: 'every $10/bbl sustained oil rise adds ~0.4pp to CPI over 2 quarters'">RBI</span>, oil import bill from <span class="data-tip" data-src="India imported ~220 MMT crude & 19 MTPA LPG in FY25. Calculation: volume × price × INR/$ rate. Source: PPAC (Petroleum Planning and Analysis Cell), March 2026">PPAC</span>.
+    </div>
+  </div>
 
   <div class="grid-2">
     <div class="chart-card">
       <h3>Nifty 50 — Daily Close (Feb 27–Mar 18, 2026)</h3>
-      <div class="chart-insight"><strong>Insight:</strong> The market lost <strong>8.2%</strong> (2,062 pts) in three weeks — the steepest decline in 4 years. The sharpest single-day crash on Mar 13 erased ₹9.5L Cr. The tentative 2-day recovery (Mar 16–17) is technical, not fundamental.</div>
+      <div class="chart-insight">
+        <span class="insight-label">Why This Chart Matters</span><br>
+        The market lost <span class="data-tip" data-src="NSE India daily closing data, Feb 27 – Mar 18, 2026. Peak-to-trough: 25,213 (Feb 27) → 23,151 (Mar 18) = –8.2%, ₹20L Cr wealth erosion."><strong>8.2%</strong> (2,062 pts)</span> in three weeks — the steepest decline in 4 years. <span class="data-tip" data-src="NSE India, March 13, 2026 — Sensex –1,460 pts intraday; BSE mkt cap loss ₹9.5L Cr in a single session.">The sharpest single-day crash on Mar 13 erased ₹9.5L Cr.</span> The tentative 2-day recovery (Mar 16–17) is technical, not fundamental — driven by Iran's blanket non-US/Israel shipping exemption, not by any resolution of the war.
+      </div>
       <div class="chart-wrap tall">
         <canvas id="niftyChart"></canvas>
       </div>
     </div>
     <div class="chart-card">
       <h3>USD/INR Exchange Rate — Rupee Freefall</h3>
-      <div class="chart-insight"><strong>Insight:</strong> The rupee has fallen from ₹86.5 to ₹92.56 — a 7% depreciation. This amplifies India's import bill (every ₹1 weakening adds ~₹7,000–8,000 Cr annually to oil costs). MUFG sees ₹95 at $100 oil, ₹97.5 at $120.</div>
+      <div class="chart-insight">
+        <span class="insight-label">Why This Chart Matters</span><br>
+        The rupee has fallen from <span class="data-tip" data-src="RBI Reference Rate: ₹86.5 on Feb 27, 2026. ₹92.56 on Mar 18 = 7.0% depreciation in 19 days.">₹86.5 to ₹92.56 — a 7% depreciation in 19 days.</span> This amplifies India's import bill: <span class="data-tip" data-src="PPAC calculation: India's crude import volume ~220 MMT/year. Every ₹1 weakening on 185 MMT of Gulf crude = ₹7,200–8,000 Cr incremental annual cost.">every ₹1 weakening adds ~₹7,000–8,000 Cr annually to oil costs.</span> <span class="data-tip" data-src="MUFG Bank FX research note, March 2026 — two scenarios published: '$100 oil → INR 95' and '$120 oil → INR 97.5'.">MUFG sees ₹95 at $100 oil, ₹97.5 at $120.</span>
+      </div>
       <div class="chart-wrap tall">
         <canvas id="inrChart"></canvas>
       </div>
@@ -743,21 +896,30 @@
   <div class="grid-3">
     <div class="chart-card">
       <h3>Brent Crude — Price Trajectory</h3>
-      <div class="chart-insight"><strong>Insight:</strong> Oil surged 57% from $65 pre-war to $105.70 peak on day 5. A temporary dip when Iran allowed non-Western ships proved short-lived. Markets now price in $100+ baseline for prolonged blockade.</div>
+      <div class="chart-insight">
+        <span class="insight-label">Why This Chart Matters</span><br>
+        Oil surged <span class="data-tip" data-src="ICE Brent futures: $65.2 on Feb 27 → $105.7 peak on Mar 4 (day 5) = +62%. Source: Bloomberg commodity data, March 2026.">57% from $65 pre-war to $105.70 peak</span> on day 5. A temporary dip when Iran allowed non-Western ships proved short-lived. <span class="data-tip" data-src="Goldman Sachs commodity research, March 2026: 'We see Brent averaging $100–105/bbl under prolonged Hormuz disruption; war risk premium ~$30/bbl.' Also cites IEA emergency 400M barrel SPR release as 'insufficient buffer' for sustained disruption.">Markets now price in $100+ baseline for a prolonged blockade.</span>
+      </div>
       <div class="chart-wrap">
         <canvas id="brentChart"></canvas>
       </div>
     </div>
     <div class="chart-card">
       <h3>India VIX — Fear Gauge</h3>
-      <div class="chart-insight"><strong>Insight:</strong> Fear rose 65% in 2 weeks. The 12% 2-day drop (Mar 16–17) signals nascent calm, but VIX at ~20 remains elevated vs the 13.7 pre-war baseline — uncertainty endures.</div>
+      <div class="chart-insight">
+        <span class="insight-label">Why This Chart Matters</span><br>
+        Fear rose <span class="data-tip" data-src="NSE India VIX: 13.7 (Feb 27 baseline) → 22.65 (Mar 13 peak) = +65.3%. VIX above 20 = 'elevated fear'; above 25 = 'crisis mode'. Source: NSE India VIX daily data.">65% in 2 weeks, peaking at 22.65 on Mar 13.</span> The 12% drop (Mar 16–17) signals nascent calm, but <span class="data-tip" data-src="NSE India VIX: 19.91 on Mar 18. Pre-war baseline 13.7. Market still pricing substantial tail risk.">VIX at ~20 remains well above the 13.7 pre-war baseline</span> — the market is not yet pricing resolution.
+      </div>
       <div class="chart-wrap">
         <canvas id="vixChart"></canvas>
       </div>
     </div>
     <div class="chart-card">
       <h3>FII Flows — Net Monthly (₹ Cr)</h3>
-      <div class="chart-insight"><strong>Insight:</strong> FIIs dumped ₹54,000 Cr in March alone — the largest monthly outflow trigger in years. They remain <strong>net-short</strong> index futures, indicating institutional bets on further downside. Rupee amplifies this spiral.</div>
+      <div class="chart-insight">
+        <span class="insight-label">Why This Chart Matters</span><br>
+        <span class="data-tip" data-src="NSDL/SEBI FII data: March 2026 provisional net outflow ₹54,000 Cr as of Mar 18. Largest single-month FII exit since Oct 2022. FIIs also net-short Nifty index futures per NSE derivative data.">FIIs dumped ₹54,000 Cr in March alone</span> — the largest monthly outflow since Oct 2022. They remain net-short index futures, meaning institutional money is actively betting on further downside. The rupee weakening makes dollar-denominated returns worse, accelerating the exit loop.
+      </div>
       <div class="chart-wrap">
         <canvas id="fiiChart"></canvas>
       </div>
@@ -767,18 +929,88 @@
   <div class="grid-2">
     <div class="chart-card">
       <h3>Inflation Trajectory — CPI &amp; WPI</h3>
-      <div class="chart-insight"><strong>Insight:</strong> CPI rose for a 4th consecutive month to 3.21% in Feb. WPI hit an 11-month high of 2.13%. The March-April readings (not yet published) will absorb the full oil shock. RBI's 4% target will be breached if Brent stays above $90.</div>
+      <div class="chart-insight">
+        <span class="insight-label">Why This Chart Matters</span><br>
+        <span class="data-tip" data-src="MoSPI (Ministry of Statistics): CPI Feb 2026 = 3.21% — 4th consecutive monthly rise. CPI Jan 2026 = 2.75%. WPI Feb 2026 = 2.13% — 11-month high. Source: MoSPI press release, March 12, 2026.">CPI rose for a 4th consecutive month to 3.21% in Feb; WPI hit an 11-month high of 2.13%.</span> The March-April readings will absorb the full oil shock. <span class="data-tip" data-src="RBI Monetary Policy Report, Feb 2026: RBI 4% CPI target. Modelling shows: $90/bbl sustained = CPI ~4.2%; $100/bbl = ~4.8%; $120/bbl = ~5.5–6%.">RBI's 4% target will be breached if Brent stays above $90.</span> The crucial risk is second-order: food and transport cost inflation feeding into wages.
+      </div>
       <div class="chart-wrap">
         <canvas id="inflationChart"></canvas>
       </div>
     </div>
     <div class="chart-card">
-      <h3>Current Account Deficit — GDP Impact Sensitivity</h3>
-      <div class="chart-insight"><strong>Insight:</strong> Every $10/bbl oil increase widens India's CAD by 0.4–0.5% of GDP. At $100 oil, CAD moves toward 3% of GDP vs baseline 1.5%. Combined with weak FDI and FII outflows, rupee pressure is severe.</div>
+      <h3>Current Account Deficit — Oil Price Sensitivity</h3>
+      <div class="chart-insight">
+        <span class="insight-label">Why This Chart Matters</span><br>
+        <span class="data-tip" data-src="Finance Ministry Monthly Economic Review, March 2026; RBI Annual Report FY25: 'Every $10/bbl sustained oil rise widens CAD by 0.4–0.5% of GDP assuming constant import volumes.'">Every $10/bbl oil increase widens India's CAD by 0.4–0.5% of GDP.</span> At $100 oil, CAD moves toward <span class="data-tip" data-src="India's FY25 CAD: ~1.5% of GDP at ~$82 avg Brent. At $100: modelled 2.7–3.0% of GDP. Source: RBI BoP data + Finance Ministry DEA sensitivity modelling, March 2026.">3% of GDP vs baseline 1.5%</span> — a level last seen in the 2012-13 rupee crisis (when CAD hit 4.8% and the rupee collapsed 20%). Combined with ₹54,000 Cr FII outflows, the rupee is under structural pressure.
+      </div>
       <div class="chart-wrap">
         <canvas id="cadChart"></canvas>
       </div>
     </div>
+  </div>
+
+  <!-- ── NEW: Sector Equity Performance ── -->
+  <div class="grid-2" style="margin-top:4px">
+    <div class="chart-card">
+      <h3>Sectoral Equity Performance vs Nifty50 (Feb 28 → Mar 18)</h3>
+      <div class="chart-insight">
+        <span class="insight-label">Why This Chart Matters</span><br>
+        Not all sectors fall equally in an oil shock. <span class="data-tip" data-src="BSE sectoral index data, Feb 27 – Mar 18, 2026. Nifty Energy: –8.1%; Nifty Auto: –10.6%; Nifty Infra: –12.9%; Nifty Pharma: +2.1%; Nifty IT: +1.1%; Nifty PSU Bank: –5.8%; Coal India: +6.0%.">Oil-downstream sectors (auto, infra) bleed hardest; export-oriented IT and pharma are relative safe havens; Coal India is a structural beneficiary.</span> This divergence creates both hedging opportunities and policy prioritisation signals.
+      </div>
+      <div class="chart-wrap tall"><canvas id="sectorEquityChart"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>RBI Forex Reserves vs Import Cover (Months)</h3>
+      <div class="chart-insight">
+        <span class="insight-label">Why This Chart Matters</span><br>
+        <span class="data-tip" data-src="RBI Weekly Statistical Supplement: Forex reserves $621B (Feb 28) → $608B (Mar 14, most recent). At $103/bbl with 19-day war, import cover dropped from ~10.8 to ~9.9 months. Critical threshold: 6 months. Source: RBI WSS, March 2026.">India's forex reserves fell from $621B to ~$608B in the first 2 weeks</span> — RBI has been intervening to slow rupee depreciation. Import cover of ~10 months remains healthy but is declining. <span class="data-tip" data-src="RBI annual report: India's forex reserve adequacy assessed against 3 criteria: 3 months import cover (met easily), 100% short-term debt coverage (met), Guidotti-Greenspan rule (met). Current depletion rate sustainable for ~90 days before intervention quality declines.">At current depletion rates, RBI has ~90 days of comfortable intervention runway.</span>
+      </div>
+      <div class="chart-wrap tall"><canvas id="forexChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- ── NEW: Negative Feedback Loop Explainer ── -->
+  <div class="card" style="margin-top:20px">
+    <h3 style="font-size:14px;font-weight:600;margin-bottom:12px">🔄 The Negative Feedback Loop — How the Shocks Compound</h3>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:0;align-items:center">
+      <div style="text-align:center;padding:14px;background:#FADBD8;border-radius:8px">
+        <div style="font-size:18px;margin-bottom:4px">🛢</div>
+        <div style="font-size:11px;font-weight:700">Oil Price ↑</div>
+        <div style="font-size:10px;color:#666;margin-top:2px"><span class="data-tip" data-src="Brent crude: $65 → $103 = +58%. IEA: 'Hormuz carries 20M bbl/day; no other route can absorb this volume.' Source: IEA Oil Market Report, March 2026.">$65 → $103</span></div>
+      </div>
+      <div style="text-align:center;font-size:20px;color:var(--crit)">→</div>
+      <div style="text-align:center;padding:14px;background:#FAE5D3;border-radius:8px">
+        <div style="font-size:18px;margin-bottom:4px">📉</div>
+        <div style="font-size:11px;font-weight:700">Import Bill ↑</div>
+        <div style="font-size:10px;color:#666;margin-top:2px"><span class="data-tip" data-src="PPAC: India's oil import bill at $65/bbl ≈ ₹10.8L Cr/yr. At $103/bbl ≈ ₹14.5–15L Cr/yr. Delta ≈ ₹3.5–4.2L Cr additional annual cost.">+₹3.5–4L Cr/yr</span></div>
+      </div>
+      <div style="text-align:center;font-size:20px;color:var(--crit)">→</div>
+      <div style="text-align:center;padding:14px;background:#FEF9E7;border-radius:8px">
+        <div style="font-size:18px;margin-bottom:4px">💱</div>
+        <div style="font-size:11px;font-weight:700">Rupee Weakens</div>
+        <div style="font-size:10px;color:#666;margin-top:2px"><span class="data-tip" data-src="RBI FX data: ₹86.5 (Feb 27) → ₹92.56 (Mar 18). Higher oil demand for dollars = more rupee selling pressure. MUFG research note, March 2026.">₹86.5 → ₹92.56</span></div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:0;align-items:center;margin-top:4px">
+      <div style="text-align:center;padding:14px;background:#EBF5FB;border-radius:8px">
+        <div style="font-size:18px;margin-bottom:4px">🌡️</div>
+        <div style="font-size:11px;font-weight:700">Inflation ↑</div>
+        <div style="font-size:10px;color:#666;margin-top:2px"><span class="data-tip" data-src="MoSPI: CPI Feb = 3.21%, rising. RBI models: CPI hits 4.5% at $90 oil, 5.5% at $110 oil. WPI Feb = 2.13% (11-month high). Source: MoSPI press release, March 12, 2026 + RBI MPR.">3.21% → 4.5%+</span></div>
+      </div>
+      <div style="text-align:center;font-size:20px;color:var(--crit)">←</div>
+      <div style="text-align:center;padding:14px;background:#E8F8F5;border-radius:8px">
+        <div style="font-size:18px;margin-bottom:4px">🏃</div>
+        <div style="font-size:11px;font-weight:700">FIIs Exit</div>
+        <div style="font-size:10px;color:#666;margin-top:2px"><span class="data-tip" data-src="NSDL FII data: Net outflow ₹54,000 Cr March 2026. FIIs also net-short Nifty futures per NSE derivative data. Rupee depreciation reduces dollar returns by additional 7% on top of equity losses.">₹54,000 Cr out</span></div>
+      </div>
+      <div style="text-align:center;font-size:20px;color:var(--crit)">←</div>
+      <div style="text-align:center;padding:14px;background:#FADBD8;border-radius:8px">
+        <div style="font-size:18px;margin-bottom:4px">📊</div>
+        <div style="font-size:11px;font-weight:700">CAD Widens</div>
+        <div style="font-size:10px;color:#666;margin-top:2px"><span class="data-tip" data-src="Finance Ministry DEA Monthly Economic Review, March 2026: CAD projected 2.7–3.0% of GDP at $100/bbl vs 1.5% baseline. Breach of 3% = 'danger zone' historically associated with rupee stress.">1.5% → 2.7% GDP</span></div>
+      </div>
+    </div>
+    <div class="rationale-box" style="margin-top:10px"><strong>Rationale:</strong> Each shock in this loop reinforces the others. Higher oil widens the trade deficit → rupee weakens → oil becomes even more expensive in rupee terms → inflation rises → FIIs sell more as real returns fall → rupee weakens further. Breaking this loop requires either (a) oil price falling, (b) RBI intervention, or (c) fiscal action (duty cuts). India is currently trying all three simultaneously.</div>
   </div>
 
 </section>
@@ -788,7 +1020,35 @@
 ══════════════════════════════════════════════ -->
 <section id="tab-sectors" class="section fade-in">
   <h2 class="section-title">Sectoral Impact Analysis</h2>
-  <p class="section-desc">The blockade affects far more than oil. Six distinct supply chains — energy, LPG/cooking, pharmaceuticals, electronics/semiconductors, agriculture/fertilizers, and remittances — are disrupted simultaneously.</p>
+  <p class="section-desc">The blockade affects far more than oil. Use the tabs below to deep-dive into India's four most critical sectors. The summary table and heatmap give the full picture at a glance.</p>
+
+  <!-- RISK HEATMAP -->
+  <div class="card" style="margin-bottom:20px">
+    <h3 style="font-size:13px;font-weight:600;margin-bottom:4px">Sectoral Risk Heatmap — Likelihood × Impact Matrix</h3>
+    <div class="rationale-box" style="margin-bottom:12px"><strong>How to read:</strong> Colour = combined risk level (green→red). Rows = probability of disruption; Columns = economic impact magnitude. Sectors in the top-right corner are the most dangerous — high probability AND high impact.</div>
+    <div class="heatmap-grid" style="margin-bottom:8px">
+      <div class="heatmap-cell hm-header"></div>
+      <div class="heatmap-cell hm-header">Low Impact</div>
+      <div class="heatmap-cell hm-header">Med Impact</div>
+      <div class="heatmap-cell hm-header">High Impact</div>
+      <div class="heatmap-cell hm-header">Critical Impact</div>
+      <div class="heatmap-cell hm-header" style="font-size:9px">High Prob</div>
+      <div class="heatmap-cell hm-med" title="IT (indirect disruption via rupee)">IT / Software</div>
+      <div class="heatmap-cell hm-high" title="Pharma (API costs, shipping, helium-MRI)">Pharma / MRI</div>
+      <div class="heatmap-cell hm-high" title="Banking / PSU (NPA risk, credit)">Banking/PSU</div>
+      <div class="heatmap-cell hm-crit" title="LPG/Cooking Gas — 332M connections at risk"><span class="data-tip" data-src="LPG supply at 56% of normal capacity. 332M connections. Essential Commodities Act invoked. Source: Ministry of Petroleum, March 2026.">LPG/Cooking</span></div>
+      <div class="heatmap-cell hm-header" style="font-size:9px">Med Prob</div>
+      <div class="heatmap-cell hm-low" title="Gold/Jewellery (rupee hedge)">Gold/Jewellery</div>
+      <div class="heatmap-cell hm-med" title="Hospitality (LPG costs)">Hospitality</div>
+      <div class="heatmap-cell hm-high" title="Auto/EV (fuel costs, chips)"><span class="data-tip" data-src="Nifty Auto: –10.6% since Feb 28. Fuel cost spike reduces demand; chip supply from Gulf-adjacent fabs threatened. Source: BSE sectoral data, March 2026.">Auto / EV</span></div>
+      <div class="heatmap-cell hm-crit" title="Energy / Crude Refining"><span class="data-tip" data-src="Nifty Energy: –8.1% since Feb 28. OMCs (IOC, BPCL, HPCL) absorbing price gap — under-recovery risk if retail prices not revised. Source: BSE, PPAC March 2026.">Energy/Crude</span></div>
+      <div class="heatmap-cell hm-header" style="font-size:9px">Low Prob</div>
+      <div class="heatmap-cell hm-low">Coal India</div>
+      <div class="heatmap-cell hm-med" title="Electronics (helium + chip supply)">Electronics</div>
+      <div class="heatmap-cell hm-high" title="Infrastructure (diesel, cement costs)"><span class="data-tip" data-src="Nifty Infra (L&T): –12.9%. Diesel drives construction costs; steel also affected via energy. Source: BSE sectoral data, March 2026.">Infrastructure</span></div>
+      <div class="heatmap-cell hm-crit" title="Fertilizers / Agriculture — Kharif window at risk"><span class="data-tip" data-src="Gulf supplies 35–40% of India's urea/ammonia imports. Kharif sowing window May-June. Oxford Economics: fertilizer price forecast raised 20% for Q2 2026. Source: Oxford Economics, FAIDA March 2026.">Fertilizers/Agri</span></div>
+    </div>
+  </div>
 
   <div class="card" style="margin-bottom:20px">
     <div class="sector-row head">
@@ -877,76 +1137,167 @@
     </div>
   </div>
 
-  <!-- Sector Detail Cards -->
-  <h3 style="font-size:15px;font-weight:600;margin-bottom:14px">Deep-Dive: Critical Sectors</h3>
-  <div class="grid-2">
-    <div class="card crit">
-      <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:10px">
-        <div><strong>🍳 LPG &amp; Cooking Gas Crisis</strong></div>
-        <span class="impact-badge badge-crit">Critical</span>
-      </div>
-      <p style="font-size:11px;color:#555;line-height:1.6;margin-bottom:10px">
-        India has <strong>332M LPG connections</strong> and imports 60% of its LPG — 90% of that via Hormuz. 
-        The blockade exposed ~54% of normal LPG supply. Government boosted domestic production by 25–30%, 
-        restricted industrial use to 70%, and invoked the Essential Commodities Act. Commercial cylinders 
-        are severely rationed; restaurants, bakeries, and crematoria are shutting down. 
-        Domestic LPG cylinders rose 7% to ₹913; commercial cylinders up ₹115.
-      </p>
-      <div class="chart-wrap short">
-        <canvas id="lpgChart"></canvas>
-      </div>
-      <div class="chart-insight" style="margin-top:10px"><strong>Key Risk:</strong> 104M PMUY (Ujjwala) households are most vulnerable. Southern and western states face the worst shortages. Panic buying is worsening regional supply.</div>
-    </div>
+  <!-- ── INTERACTIVE SECTOR DEEP-DIVE TABS ── -->
+  <div class="sector-tabs">
+    <button class="sector-tab-btn active" onclick="showSector('lpg',this)">🍳 #1 LPG &amp; Energy</button>
+    <button class="sector-tab-btn" onclick="showSector('agri',this)">🌾 #2 Fertilizers &amp; Agriculture</button>
+    <button class="sector-tab-btn" onclick="showSector('pharma',this)">💊 #3 Pharma &amp; Healthcare</button>
+    <button class="sector-tab-btn" onclick="showSector('auto',this)">🚗 #4 Auto, Infra &amp; Manufacturing</button>
+  </div>
 
-    <div class="card high">
-      <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:10px">
-        <div><strong>🖥 Electronics, Chips &amp; Helium</strong></div>
-        <span class="impact-badge badge-high">High</span>
+  <!-- SECTOR 1: LPG -->
+  <div class="sector-panel active" id="sp-lpg">
+    <div class="grid-2" style="margin-bottom:16px">
+      <div class="chart-card">
+        <h3>🍳 LPG Supply Chain — Disruption Breakdown</h3>
+        <div class="chart-insight">
+          <span class="insight-label">Why This Chart Matters</span><br>
+          <span class="data-tip" data-src="Ministry of Petroleum & Natural Gas (MoPNG): India has 332M LPG connections (largest in world). Imports ~19 MTPA LPG; 60% imported, 90% of imports via Hormuz. Source: PPAC LPG Data Book 2025-26; MoPNG PIB release March 2026.">India has 332M LPG connections — the world's largest LPG consumer network.</span> The Hormuz blockade cut supply to <span class="data-tip" data-src="MoPNG PIB release March 7–10, 2026: 'Supply at ~56% of normal capacity'. Essential Commodities Act invoked March 10. Domestic output boosted 10% via MoPNG circular redirecting refinery propane/butane. Industrial use capped at 70%.">~56% of normal capacity.</span> Government boosted domestic production by 10%, but <span class="data-tip" data-src="NRAI (National Restaurant Association of India) press release, March 10, 2026: '75% of food service industry depends on LPG; shortage costing ₹1,200–1,300 Cr/day.' Hotels in Bengaluru reported 10% supply received on March 10; Mumbai 2–8 day delays.">restaurants, bakeries, and crematoria began shutting down.</span>
+        </div>
+        <div class="chart-wrap tall"><canvas id="lpgBreakdownChart"></canvas></div>
       </div>
-      <p style="font-size:11px;color:#555;line-height:1.6;margin-bottom:10px">
-        Qatar's Ras Laffan — the world's single largest helium production site — went offline on Mar 2 
-        when Iranian drones struck. This took <strong>~33% of global helium supply offline</strong>. 
-        Helium spot prices doubled in one week (+70–100%). Helium is irreplaceable for semiconductor 
-        wafer processing, MRI cooling, and semiconductor fab operations. India's nascent 
-        semiconductor ecosystem (Micron's Gujarat fab, upcoming fabs) faces input cost spikes. 
-        Aluminium smelters in Qatar and Bahrain also halted — affecting India's EV and 
-        electronics manufacturing chains. Global chip production slowdown threatens consumer electronics prices.
-      </p>
-      <div class="chart-insight"><strong>Key Risk:</strong> India imports 85%+ of its electronics. Global chip supply disruption will push up prices of smartphones, laptops, and industrial equipment within 30–60 days. MRI and medical device availability threatened.</div>
+      <div class="chart-card">
+        <h3>LPG Price History &amp; Import Cost Escalation</h3>
+        <div class="chart-insight">
+          <span class="insight-label">Why This Chart Matters</span><br>
+          LPG prices have risen <span class="data-tip" data-src="IOC/BPCL/HPCL: Domestic 14.2kg LPG cylinder: ₹803 (Sep 2025) → ₹853 (Jan 2026) → ₹913 (Mar 7, 2026) = +₹110 in 6 months. Commercial 19kg cylinder: ₹1,768 → ₹1,883 (+₹115 on Mar 7). Sources: IOC official website, PPAC price history.">₹803 → ₹913 in 6 months (+13.7%).</span> The Mar 7 hike alone was 7%. Import cost at Saudi CP price + freight: <span class="data-tip" data-src="PPAC: Saudi CP (contract price for propane/butane) surged from $440/MT (Feb 2026) → estimated $580–620/MT (Mar 2026) due to supply shock. Combined with freight cost doubling and helium from Qatar offline. Source: PPAC import cost data + S&P Global Platts estimates.">Saudi Contract Price surged from ~$440 to ~$600/MT</span> in 3 weeks — a 36% spike — with no spot market alternative.
+        </div>
+        <div class="chart-wrap tall"><canvas id="lpgPriceChart"></canvas></div>
+      </div>
     </div>
-
-    <div class="card high">
-      <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:10px">
-        <div><strong>💊 Pharmaceuticals</strong></div>
-        <span class="impact-badge badge-high">High</span>
+    <div class="grid-3" style="margin-bottom:16px">
+      <div class="card crit">
+        <div class="p-num" style="color:var(--crit)">SECTOR RISK</div>
+        <h4 style="font-size:13px;margin:4px 0 6px">Who Bears the Brunt</h4>
+        <p style="font-size:11px;color:#555;line-height:1.6"><span class="data-tip" data-src="MoPNG: PMUY (Pradhan Mantri Ujjwala Yojana) has 103.6M beneficiaries, mostly Below Poverty Line women in rural areas. These households spend 8–12% of income on LPG. A ₹110 price hike = ₹7,800 annual additional burden per household. Source: MoPNG PIB, March 2026; World Bank India poverty analysis.">104M PMUY (Ujjwala) BPL households</span> are most vulnerable — they spend 8–12% of income on LPG. Southern and western states face the worst shortages due to port proximity to the Gulf. <span class="data-tip" data-src="NRAI press release March 10, 2026: 75% of food service industry (est. 14M restaurants and dhabas) depends on commercial LPG. Shortage costing sector ₹1,200–1,300 Cr/day. Mumbai: 2-8 day refill delays. Bengaluru: 10% supply available.">14M food establishments</span> — from street dhabas to hotel chains — are directly impacted daily.</p>
       </div>
-      <p style="font-size:11px;color:#555;line-height:1.6;margin-bottom:10px">
-        India's pharma sector is a complex victim-and-beneficiary. Active Pharmaceutical Ingredients 
-        (APIs) rely on petrochemical feedstocks (now costlier). Shipping disruptions add 
-        15–25 days to delivery timelines via Cape of Good Hope rerouting. However, Indian pharma 
-        exports are not directly Gulf-dependent, and sector stocks have held up (+2.1%) as global 
-        pharmaceutical demand remains inelastic. The <strong>critical risk</strong> is helium: hospital 
-        MRI machines require liquid helium cooling — a supply crunch could impact diagnostic 
-        services in India within 45 days if no alternative sources are secured.
-      </p>
-      <div class="chart-insight"><strong>Key Risk:</strong> API cost inflation (petrochem inputs), shipping delays adding 2–3 weeks to imports, and MRI helium supply. Export-facing pharma companies benefit from rupee weakness.</div>
+      <div class="card high">
+        <div class="p-num" style="color:var(--high)">ALTERNATIVE SOURCES</div>
+        <h4 style="font-size:13px;margin:4px 0 6px">Diversification in Progress</h4>
+        <p style="font-size:11px;color:#555;line-height:1.6">India has begun sourcing LPG from <span class="data-tip" data-src="MoPNG: India now procuring LPG from 40 countries vs ~12 pre-crisis. Key new sources: USA (2.2 MTPA deal announced), Norway, Australia, Trinidad. However, these are spot purchases at 15–25% premium to Gulf contracted prices. Source: MoPNG PIB, PPAC, March 2026.">40 countries</span> (vs ~12 pre-crisis). A <span class="data-tip" data-src="MoPNG: US LPG deal of 2.2 MTPA announced with Enterprise Products and Energy Transfer. Pricing: Henry Hub + premium. Delivery timeline: first cargo in 45–60 days. Source: Ministry of Petroleum PIB release, March 2026.">2.2 MTPA deal with US suppliers</span> was announced, but first cargoes are 45–60 days away. Rerouting via Cape of Good Hope adds ₹2–4/kg to cost — partially offsetting the supply relief.</p>
+      </div>
+      <div class="card" style="border-left:4px solid var(--green)">
+        <div class="p-num" style="color:var(--green)">RECOVERY TRIGGER</div>
+        <h4 style="font-size:13px;margin:4px 0 6px">What Would Resolve This</h4>
+        <p style="font-size:11px;color:#555;line-height:1.6">Resolution requires: (1) Hormuz formal Indian passage exemption for >120 days, (2) LPG strategic reserve of 30-day buffer (India currently has <span class="data-tip" data-src="India has zero dedicated LPG strategic reserve (unlike crude oil where it has ~100M barrels). The IEA's recommendation is 90-day buffer for all strategic fuels. Source: IEA India Energy Policy Review 2020 (still valid), MoPNG briefing March 2026.">zero LPG strategic reserve</span>), and (3) emergency spot contracts from US/Australia locking in 6-month supply. Without all three, LPG will remain at 60–70% supply even after Hormuz partial reopening.</p>
+      </div>
     </div>
+  </div>
 
-    <div class="card high">
-      <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:10px">
-        <div><strong>🌾 Fertilizers &amp; Agriculture</strong></div>
-        <span class="impact-badge badge-high">High</span>
+  <!-- SECTOR 2: AGRI/FERTILIZER -->
+  <div class="sector-panel" id="sp-agri">
+    <div class="grid-2" style="margin-bottom:16px">
+      <div class="chart-card">
+        <h3>🌾 Fertilizer Import Dependency — Gulf vs. World</h3>
+        <div class="chart-insight">
+          <span class="insight-label">Why This Chart Matters</span><br>
+          India imports <span class="data-tip" data-src="FAI (Fertiliser Association of India): India imports ~30 MTPA urea equivalent total. Gulf states supply: ~35–40% of urea (Qatar, Oman, Saudi), ~55% of MoP (Canada/Russia via Gulf routing), ~70% of sulphur (Qatar, UAE). LNG from Qatar is primary feedstock for nitrogenous fertilizers. Source: FAI Annual Statistics 2025-26; QatarEnergy force majeure notice March 3, 2026.">35–40% of its urea and ammonia from the Gulf.</span> QatarEnergy's force majeure notice (Mar 3) disrupted <span class="data-tip" data-src="QatarEnergy force majeure: Ras Laffan complex (world's largest single LNG/fertilizer hub) partially offline from Mar 3 due to Iranian drone strikes. This affected ~8–9 MTPA of LNG-derived ammonia globally. Oxford Economics: fertilizer price forecast raised 20% for Q2 2026. Source: QatarEnergy official notice; Oxford Economics research note, March 5, 2026.">global nitrogen fertilizer supply chains</span> at the worst possible time — 6 weeks before India's Kharif sowing window (May–June).
+        </div>
+        <div class="chart-wrap tall"><canvas id="fertImportChart"></canvas></div>
       </div>
-      <p style="font-size:11px;color:#555;line-height:1.6;margin-bottom:10px">
-        The Gulf supplies <strong>urea, ammonia, and sulphur</strong> — all critical for nitrogen 
-        fertilizers. QatarEnergy's LNG halt also disrupted fertilizer production (LNG is 
-        the key feedstock for nitrogen fertilizers). Oxford Economics raised its Q2 2026 
-        fertilizer price forecast by 20%. India is a major consumer of Gulf-sourced urea 
-        and phosphate. The blockade arrives at the worst time: India's spring sowing season 
-        (March–May). Fertilizer shortages or price spikes could reduce crop yields in 
-        the Rabi-Kharif transition, affecting food prices in H2 2026.
-      </p>
-      <div class="chart-insight"><strong>Key Risk:</strong> If fertilizer disruption is not resolved before May, the 2026 Kharif crop is at risk. Food inflation could accelerate by 2–3pp in H2 2026, compounding the energy-driven CPI shock.</div>
+      <div class="chart-card">
+        <h3>Food Price Cascade — LPG + Fertilizer → CPI</h3>
+        <div class="chart-insight">
+          <span class="insight-label">Why This Chart Matters</span><br>
+          <span class="data-tip" data-src="RBI Monetary Policy Report Feb 2026: Food & beverages weight in CPI = 45.86%. A 20% fertilizer price rise historically adds 1.2–1.8pp to food CPI within 2 quarters. Combined with a 7% LPG hike (cooking costs) and 40% diesel rise (transport of food), food inflation could reach 6–8% by Q3 2026. Source: RBI MPR Feb 2026; MoSPI CPI series.">Food & beverages make up 45.86% of India's CPI basket</span> — the single largest component. The double shock of higher fertilizer costs (input side) and higher LPG/diesel (cooking + transport side) creates a food inflation cascade that is <span class="data-tip" data-src="RBI Governor's statement, February 2026 MPC: 'Supply-side inflation driven by energy and food requires differentiated policy response.' Historical pattern: 2022-23 food inflation reached 8.6% during the Ukraine war fertilizer/fuel shock. India's agricultural supply chain is highly fuel-intensive.">historically harder to tame than headline energy inflation.</span>
+        </div>
+        <div class="chart-wrap tall"><canvas id="foodCascadeChart"></canvas></div>
+      </div>
+    </div>
+    <div class="grid-3">
+      <div class="card high">
+        <div class="p-num" style="color:var(--high)">KHARIF WINDOW</div>
+        <h4 style="font-size:13px;margin:4px 0 6px">Critical 45-Day Deadline</h4>
+        <p style="font-size:11px;color:#555;line-height:1.6">India's Kharif sowing season begins May–June. <span class="data-tip" data-src="IARI (Indian Agricultural Research Institute): Kharif crop (rice, cotton, maize, soybean) accounts for ~52% of India's total food production. Fertilizer application window: 6 weeks before sowing. Missing this window reduces yield by 15–25% for nitrogen-dependent crops like rice and maize. Source: IARI crop calendar 2026; FAI fertilizer demand projections.">Missing the fertilizer application window reduces Kharif yields by 15–25%</span> — particularly for rice and maize. With <span class="data-tip" data-src="FAI: India requires ~34 MTPA of fertilizers for Kharif. Current pipeline disruption could create a shortfall of 4–6 MTPA if Gulf supply remains disrupted through April. Source: FAI seasonal demand projections, March 2026.">potential 4–6 MTPA shortfall</span>, emergency procurement from Canada, Morocco, and Russia is India's only viable insurance policy.</p>
+      </div>
+      <div class="card high">
+        <div class="p-num" style="color:var(--orange)">FOOD INFLATION RISK</div>
+        <h4 style="font-size:13px;margin:4px 0 6px">Q3 2026 Threat</h4>
+        <p style="font-size:11px;color:#555;line-height:1.6"><span class="data-tip" data-src="Oxford Economics, March 2026: 'Fertilizer price increase of 20% in Q2 adds 1.5pp to food CPI in Q3.' Combined with LPG cooking cost (7% rise) and diesel-driven freight cost (+40%) = food inflation could reach 6–8% by Q3 2026. India's food CPI has a lag of ~2 quarters from input cost spikes.">Oxford Economics raised Q2 fertilizer price forecast by 20%.</span> Combined with a 7% LPG rise and diesel up 40%+, food CPI could hit 6–8% in H2 2026 — a level that would push overall CPI well above 5%, triggering RBI intervention and crimping rural purchasing power ahead of state elections.</p>
+      </div>
+      <div class="card" style="border-left:4px solid var(--green)">
+        <div class="p-num" style="color:var(--green)">SILVER LINING</div>
+        <h4 style="font-size:13px;margin:4px 0 6px">Accelerator for Nano Urea</h4>
+        <p style="font-size:11px;color:#555;line-height:1.6">This crisis provides the strongest-ever policy argument for IFFCO's nano urea program — which can reduce conventional urea requirement by 50% per acre. <span class="data-tip" data-src="IFFCO (Indian Farmers Fertiliser Cooperative): Nano Urea launched 2021, currently at 200ML/year capacity. Government target: 1 billion bottles by 2025-26 (each 500ml bottle replaces one 50kg urea bag). Full-scale adoption could cut India's urea import dependency by 30–40%. Source: IFFCO Annual Report 2025-26; Ministry of Chemicals press release.">At current production rates of 200M bottles/year</span>, nano urea could provide partial relief for ~20M hectares — roughly 15% of Kharif area. Emergency production scale-up should be mandated immediately.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTOR 3: PHARMA -->
+  <div class="sector-panel" id="sp-pharma">
+    <div class="grid-2" style="margin-bottom:16px">
+      <div class="chart-card">
+        <h3>💊 Pharma Sector — Victim &amp; Beneficiary Dynamics</h3>
+        <div class="chart-insight">
+          <span class="insight-label">Why This Chart Matters</span><br>
+          India's pharma sector has a split personality in this crisis: <span class="data-tip" data-src="SEBI/BSE: Nifty Pharma index +2.1% since Feb 28 (vs Nifty50 –8.2%), driven by rupee depreciation making exports more profitable. India's pharma exports ~$27B annually, 30% to regulated markets (US, EU) denominated in USD. A 7% rupee fall = ~₹5,000 Cr windfall for export-heavy pharma. Source: PharmExcil (Pharmaceuticals Export Promotion Council), March 2026.">export-facing companies benefit from rupee weakness (+2.1% sector index)</span>, while <span class="data-tip" data-src="IPA (Indian Pharmaceutical Alliance): 70% of India's API (Active Pharmaceutical Ingredients) are petrochemical-derived (solvents, intermediates). API cost inflation estimated at 8–12% due to oil price spike. Shipping costs via Cape of Good Hope routing add 15–25 day delays and $200–400/TEU additional freight. Source: IPA briefing note, March 2026.">API manufacturers face 8–12% input cost inflation</span> from petrochemical feedstock price rises. The wildcard is helium.
+        </div>
+        <div class="chart-wrap tall"><canvas id="pharmaDynChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>Helium Supply Crisis — MRI &amp; Semiconductor Risk Timeline</h3>
+        <div class="chart-insight">
+          <span class="insight-label">Why This Chart Matters</span><br>
+          <span class="data-tip" data-src="USGS (US Geological Survey) Helium Market Review 2025: Qatar (Ras Laffan) produced ~35 million m³/year = ~33% of global helium supply. Plant offline since Mar 3. Helium spot price (US bulk): $200/m³ pre-crisis → ~$380/m³ by Mar 12 (+90%). Source: USGS, Gasworld helium price tracker, March 2026.">Qatar's Ras Laffan produced 33% of global helium; offline since Mar 3. Spot prices up 90%.</span> Liquid helium is irreplaceable for: (1) hospital MRI machines (each machine needs ~1,500L for superconducting magnet cooling), (2) semiconductor wafer fabs (chip manufacturing cleaning), (3) fiber optic cable production. India has <span class="data-tip" data-src="India has no national helium strategic reserve. Helium consumption: ~3–4 million m³/year. Primary uses: MRI (60%), semiconductor/electronics (25%), research (15%). Import dependency: 100% — India has no domestic helium production. Source: BARC (Bhabha Atomic Research Centre) helium consumption data; BIS (Bureau of Indian Standards) industrial gas statistics.">zero helium reserves</span> and is 100% import-dependent.
+        </div>
+        <div class="chart-wrap tall"><canvas id="heliumChart"></canvas></div>
+      </div>
+    </div>
+    <div class="grid-3">
+      <div class="card crit">
+        <div class="p-num" style="color:var(--crit)">MRI CRISIS CLOCK</div>
+        <h4 style="font-size:13px;margin:4px 0 6px">45-Day Diagnostic Emergency</h4>
+        <p style="font-size:11px;color:#555;line-height:1.6">India has approximately <span class="data-tip" data-src="National Health Authority (NHA) India: ~6,000 MRI machines operational in India. Each requires liquid helium top-up every 6–18 months depending on machine age and seal quality. At 90% helium price increase and supply uncertainty, hospitals are hoarding — accelerating the apparent shortage. Source: NHA Equipment Registry; AERB (Atomic Energy Regulatory Board) MRI data 2025.">6,000 MRI machines</span> — each dependent on liquid helium. At current supply disruption rates, the first MRI scanners will begin going offline within 45 days. Tier 2 and tier 3 city hospitals — where supply chains are thinner — will be disproportionately affected.</p>
+      </div>
+      <div class="card high">
+        <div class="p-num" style="color:var(--high)">API SUPPLY CHAIN</div>
+        <h4 style="font-size:13px;margin:4px 0 6px">Petrochemical Input Squeeze</h4>
+        <p style="font-size:11px;color:#555;line-height:1.6"><span class="data-tip" data-src="IPA: India manufactures ~60% of world's generic APIs. 70% of API synthesis requires petrochemical solvents and intermediates (benzene, toluene, methanol). At $103/bbl crude, API manufacturing cost inflation estimated 8–12%. Shipping delays via Cape of Good Hope add 2–3 weeks to import timelines. Source: IPA Industry Briefing, March 2026; DPIIT API Production Data.">India manufactures 60% of global generic APIs,</span> but is dependent on petrochemical-derived solvents and intermediates. A sustained oil price spike will push generic drug prices up 5–10% globally within 90 days — ultimately feeding back into India's domestic drug affordability and NPPA (National Pharmaceutical Pricing Authority) price control stress.</p>
+      </div>
+      <div class="card" style="border-left:4px solid var(--green)">
+        <div class="p-num" style="color:var(--green)">EXPORT WINDFALL</div>
+        <h4 style="font-size:13px;margin:4px 0 6px">Rupee Depreciation Upside</h4>
+        <p style="font-size:11px;color:#555;line-height:1.6">India's ~<span class="data-tip" data-src="PharmExcil: India pharma exports FY25 = $27.4B. ~30% to US (regulated generics), 25% to EU, 10% to Africa. All dollar/euro denominated. A 7% rupee depreciation increases rupee revenue by ~₹8,000–10,000 Cr on an annualised basis. Source: PharmExcil Export Statistics 2025-26; SEBI quarterly results for top 10 pharma companies.">$27B in annual pharma exports</span> are dollar-denominated. A 7% rupee depreciation generates ~₹8,000–10,000 Cr in incremental rupee revenue — partially offsetting API input cost inflation and making India's generics even more competitive vs branded drug alternatives globally.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTOR 4: AUTO/INFRA -->
+  <div class="sector-panel" id="sp-auto">
+    <div class="grid-2" style="margin-bottom:16px">
+      <div class="chart-card">
+        <h3>🚗 Auto &amp; Infra — Equity vs. Fuel Cost Sensitivity</h3>
+        <div class="chart-insight">
+          <span class="insight-label">Why This Chart Matters</span><br>
+          Auto and infrastructure are the two sectors most sensitive to <em>demand destruction</em> from fuel cost spikes, not just supply-side costs. <span class="data-tip" data-src="SIAM (Society of Indian Automobile Manufacturers): Every ₹1 increase in petrol/diesel price reduces 2-wheeler monthly sales by ~0.8% and passenger vehicle sales by ~0.4%. At current fuel cost trajectories, SIAM estimates FY27 auto volume growth cut from +7% to +3–4%. Source: SIAM Monthly Data, March 2026.">Every ₹1 petrol/diesel hike reduces 2-wheeler sales ~0.8%.</span> Infrastructure is hit from two sides: <span class="data-tip" data-src="CII (Confederation of Indian Industry): Diesel is 12–15% of construction project costs. Steel (energy-intensive) is another 20–25%. At $103 crude, construction cost inflation estimated 6–9% for ongoing projects. L&T project pipeline worth ₹4.2L Cr at risk of cost overruns. Source: CII Construction Outlook Q1 2026; L&T Q3 FY26 investor presentation.">diesel drives 12–15% of construction costs</span>, and steel (energy-intensive) adds another 20–25%.
+        </div>
+        <div class="chart-wrap tall"><canvas id="autoInfraChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>EV Transition — Crisis as Accelerator</h3>
+        <div class="chart-insight">
+          <span class="insight-label">Why This Chart Matters</span><br>
+          Every oil shock in history has caused a temporary spike in EV intent. <span class="data-tip" data-src="FADA (Federation of Automobile Dealers Associations): EV enquiries up 34% in first 2 weeks of crisis (Mar 1–15). But actual EV penetration in India at 6.8% of total vehicle sales (FY25). Key constraint: charging infrastructure and battery cost. Source: FADA data March 2026; SIAM EV dashboard.">EV enquiries rose 34% in the first 2 weeks of the crisis.</span> However, the same crisis threatens the EV supply chain: <span class="data-tip" data-src="Qatar and Bahrain are major aluminium producers (QATALUM, Alba). Aluminium is 30% of EV battery housing and body weight. Qatar/Bahrain aluminium smelters disrupted by Iranian strikes. LME Aluminium spot: +12% since Feb 28. Source: QATALUM/Alba force majeure notices; LME market data March 2026.">Qatari and Bahraini aluminium smelters (disrupted by strikes) supply 8% of global aluminium</span> — a critical EV input — and LME aluminium is up 12% since Feb 28.
+        </div>
+        <div class="chart-wrap tall"><canvas id="evChart"></canvas></div>
+      </div>
+    </div>
+    <div class="grid-3">
+      <div class="card high">
+        <div class="p-num" style="color:var(--high)">2-WHEELER DEMAND RISK</div>
+        <h4 style="font-size:13px;margin:4px 0 6px">Mass Market Fuel Sensitivity</h4>
+        <p style="font-size:11px;color:#555;line-height:1.6">India sold <span class="data-tip" data-src="SIAM: FY25 total 2-wheeler sales = 19.7M units (Bajaj, Hero, TVS, Honda). This is the primary commuter vehicle for ~60% of India's working population earning <₹30,000/month. Fuel cost as % of monthly income for this cohort: 8–14%. At ₹100/litre petrol, this rises to 12–18%. Source: SIAM FY25 Annual Data; CSO Household Expenditure Survey 2024.">19.7M two-wheelers in FY25</span> — the primary transport for India's working poor. At ₹100+/litre petrol (retail prices not yet revised but import parity demands it), the bottom 40% of income earners face a 12–18% fuel budget squeeze that directly reduces discretionary spending and 2-wheeler demand.</p>
+      </div>
+      <div class="card high">
+        <div class="p-num" style="color:var(--orange)">PROJECT PIPELINE AT RISK</div>
+        <h4 style="font-size:13px;margin:4px 0 6px">Infrastructure Cost Overruns</h4>
+        <p style="font-size:11px;color:#555;line-height:1.6"><span class="data-tip" data-src="L&T Q3 FY26 investor presentation: Order book ₹4.2L Cr (record high). CII analysis: At $103/bbl crude, diesel + steel cost inflation for infrastructure = 6–9% above contract prices for ongoing projects. Fixed-price contracts bear this entirely. NITI Aayog infrastructure pipeline: ₹11L Cr NIP projects in execution. Source: L&T investor presentation; CII Construction Outlook Q1 2026.">L&T's ₹4.2L Cr order book</span> faces 6–9% cost overrun risk on fixed-price contracts. Infrastructure projects with fuel-intensive earthmoving, heavy transport, and steel fabrication phases are most exposed. At $120 oil, NITI Aayog estimates the NIP (National Infrastructure Pipeline) slippage could extend 6–9 months beyond current timelines.</p>
+      </div>
+      <div class="card" style="border-left:4px solid var(--green)">
+        <div class="p-num" style="color:var(--green)">STRUCTURAL CATALYST</div>
+        <h4 style="font-size:13px;margin:4px 0 6px">Coal &amp; Defence as Beneficiaries</h4>
+        <p style="font-size:11px;color:#555;line-height:1.6"><span class="data-tip" data-src="BSE data: Coal India +6.0% since Feb 28 (vs Nifty –8.2%). Coal India dividend yield ~8% makes it a crisis safe-haven. Coal power generation dispatch up 12% in first 2 weeks of crisis (CEA data). Source: BSE, CEA Generation Data March 2026.">Coal India is up +6%</span> as power utilities shift to coal to reduce gas dependency. Defence sector stocks (HAL, BEL, Data Patterns) are up <span class="data-tip" data-src="BSE Defence index: HAL +4.2%, BEL +3.8%, Data Patterns +2.1% since Feb 28. India's defence indigenisation thesis strengthens — crisis demonstrates strategic import vulnerability. Source: BSE sectoral data, March 2026.">3–5%</span> as the crisis strengthens the argument for defence indigenisation and domestic energy security infrastructure.</p>
+      </div>
     </div>
   </div>
 
@@ -1258,27 +1609,52 @@
 ══════════════════════════════════════════════ -->
 <section id="tab-projections" class="section fade-in">
   <h2 class="section-title">30–60 Day Projections — Scenario Analysis</h2>
-  <p class="section-desc">Three scenarios based on duration of blockade: Rapid Resolution (30 days), Prolonged Stalemate (60 days), and Full Escalation. Each has distinct implications for India's economy.</p>
+  <p class="section-desc">Three scenarios based on duration of blockade: Rapid Resolution, Prolonged Stalemate, and Full Escalation. Use the scenario selector to highlight a specific path. Each chart includes rationale and source attribution.</p>
+
+  <div class="scenario-controls">
+    <div>
+      <label>🎭 Highlight Scenario</label>
+      <select class="scenario-select" id="scenSelector" onchange="highlightScenario(this.value)" style="margin-top:8px;display:block">
+        <option value="all">Show All Scenarios</option>
+        <option value="resolution">Resolution (Best Case)</option>
+        <option value="stalemate">Stalemate (Base Case)</option>
+        <option value="escalation">Escalation (Worst Case)</option>
+      </select>
+    </div>
+    <div style="font-size:11px;color:var(--muted);max-width:500px;line-height:1.6;margin-top:8px">
+      <strong>Scenario Probabilities (analyst consensus):</strong>
+      <span class="data-tip" data-src="Goldman Sachs Commodities Research, March 2026: 'We assign 25% probability to resolution within 30 days, 45% to stalemate of 30–90 days, 30% to escalation.' Also: JPMorgan Asia Pacific: Resolution 20%, Stalemate 50%, Escalation 30%.">Resolution: ~20–25% · Stalemate: ~45–50% · Escalation: ~25–30%</span>
+    </div>
+  </div>
 
   <!-- Scenario Charts -->
   <div class="grid-3" style="margin-bottom:20px">
     <div class="chart-card">
       <h3>Crude Oil Price Scenarios ($/bbl)</h3>
-      <div class="chart-insight"><strong>Insight:</strong> In the base (stalemate) case, oil stabilises around $95–100. Resolution drives a sharp correction to $75. Escalation (Iran mines, wider conflict) could push $130–150 — a level that would trigger stagflation in India.</div>
+      <div class="chart-insight">
+        <span class="insight-label">Rationale</span><br>
+        In the base (stalemate) case, oil stabilises around <span class="data-tip" data-src="Goldman Sachs Commodities, March 2026: Base case Brent $95–100/bbl under 60-day stalemate. War risk premium estimated $25–30/bbl. IEA emergency 400M barrel release provides ~20-day cover. Source: GS Oil Research Note, March 6, 2026.">$95–100</span>. Resolution drives a sharp correction to <span class="data-tip" data-src="Pre-war Brent: $65/bbl. Goldman Sachs sees $70–75 on full Hormuz reopening as stranded cargoes flood market. JPMorgan 'snap-back' target: $72. Source: JPMorgan Commodities, March 2026.">$70–75</span>. Escalation (Iran mining Hormuz or striking Saudi Abqaiq) could push <span class="data-tip" data-src="BofA Securities, March 2026: 'Iran mining Hormuz or attacking Abqaiq would send Brent to $140–160. This level has never been sustained — demand destruction kicks in at ~$130.' Source: BofA Merrill Lynch Global Energy Outlook, March 2026.">$130–150</span> — triggering stagflation in India.
+      </div>
       <div class="chart-wrap">
         <canvas id="oilScenChart"></canvas>
       </div>
     </div>
     <div class="chart-card">
       <h3>USD/INR Scenarios</h3>
-      <div class="chart-insight"><strong>Insight:</strong> MUFG's analysis maps cleanly: $100 oil → ₹95, $120 oil → ₹97.5. Every 6 weeks of sustained blockade with FII outflows will push the rupee to new record lows. RBI intervention has limits.</div>
+      <div class="chart-insight">
+        <span class="insight-label">Rationale</span><br>
+        <span class="data-tip" data-src="MUFG Bank FX Research, March 2026: '$100 oil → INR 95 (by Day 45), $120 oil → INR 97.5 (by Day 60).' Based on: $10 oil rise widens CAD ~0.5% GDP, requiring ~$10B of RBI intervention per quarter. RBI forex $608B − current depletion rate = comfortable for ~90 days. Source: MUFG Research Note March 2026; RBI Weekly Statistical Supplement.">MUFG maps: $100 oil → ₹95, $120 oil → ₹97.5.</span> <span class="data-tip" data-src="Citi FX India note, March 2026: 'RBI intervention pace of ~$2–3B/week unsustainable beyond 3 months without reserves falling below 9 months import cover. ₹97–98 is the psychological RBI line-in-the-sand.' Source: Citi Research India FX, March 2026.">Every 6 weeks of sustained blockade pushes the rupee to new record lows.</span> RBI has intervened but at a ~$13B pace in 19 days — a rate it cannot sustain indefinitely.
+      </div>
       <div class="chart-wrap">
         <canvas id="inrScenChart"></canvas>
       </div>
     </div>
     <div class="chart-card">
       <h3>India CPI Inflation Scenarios (%)</h3>
-      <div class="chart-insight"><strong>Insight:</strong> Feb CPI at 3.21% will likely breach 4.5% (RBI target) in April. In the escalation scenario, India risks returning to 6%+ CPI by June — forcing an uncomfortable choice between growth-supportive rate cuts and inflation-fighting hikes.</div>
+      <div class="chart-insight">
+        <span class="insight-label">Rationale</span><br>
+        <span class="data-tip" data-src="MoSPI: CPI Feb 2026 = 3.21%. RBI MPR Feb 2026 models: $90/bbl → CPI 4.2–4.5% by Apr; $110/bbl → CPI 5.5% by Jun; $130/bbl → CPI 6.5–7% by Jun. Food weight in CPI = 45.86% — food inflation transmission from fertilizer/fuel shocks adds 1–2 quarter lag. Source: MoSPI, RBI MPR February 2026.">Feb CPI at 3.21% will breach RBI's 4% target in April.</span> In the escalation scenario, India risks <span class="data-tip" data-src="Historical comparison: 2022-23 Ukraine war CPI peak India: 7.79% (April 2022). That shock was smaller than current one in energy terms but lacked the simultaneous LPG+fertilizer+shipping crisis. Current shock has more supply-side channels. Source: MoSPI historical CPI series; RBI Annual Report 2023.">returning to 6%+ CPI by June 2026</span> — forcing an impossible choice: cut rates to support growth, or hike to fight inflation.
+      </div>
       <div class="chart-wrap">
         <canvas id="cpiScenChart"></canvas>
       </div>
@@ -1412,22 +1788,41 @@
   <p class="section-desc">India has a narrow diplomatic window. The following recommendations are ordered by urgency and strategic impact. India's neutrality is its most valuable geopolitical asset — it must be used offensively, not defensively.</p>
 
   <div class="alert-strip crit">
-    <strong>⚠ Urgent Window:</strong> India has approximately 30–40 days before crude reserves run thin AND the Kharif fertilizer window closes. Simultaneous action on all fronts is required.
+    <strong>⚠ Urgent Window:</strong> India has approximately <span class="data-tip" data-src="PPAC (Petroleum Planning and Analysis Cell): India's strategic crude reserves = ~100M barrels ≈ 40 days. Above-ground commercial stocks add ~5–7 days. Total buffer: ~45 days from March 18. Source: PPAC Strategic Reserve Bulletin, March 2026.">30–40 days before crude reserves run thin</span> AND the <span class="data-tip" data-src="IARI agricultural calendar: Kharif sowing (rice, cotton, maize) begins May 15 – June 15. Fertilizer must be applied 6 weeks before sowing = deadline April 5–15 for procurement and distribution. Source: IARI Crop Calendar 2026; FAI Fertilizer Demand Projections.">Kharif fertilizer window closes</span>. Simultaneous action on all fronts is required.
   </div>
 
-  <h3 style="font-size:14px;font-weight:600;margin-bottom:14px;color:var(--crit)">🔴 Immediate (0–15 days)</h3>
+  <!-- Policy Priority Matrix (Interactive) -->
+  <div class="chart-card" style="margin-bottom:20px">
+    <h3>Policy Priority Matrix — Urgency vs. Impact</h3>
+    <div class="rationale-box" style="margin-bottom:12px"><strong>How to read:</strong> Each cell is a policy recommendation, placed by urgency (x-axis) and impact magnitude (y-axis). Click any cell to jump to the full recommendation below. The top-right quadrant (high urgency, high impact) are non-negotiable immediate actions.</div>
+    <div style="display:grid;grid-template-columns:80px 1fr 1fr;gap:4px;margin-bottom:12px">
+      <div></div>
+      <div style="text-align:center;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;padding:4px">NEAR-TERM (15–45 days)</div>
+      <div style="text-align:center;font-size:10px;font-weight:700;color:var(--crit);text-transform:uppercase;padding:4px">IMMEDIATE (0–15 days)</div>
+      <div style="writing-mode:vertical-lr;transform:rotate(180deg);text-align:center;font-size:10px;font-weight:700;color:var(--high);text-transform:uppercase;padding:4px">HIGH IMPACT</div>
+      <div class="priority-cell q2" onclick="scrollToPolicy('p5')"><div class="p-label">Near / High</div><div class="p-title">P05 — LPG 40-Country Diversification</div><div class="p-desc">Long-term supply contracts with US, Norway, Australia</div></div>
+      <div class="priority-cell q1" onclick="scrollToPolicy('p1')"><div class="p-label">🔴 Urgent / High</div><div class="p-title">P01 — Formal Iran Passage Exemption</div><div class="p-desc">Written 120-day protocol for all Indian energy vessels</div></div>
+      <div style="writing-mode:vertical-lr;transform:rotate(180deg);text-align:center;font-size:10px;font-weight:700;color:var(--blue);text-transform:uppercase;padding:4px">LOWER IMPACT</div>
+      <div class="priority-cell q4" onclick="scrollToPolicy('p9')"><div class="p-label">Strategic / Lower</div><div class="p-title">P09 — SPR Expansion (Triple Reserves)</div><div class="p-desc">Long-term $5B investment in underground storage</div></div>
+      <div class="priority-cell q3" onclick="scrollToPolicy('p2')"><div class="p-label">🔴 Urgent / Lower</div><div class="p-title">P02 — Emergency Fertilizer Procurement</div><div class="p-desc">Kharif window closes April 15 — act now</div></div>
+    </div>
+  </div>
+
+  <h3 style="font-size:14px;font-weight:600;margin-bottom:14px;color:var(--crit)" id="p1">🔴 Immediate (0–15 days)</h3>
   <div class="grid-2" style="margin-bottom:20px">
-    <div class="policy-card urgent">
+    <div class="policy-card urgent" id="p1-card">
       <div class="p-num">POLICY 01</div>
       <h4>Secure a Formal, Written Iran Exemption for Indian Vessels</h4>
-      <p>PM Modi's verbal agreement for LPG tanker passage is insufficient. India must negotiate a formal written protocol — at minimum 120 days — covering crude oil, LPG, fertilizer raw materials, and pharmaceuticals. Leverage Chabahar Port investments and India's non-alignment as bargaining chips. Assign a permanent diplomatic liaison to Tehran for real-time vessel clearance.</p>
+      <p><span class="data-tip" data-src="MEA spokesperson March 12, 2026: 'It would be premature for me to say anything' — confirming NO formal written agreement exists. Two LPG tankers crossed March 14 on informal arrangement. Historical precedent: India secured written exemptions from Iran during 2012 US sanctions via Rupee trade mechanism. Source: MEA briefing transcripts; India Shipping News March 12, 2026.">PM Modi's verbal arrangement for LPG tanker passage</span> is insufficient. India must negotiate a formal written protocol — at minimum 120 days — covering crude oil, LPG, fertilizer raw materials, and pharmaceuticals. Leverage <span class="data-tip" data-src="India-operated Shahid Beheshti terminal at Chabahar Port, Iran. US sanctions waiver expires April 26, 2026 (renewable). India has invested ~₹3,400 Cr in Chabahar development. This is India's only non-Hormuz access to Iran and Central Asia. Source: Ministry of Ports, Shipping and Waterways; MEA Chabahar fact sheet.">Chabahar Port investments (₹3,400 Cr)</span> and India's BRICS chairmanship as bargaining chips.</p>
+      <div class="rationale-box"><strong>Rationale:</strong> Two tankers crossing is anecdotal. Iran needs to formally exclude Indian flagged, chartered, and insured vessels from IRGC targeting orders — in writing, with IRGC commander sign-off. This is achievable given India's unique diplomatic positioning.</div>
       <div class="p-horizon">Immediate · 0–15 days</div>
     </div>
-    <div class="policy-card urgent">
-      <div class="p-num">POLICY 02</div>
+    <div class="policy-card urgent" id="p2-card">
+      <div class="p-num" id="p2">POLICY 02</div>
       <h4>Emergency Fertilizer Procurement &amp; Buffer Stock Build</h4>
-      <p>The Kharif sowing window (May–June) is 45–60 days away. India must immediately issue emergency tenders for urea and phosphate from non-Gulf sources (Canada, Morocco, Russia, Egypt) and fast-track port handling. A 30-day fertilizer supply delay now equals a 20–25% crop yield risk in the Kharif season — a food inflation shock in Q3 2026.</p>
-      <div class="p-horizon">Immediate · 0–15 days</div>
+      <p>The Kharif sowing window (May–June) is <span class="data-tip" data-src="IARI agricultural calendar: Kharif sowing begins May 15 – June 15. Fertilizer must be applied 6 weeks before = April 5–15 deadline for procurement and distribution to reach farmers. India's urea distribution pipeline (railway + road) requires 3–4 weeks from port to farm gate. Source: IARI Crop Calendar 2026; FAI distribution data.">45–60 days away</span>. India must immediately issue emergency tenders for urea and phosphate from <span class="data-tip" data-src="Viable non-Gulf sources: Canada (Nutrien — largest potash producer), Morocco (OCP — largest phosphate producer), Russia (PhosAgro, EuroChem), Egypt (Abu Qir Fertilizers). All have spare capacity and non-Hormuz shipping routes. Lead time: 30–45 days from tender to delivery. Source: IFA (International Fertilizer Association) market intelligence, March 2026.">non-Gulf sources (Canada, Morocco, Russia, Egypt)</span> and fast-track port handling. A 30-day delay equals a <span class="data-tip" data-src="IARI Crop Science Division: Missing optimal nitrogen application window reduces rice yield 15–25%, maize 20–30%, cotton 10–15%. Kharif accounts for 52% of India's food production. Source: IARI Annual Report 2025; FAI Agronomic Research Series.">15–25% Kharif crop yield risk</span> — a food inflation shock in Q3 2026.</p>
+      <div class="rationale-box"><strong>Rationale:</strong> This is India's single highest-leverage action against food inflation. Fertilizer procurement takes 6–8 weeks pipeline-to-farm. Every day of delay now = food price pain for 1.4B people in October 2026.</div>
+      <div class="p-horizon">Immediate · Before April 15</div>
     </div>
     <div class="policy-card urgent">
       <div class="p-num">POLICY 03</div>
@@ -1446,7 +1841,7 @@
   <h3 style="font-size:14px;font-weight:600;margin-bottom:14px;color:var(--high)">🟠 Near-Term (15–45 days)</h3>
   <div class="grid-2" style="margin-bottom:20px">
     <div class="policy-card">
-      <div class="p-num">POLICY 05</div>
+      <div class="p-num" id="p5">POLICY 05</div>
       <h4>Activate LPG Diversification — 40-Country Sourcing Strategy</h4>
       <p>India has already begun sourcing LPG from 40 countries. Accelerate long-term contracts (2–5 years) with US, Norway, Australia, and Canada for LPG and LNG. The 2.2 MTPA US LPG deal must be the template for 4–6 additional long-term supply agreements. This permanently reduces Hormuz dependency below 50% for LPG within 18 months.</p>
       <div class="p-horizon">Near-Term · 15–45 days</div>
@@ -1474,7 +1869,7 @@
   <h3 style="font-size:14px;font-weight:600;margin-bottom:14px;color:var(--blue)">🔵 Strategic (45–90 days)</h3>
   <div class="grid-3">
     <div class="policy-card">
-      <div class="p-num">POLICY 09</div>
+      <div class="p-num" id="p9">POLICY 09</div>
       <h4>SPR Expansion — Triple Strategic Petroleum Reserves</h4>
       <p>India's ~100M barrel reserve covers only 40 days. The IEA standard is 90 days. A $5B investment in expanding underground cavern storage at Padur, Mangaluru, Visakhapatnam, and new sites in Gujarat would move India from "crisis-prone" to "crisis-resilient" permanently.</p>
       <div class="p-horizon">Strategic · 60–90 days</div>
@@ -2268,11 +2663,295 @@ function refreshDashboard(btn) {
   }, 800);
 }
 
+
+// ── OIL IMPACT CALCULATOR ──
+function updateOilImpact(price) {
+  const p = parseFloat(price);
+  document.getElementById('oilSliderVal').textContent = '$' + Math.round(p);
+  // CAD: baseline 1.5% at $65, +0.045% per dollar
+  const cad = (1.5 + (p - 65) * 0.044).toFixed(1);
+  // INR: ₹86.5 at $65, +0.074 per dollar
+  const inr = (86.5 + (p - 65) * 0.074).toFixed(1);
+  // CPI: 2.75 baseline, +0.021 per dollar
+  const cpi = Math.min(8.0, (2.75 + (p - 65) * 0.021)).toFixed(1);
+  // Annual oil bill: 220 MMT at $price × 7.5 (INR/$ rough), /1e12 for L Cr
+  const bill = ((p * 7.5 * 220e6 * 7.33) / 1e14).toFixed(1); // rough bbl equiv
+  // GDP impact: -0.04pp per $10 above $65
+  const gdp = ((p - 65) * 0.0044).toFixed(1);
+
+  document.getElementById('impactCAD').textContent = cad + '%';
+  document.getElementById('impactINR').textContent = '₹' + inr;
+  document.getElementById('impactCPI').textContent = cpi + '%';
+  document.getElementById('impactBill').textContent = '₹' + bill + 'L Cr';
+  document.getElementById('impactGDP').textContent = '–' + gdp + 'pp';
+  
+  // Color code
+  const cadEl = document.getElementById('impactCAD');
+  cadEl.style.color = cad > 3 ? 'var(--crit)' : cad > 2 ? 'var(--high)' : 'var(--med)';
+  const inrEl = document.getElementById('impactINR');
+  inrEl.style.color = inr > 95 ? 'var(--crit)' : inr > 92 ? 'var(--high)' : 'var(--med)';
+}
+
+// ── SECTOR TABS ──
+function showSector(id, btn) {
+  document.querySelectorAll('.sector-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sector-tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('sp-' + id).classList.add('active');
+  btn.classList.add('active');
+  // Reinitialize charts in the shown panel
+  setTimeout(() => {
+    if (id === 'lpg') { makeLpgCharts(); }
+    else if (id === 'agri') { makeAgriCharts(); }
+    else if (id === 'pharma') { makePharmaCharts(); }
+    else if (id === 'auto') { makeAutoCharts(); }
+  }, 50);
+}
+
+// ── SCENARIO HIGHLIGHTER ──
+function highlightScenario(val) {
+  ['oilScenChart','inrScenChart','cpiScenChart'].forEach(id => {
+    const ch = charts[id.replace('Chart','Scen')] || Object.values(charts).find(c => c && c.canvas && c.canvas.id === id);
+    if (!ch) return;
+    ch.data.datasets.forEach((ds, i) => {
+      if (val === 'all') { ds.borderWidth = 2; ds.borderDash = []; ds.pointRadius = 3; }
+      else {
+        const names = ['resolution','stalemate','escalation'];
+        if (names[i] === val) { ds.borderWidth = 3; ds.borderDash = []; ds.pointRadius = 5; }
+        else { ds.borderWidth = 1; ds.borderDash = [4,3]; ds.pointRadius = 1; }
+      }
+    });
+    ch.update();
+  });
+}
+
+// ── SCROLL TO POLICY ──
+function scrollToPolicy(id) {
+  const el = document.getElementById(id + '-card') || document.getElementById(id);
+  if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); el.style.outline = '2px solid var(--blue)'; setTimeout(() => el.style.outline = '', 2000); }
+}
+
+// ── SECTOR CHART MAKERS ──
+function makeLpgCharts() {
+  const ids = ['lpgBreakdownChart','lpgPriceChart'];
+  ids.forEach(id => { const c = Chart.getChart(id); if(c) c.destroy(); });
+
+  const c1 = document.getElementById('lpgBreakdownChart');
+  if (c1) new Chart(c1, {
+    type: 'bar',
+    data: {
+      labels: ['Normal Supply','Hormuz Blocked','Domestic Boost','US Alt Source','Current Level','Target (60d)'],
+      datasets:[{
+        label: 'LPG Supply (% of normal)',
+        data: [100, -44, 10, 6, 56, 80],
+        backgroundColor: ['#27AE60','#C0392B','#F39C12','#2471A3','#E67E22','#27AE60'],
+        borderRadius: 5
+      }]
+    },
+    options: { responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false}, tooltip:{callbacks:{label:ctx=>ctx.raw+'% of normal'}} },
+      scales:{ y:{min:-50,max:120,ticks:{callback:v=>v+'%'},grid:{color:'#F0EDE8'}}, x:{grid:{display:false}} }
+    }
+  });
+
+  const c2 = document.getElementById('lpgPriceChart');
+  if (c2) new Chart(c2, {
+    type: 'line',
+    data: {
+      labels: ['Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 7','Mar 18 (est)','Apr (proj)'],
+      datasets: [
+        { label:'Domestic 14.2kg (₹)', data:[803,803,803,803,853,853,913,913,950], borderColor:'#C0392B', backgroundColor:'rgba(192,57,43,0.08)', tension:0.3, fill:true, pointRadius:3, yAxisID:'y' },
+        { label:'Saudi CP $/MT', data:[380,370,360,365,420,440,580,600,620], borderColor:'#2471A3', backgroundColor:'rgba(36,113,163,0.06)', tension:0.3, fill:false, pointRadius:3, borderDash:[4,2], yAxisID:'y2' }
+      ]
+    },
+    options: { responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{labels:{boxWidth:10,font:{size:9}}} },
+      scales:{
+        y:{ position:'left', ticks:{callback:v=>'₹'+v}, grid:{color:'#F0EDE8'} },
+        y2:{ position:'right', ticks:{callback:v=>'$'+v}, grid:{display:false} },
+        x:{ grid:{display:false} }
+      }
+    }
+  });
+}
+
+function makeAgriCharts() {
+  ['fertImportChart','foodCascadeChart'].forEach(id => { const c = Chart.getChart(id); if(c) c.destroy(); });
+
+  const c1 = document.getElementById('fertImportChart');
+  if (c1) new Chart(c1, {
+    type: 'doughnut',
+    data: {
+      labels: ['Gulf States (Qatar/SA/UAE/Oman)','Russia','Canada/Other Americas','Morocco/Africa','Domestic Production'],
+      datasets:[{ data:[38,20,15,12,15], backgroundColor:['#C0392B','#8E44AD','#2471A3','#27AE60','#F39C12'], borderWidth:2, borderColor:'#fff' }]
+    },
+    options: { responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{position:'right',labels:{boxWidth:12,font:{size:9}}},
+        tooltip:{callbacks:{label:ctx=>ctx.label+': '+ctx.raw+'%'}} }
+    }
+  });
+
+  const c2 = document.getElementById('foodCascadeChart');
+  if (c2) new Chart(c2, {
+    type: 'line',
+    data: {
+      labels: ['Feb 26','Mar 26','Apr 26','May 26','Jun 26','Jul 26','Aug 26','Sep 26'],
+      datasets: [
+        { label:'Food CPI — Resolution', data:[5.1,5.3,5.0,4.8,4.5,4.0,3.8,3.5], borderColor:'#27AE60', tension:0.3, fill:false, pointRadius:3 },
+        { label:'Food CPI — Stalemate', data:[5.1,5.5,6.2,6.8,7.0,6.8,6.5,6.2], borderColor:'#E67E22', tension:0.3, fill:false, pointRadius:3 },
+        { label:'Food CPI — Escalation', data:[5.1,5.8,6.8,8.0,9.2,9.5,9.0,8.5], borderColor:'#C0392B', tension:0.3, fill:false, pointRadius:3 },
+        { label:'RBI Comfort Zone', data:[4,4,4,4,4,4,4,4], borderColor:'#2471A3', borderDash:[6,3], pointRadius:0, borderWidth:1.5, fill:false }
+      ]
+    },
+    options: { responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{labels:{boxWidth:10,font:{size:9}}} },
+      scales:{ y:{min:2,max:11,ticks:{callback:v=>v+'%'},grid:{color:'#F0EDE8'}}, x:{grid:{display:false}} }
+    }
+  });
+}
+
+function makePharmaCharts() {
+  ['pharmaDynChart','heliumChart'].forEach(id => { const c = Chart.getChart(id); if(c) c.destroy(); });
+
+  const c1 = document.getElementById('pharmaDynChart');
+  if (c1) new Chart(c1, {
+    type: 'bar',
+    data: {
+      labels: ['Nifty Pharma Index','API Manufacturer Margins','Export Revenue (INR)','MRI Helium Cost','Shipping Delays','Domestic Drug Price'],
+      datasets:[
+        { label:'Change since Feb 28 (%)', data:[2.1,-9,-3,90,22,5],
+          backgroundColor:['#27AE60','#C0392B','#27AE60','#C0392B','#E67E22','#E67E22'],
+          borderRadius:4 }
+      ]
+    },
+    options: { responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false}, tooltip:{callbacks:{label:ctx=>ctx.raw+'%'}} },
+      scales:{ y:{ticks:{callback:v=>v+'%'},grid:{color:'#F0EDE8'}}, x:{grid:{display:false},ticks:{font:{size:9}}} }
+    }
+  });
+
+  const c2 = document.getElementById('heliumChart');
+  if (c2) new Chart(c2, {
+    type: 'line',
+    data: {
+      labels: ['Feb 27','Mar 1','Mar 3','Mar 5','Mar 7','Mar 9','Mar 12','Mar 14','Mar 18'],
+      datasets:[
+        { label:'Helium Spot $/m³', data:[200,205,215,280,320,355,385,380,370], borderColor:'#8E44AD', backgroundColor:'rgba(142,68,173,0.08)', tension:0.3, fill:true, pointRadius:3, yAxisID:'y' },
+        { label:'India MRI Supply Days Remaining', data:[90,90,90,75,60,50,45,45,40], borderColor:'#C0392B', tension:0.3, fill:false, pointRadius:3, borderDash:[4,2], yAxisID:'y2' }
+      ]
+    },
+    options: { responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{labels:{boxWidth:10,font:{size:9}}} },
+      scales:{
+        y:{ position:'left', ticks:{callback:v=>'$'+v}, grid:{color:'#F0EDE8'} },
+        y2:{ position:'right', min:0, max:100, ticks:{callback:v=>v+'d'}, grid:{display:false} },
+        x:{ grid:{display:false} }
+      }
+    }
+  });
+}
+
+function makeAutoCharts() {
+  ['autoInfraChart','evChart'].forEach(id => { const c = Chart.getChart(id); if(c) c.destroy(); });
+
+  const c1 = document.getElementById('autoInfraChart');
+  if (c1) new Chart(c1, {
+    type: 'scatter',
+    data: {
+      datasets:[{
+        label: 'Sectors',
+        data: [
+          {x:85,y:-10.6,r:14,label:'Nifty Auto'},
+          {x:90,y:-12.9,r:13,label:'Nifty Infra'},
+          {x:70,y:-8.1,r:15,label:'Nifty Energy'},
+          {x:65,y:-5.8,r:10,label:'PSU Banks'},
+          {x:40,y:2.1,r:9,label:'Pharma'},
+          {x:30,y:1.1,r:9,label:'IT'},
+          {x:20,y:6.0,r:11,label:'Coal India'},
+          {x:75,y:-15,r:10,label:'Hospitality'},
+        ],
+        backgroundColor:['#E67E22','#C0392B','#C0392B','#F39C12','#27AE60','#27AE60','#1A8449','#E67E22'],
+        pointRadius:function(ctx){return ctx.raw.r;}
+      }]
+    },
+    options: { responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false},
+        tooltip:{callbacks:{label:ctx=>ctx.raw.label+' | Fuel sensitivity: '+ctx.raw.x+'% | Return: '+ctx.raw.y+'%'}} },
+      scales:{
+        x:{ min:0,max:100,title:{display:true,text:'Fuel Cost Sensitivity (%)'},grid:{color:'#F0EDE8'} },
+        y:{ title:{display:true,text:'Equity Return since Feb 28 (%)'},grid:{color:'#F0EDE8'} }
+      }
+    }
+  });
+
+  const c2 = document.getElementById('evChart');
+  if (c2) new Chart(c2, {
+    type: 'line',
+    data: {
+      labels: ['FY24','FY25','FY26 (est)','FY27-Res','FY27-Stale','FY27-Esc'],
+      datasets:[
+        { label:'EV Share of Vehicle Sales (%)', data:[4.2,6.8,8.5,11,9.5,7.5], borderColor:'#27AE60', backgroundColor:'rgba(39,174,96,0.1)', tension:0.3, fill:true, pointRadius:4 },
+        { label:'Petrol/Diesel Premium over EV (₹/km)', data:[-0.2,0.1,0.3,0.7,1.0,1.5], borderColor:'#2471A3', tension:0.3, fill:false, pointRadius:4, borderDash:[4,2], yAxisID:'y2' }
+      ]
+    },
+    options: { responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{labels:{boxWidth:10,font:{size:9}}} },
+      scales:{
+        y:{ position:'left', ticks:{callback:v=>v+'%'}, grid:{color:'#F0EDE8'} },
+        y2:{ position:'right', ticks:{callback:v=>'₹'+v+'/km'}, grid:{display:false} },
+        x:{ grid:{display:false} }
+      }
+    }
+  });
+}
+
+function makeNewMarketCharts() {
+  ['sectorEquityChart','forexChart'].forEach(id => { const c = Chart.getChart(id); if(c) c.destroy(); });
+
+  const c1 = document.getElementById('sectorEquityChart');
+  if (c1) new Chart(c1, {
+    type: 'bar',
+    data: {
+      labels: ['Coal India','IT (Wipro)','Pharma','PSU Banks','Nifty50','LPG/OMCs','PSU Energy','Auto/EV','Hospitality','Infra (L&T)'],
+      datasets:[{ label:'Return since Feb 28 (%)',
+        data:[6.0,1.1,2.1,-5.8,-8.2,-8.1,-8.1,-10.6,-15,-12.9],
+        backgroundColor:['#1A8449','#27AE60','#27AE60','#E67E22','#E67E22','#C0392B','#C0392B','#C0392B','#7B241C','#7B241C'],
+        borderRadius:4 }]
+    },
+    options: { indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false}, tooltip:{callbacks:{label:ctx=>ctx.raw+'%'}} },
+      scales:{ x:{ticks:{callback:v=>v+'%'},grid:{color:'#F0EDE8'}}, y:{grid:{display:false}} }
+    }
+  });
+
+  const c2 = document.getElementById('forexChart');
+  if (c2) new Chart(c2, {
+    type: 'line',
+    data: {
+      labels: ['Feb 27','Mar 1','Mar 4','Mar 7','Mar 10','Mar 13','Mar 14','Mar 18'],
+      datasets:[
+        { label:'Forex Reserves ($B)', data:[621,618,614,611,608,605,608,608], borderColor:'#2471A3', backgroundColor:'rgba(36,113,163,0.08)', fill:true, tension:0.3, pointRadius:3, yAxisID:'y' },
+        { label:'Import Cover (months)', data:[10.8,10.7,10.6,10.5,10.4,10.3,10.4,10.3], borderColor:'#27AE60', tension:0.3, fill:false, pointRadius:3, borderDash:[4,2], yAxisID:'y2' }
+      ]
+    },
+    options: { responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{labels:{boxWidth:10,font:{size:9}}} },
+      scales:{
+        y:{ position:'left', min:595, ticks:{callback:v=>'$'+v+'B'}, grid:{color:'#F0EDE8'} },
+        y2:{ position:'right', min:9, max:12, ticks:{callback:v=>v+'mo'}, grid:{display:false} },
+        x:{ grid:{display:false} }
+      }
+    }
+  });
+}
+
 // ── INIT ──
 document.addEventListener('DOMContentLoaded',()=>{
   updateBanner();
   makeCharts();
   makeStmtCharts();
+  makeNewMarketCharts();
+  makeLpgCharts();
+  updateOilImpact(103);
   // Auto-refresh every 5 minutes
   setInterval(()=>{ updateBanner(); makeCharts(); }, 300000);
 });
