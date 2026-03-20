@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>India & the Hormuz Blockade — Crisis Intelligence Dashboard</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -639,6 +639,9 @@
     min-height: 420px; overflow: hidden;
   }
   .map-svg-wrap svg { width: 100%; display: block; }
+  .leaflet-map-container { height: 460px; border-radius: 8px 0 0 8px; z-index: 0; }
+  .leaflet-map-container .leaflet-control-attribution { font-size: 8px; background: rgba(0,0,0,0.5); color: rgba(255,255,255,0.4); }
+  .leaflet-map-container .leaflet-control-attribution a { color: rgba(255,255,255,0.5); }
 
   .map-side-panel {
     background: #0D2137; border-left: 1px solid rgba(255,255,255,0.08);
@@ -1407,184 +1410,7 @@
     ════════════════════════════════════════════════════ -->
     <div class="map-panel active" id="mp-blockade">
       <div class="map-insight-panel">
-        <div class="map-svg-wrap">
-          <svg viewBox="0 0 860 500" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <radialGradient id="oceanGrad" cx="50%" cy="50%" r="60%">
-                <stop offset="0%" stop-color="#0D3B5E"/>
-                <stop offset="100%" stop-color="#071520"/>
-              </radialGradient>
-              <radialGradient id="warGrad" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stop-color="rgba(192,57,43,0.35)"/>
-                <stop offset="100%" stop-color="rgba(192,57,43,0)"/>
-              </radialGradient>
-              <filter id="glow">
-                <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-                <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
-              </filter>
-              <filter id="softglow">
-                <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
-                <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
-              </filter>
-            </defs>
-            <!-- Ocean -->
-            <rect width="860" height="500" fill="url(#oceanGrad)"/>
-            <!-- Grid lines subtle -->
-            <g stroke="rgba(255,255,255,0.04)" stroke-width="1">
-              <line x1="0" y1="100" x2="860" y2="100"/>
-              <line x1="0" y1="200" x2="860" y2="200"/>
-              <line x1="0" y1="300" x2="860" y2="300"/>
-              <line x1="0" y1="400" x2="860" y2="400"/>
-              <line x1="100" y1="0" x2="100" y2="500"/>
-              <line x1="200" y1="0" x2="200" y2="500"/>
-              <line x1="300" y1="0" x2="300" y2="500"/>
-              <line x1="400" y1="0" x2="400" y2="500"/>
-              <line x1="500" y1="0" x2="500" y2="500"/>
-              <line x1="600" y1="0" x2="600" y2="500"/>
-              <line x1="700" y1="0" x2="700" y2="500"/>
-              <line x1="800" y1="0" x2="800" y2="500"/>
-            </g>
-
-            <!-- ── LANDMASSES rendered by D3 + world-atlas ── -->
-            <g id="geo-1"></g>
-
-            <!-- War damage markers on Iran (overlays kept) -->
-            <g filter="url(#glow)">
-              <circle cx="540" cy="72" r="5" fill="#FF4444" opacity="0.9"/>
-              <circle cx="565" cy="65" r="4" fill="#FF4444" opacity="0.8"/>
-              <circle cx="600" cy="70" r="6" fill="#FF4444" opacity="0.85"/>
-              <circle cx="625" cy="85" r="4" fill="#FF4444" opacity="0.7"/>
-              <circle cx="580" cy="95" r="5" fill="#FF6600" opacity="0.8"/>
-              <circle cx="510" cy="80" r="4" fill="#FF4444" opacity="0.7"/>
-            </g>
-
-            <!-- Qatar Ras Laffan strike overlay -->
-            <circle cx="472" cy="155" r="8" fill="rgba(255,100,0,0.3)" stroke="#FF6600" stroke-width="1.5" stroke-dasharray="3,2"/>
-            <text x="478" y="148" fill="#FF8844" font-size="7" font-family="DM Mono">RAS LAFFAN ⚡</text>
-
-            <!-- ── PERSIAN GULF BODY ── -->
-            <path d="M395,112 L430,108 L460,115 L480,130 L495,150 L492,168 L475,172 L455,175 L440,168 L420,158 L398,145 L388,130 Z" fill="rgba(30,100,180,0.25)" stroke="rgba(60,140,200,0.3)" stroke-width="1"/>
-            <text x="430" y="145" fill="rgba(120,180,255,0.6)" font-size="8" font-family="DM Serif Display" font-style="italic">Persian Gulf</text>
-
-            <!-- Gulf of Oman -->
-            <text x="595" y="248" fill="rgba(120,180,255,0.5)" font-size="9" font-family="DM Serif Display" font-style="italic">Gulf of Oman</text>
-
-            <!-- Arabian Sea -->
-            <text x="650" y="400" fill="rgba(120,180,255,0.45)" font-size="13" font-family="DM Serif Display" font-style="italic">Arabian Sea</text>
-
-            <!-- ══ STRAIT OF HORMUZ — DETAILED ══ -->
-            <!-- Water through the strait -->
-            <ellipse cx="527" cy="148" rx="38" ry="18" fill="rgba(20,80,160,0.4)" stroke="rgba(60,140,200,0.3)" stroke-width="1"/>
-            <!-- Danger zone overlay -->
-            <ellipse cx="527" cy="148" rx="42" ry="22" fill="url(#warGrad)"/>
-            <!-- Pulsing outer ring -->
-            <circle cx="527" cy="148" r="30" fill="none" stroke="#FF4444" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.6" class="choke-ring"/>
-            <circle cx="527" cy="148" r="20" fill="rgba(192,57,43,0.3)" stroke="#FF4444" stroke-width="2" filter="url(#glow)"/>
-            <circle cx="527" cy="148" r="8" fill="#FF2222" opacity="0.9" filter="url(#glow)"/>
-            <!-- Hormuz label -->
-            <rect x="462" y="108" width="130" height="26" rx="4" fill="rgba(192,57,43,0.85)"/>
-            <text x="527" y="118" fill="white" font-size="9" font-family="DM Mono" font-weight="700" text-anchor="middle">STRAIT OF HORMUZ</text>
-            <text x="527" y="128" fill="rgba(255,200,200,0.9)" font-size="7.5" font-family="DM Mono" text-anchor="middle">BLOCKADED — 97% traffic drop</text>
-
-            <!-- Iranian IRGC patrol markers -->
-            <g opacity="0.85" filter="url(#glow)">
-              <polygon points="522,152 518,160 526,160" fill="#FF6600" transform="rotate(-20,522,156)"/>
-              <polygon points="532,144 528,152 536,152" fill="#FF6600" transform="rotate(15,532,148)"/>
-              <polygon points="519,140 515,148 523,148" fill="#FF6600" transform="rotate(-10,519,144)"/>
-            </g>
-            <text x="492" y="172" fill="rgba(255,120,60,0.9)" font-size="7.5" font-family="DM Mono">IRGC PATROL ZONE</text>
-
-            <!-- Mine field indicator -->
-            <g opacity="0.7">
-              <text x="540" y="160" fill="#FFD700" font-size="8" font-family="DM Mono">⚓</text>
-              <text x="555" y="150" fill="#FFD700" font-size="8" font-family="DM Mono">⚓</text>
-              <text x="548" y="168" fill="#FFD700" font-size="8" font-family="DM Mono">⚓</text>
-            </g>
-
-            <!-- ══ BLOCKED NORMAL ROUTE ══ -->
-            <!-- Pre-war route — BLOCKED (dashed red) -->
-            <path d="M490,165 Q520,175 560,185 Q600,195 640,205 Q680,218 710,248 Q728,268 738,295" fill="none" stroke="#FF4444" stroke-width="2.5" stroke-dasharray="8,4" opacity="0.7"/>
-            <rect x="620" y="185" width="82" height="14" rx="3" fill="rgba(192,57,43,0.75)"/>
-            <text x="661" y="195" fill="white" font-size="7.5" font-family="DM Mono" font-weight="700" text-anchor="middle">ROUTE BLOCKED</text>
-
-            <!-- ══ WAR ZONE OVERLAY ON IRAN ══ -->
-            <circle cx="570" cy="80" r="55" fill="rgba(200,0,0,0.07)" stroke="rgba(200,0,0,0.15)" stroke-width="1.5" stroke-dasharray="6,3"/>
-            <text x="490" y="50" fill="rgba(255,100,100,0.8)" font-size="9" font-family="DM Mono" font-weight="700">● ACTIVE CONFLICT ZONE</text>
-
-            <!-- US/Israel strike waves (radiating circles from Iran interior) -->
-            <g opacity="0.4">
-              <circle cx="570" cy="78" r="20" fill="none" stroke="#FF6600" stroke-width="1" stroke-dasharray="3,3"/>
-              <circle cx="570" cy="78" r="32" fill="none" stroke="#FF6600" stroke-width="1" stroke-dasharray="3,3"/>
-              <circle cx="570" cy="78" r="45" fill="none" stroke="#FF4444" stroke-width="0.8" stroke-dasharray="3,3"/>
-            </g>
-
-            <!-- Nuclear facility strike marker -->
-            <circle cx="600" cy="62" r="7" fill="rgba(255,200,0,0.3)" stroke="#FFD700" stroke-width="1.5"/>
-            <text x="608" y="58" fill="#FFD700" font-size="7" font-family="DM Mono">⚛ NATANZ</text>
-
-            <!-- Tehran -->
-            <circle cx="575" cy="62" r="5" fill="#3A6A9A" stroke="#5A9ACA" stroke-width="1"/>
-            <text x="580" y="60" fill="rgba(180,210,255,0.9)" font-size="8" font-family="DM Sans">Tehran</text>
-
-            <!-- Kharg Island oil terminal (struck) -->
-            <circle cx="460" cy="140" r="6" fill="rgba(255,100,0,0.5)" stroke="#FF6600" stroke-width="1.5"/>
-            <text x="430" y="133" fill="#FF8844" font-size="7.5" font-family="DM Mono">KHARG IS. ⚡</text>
-            <text x="430" y="142" fill="rgba(255,150,80,0.7)" font-size="6.5" font-family="DM Mono">Oil terminal</text>
-
-            <!-- Bandar Abbas (IRGC naval base) -->
-            <circle cx="545" cy="163" r="5" fill="rgba(255,50,50,0.6)" stroke="#FF4444" stroke-width="1.5"/>
-            <text x="551" y="175" fill="rgba(255,130,130,0.9)" font-size="7" font-family="DM Mono">BANDAR ABBAS</text>
-            <text x="551" y="183" fill="rgba(255,100,100,0.7)" font-size="6.5" font-family="DM Mono">IRGC Naval Base</text>
-
-            <!-- Abu Musa island (IRGC) -->
-            <circle cx="512" cy="162" r="4" fill="rgba(255,50,50,0.5)" stroke="#FF4444" stroke-width="1"/>
-            <text x="515" y="170" fill="rgba(255,100,100,0.7)" font-size="6.5" font-family="DM Mono">Abu Musa</text>
-
-            <!-- IRIS Dena sinking location (south of Sri Lanka) -->
-            <circle cx="756" cy="352" r="6" fill="rgba(192,57,43,0.7)" stroke="#FF4444" stroke-width="1.5" filter="url(#glow)"/>
-            <text x="720" y="345" fill="rgba(255,120,120,0.9)" font-size="7.5" font-family="DM Mono">IRIS DENA</text>
-            <text x="720" y="354" fill="rgba(255,100,100,0.7)" font-size="6.5" font-family="DM Mono">Sunk Mar 4</text>
-
-            <!-- Sri Lanka -->
-            <!-- Sri Lanka rendered by D3 geo base -->
-            <text x="768" y="338" fill="rgba(180,210,255,0.6)" font-size="7" font-family="DM Sans">Sri Lanka</text>
-
-            <!-- India ports -->
-            <g>
-              <circle cx="718" cy="178" r="7" fill="#8B5CF6" stroke="#C4B5FD" stroke-width="1.5"/>
-              <text x="726" y="175" fill="#C4B5FD" font-size="7.5" font-family="DM Mono">Mundra</text>
-              <circle cx="712" cy="235" r="7" fill="#8B5CF6" stroke="#C4B5FD" stroke-width="1.5"/>
-              <text x="720" y="232" fill="#C4B5FD" font-size="7.5" font-family="DM Mono">Mumbai</text>
-              <circle cx="714" cy="298" r="6" fill="#8B5CF6" stroke="#C4B5FD" stroke-width="1.5"/>
-              <text x="722" y="295" fill="#C4B5FD" font-size="7.5" font-family="DM Mono">Kochi</text>
-              <circle cx="750" cy="290" r="5" fill="#8B5CF6" stroke="#C4B5FD" stroke-width="1"/>
-              <text x="757" y="287" fill="#C4B5FD" font-size="7" font-family="DM Mono">Chennai</text>
-              <!-- Chabahar -->
-              <circle cx="630" cy="120" r="7" fill="#22C55E" stroke="#86EFAC" stroke-width="1.5" filter="url(#glow)"/>
-              <text x="638" y="117" fill="#86EFAC" font-size="7.5" font-family="DM Mono" font-weight="700">CHABAHAR</text>
-              <text x="638" y="127" fill="rgba(134,239,172,0.7)" font-size="6.5" font-family="DM Mono">India-operated</text>
-            </g>
-
-            <!-- Visakhapatnam (MILAN exercise) -->
-            <circle cx="784" cy="262" r="5" fill="#3B82F6" stroke="#93C5FD" stroke-width="1"/>
-            <text x="790" y="260" fill="#93C5FD" font-size="6.5" font-family="DM Mono">Vizag (MILAN)</text>
-
-            <!-- Map scale bar -->
-            <g transform="translate(20,465)">
-              <rect width="120" height="22" rx="3" fill="rgba(0,0,0,0.4)"/>
-              <line x1="10" y1="14" x2="110" y2="14" stroke="white" stroke-width="1.5"/>
-              <line x1="10" y1="10" x2="10" y2="18" stroke="white" stroke-width="1.5"/>
-              <line x1="110" y1="10" x2="110" y2="18" stroke="white" stroke-width="1.5"/>
-              <text x="60" y="12" fill="rgba(255,255,255,0.7)" font-size="7" font-family="DM Mono" text-anchor="middle">≈ 1,500 km</text>
-            </g>
-
-            <!-- Compass rose -->
-            <g transform="translate(808,450)">
-              <text x="0" y="0" fill="rgba(255,255,255,0.6)" font-size="14" font-family="DM Mono" text-anchor="middle">N</text>
-              <text x="0" y="28" fill="rgba(255,255,255,0.4)" font-size="10" font-family="DM Mono" text-anchor="middle">↑</text>
-            </g>
-          </svg>
-        </div>
+        <div id="lmap-1" class="leaflet-map-container"></div>
         <div class="map-side-panel">
           <div>
             <div class="side-title">Map 1 — The Blockade</div>
@@ -1613,124 +1439,7 @@
     ════════════════════════════════════════════════════ -->
     <div class="map-panel" id="mp-routes">
       <div class="map-insight-panel">
-        <div class="map-svg-wrap" style="min-height:460px">
-          <svg viewBox="0 0 900 520" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <radialGradient id="worldOcean" cx="40%" cy="40%" r="70%">
-                <stop offset="0%" stop-color="#0E2A40"/>
-                <stop offset="100%" stop-color="#071520"/>
-              </radialGradient>
-              <marker id="arrow-orange" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-                <path d="M0,0 L0,6 L8,3 z" fill="#FF8C42"/>
-              </marker>
-              <marker id="arrow-green" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-                <path d="M0,0 L0,6 L8,3 z" fill="#4ADE80"/>
-              </marker>
-              <marker id="arrow-blue" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-                <path d="M0,0 L0,6 L8,3 z" fill="#60A5FA"/>
-              </marker>
-              <marker id="arrow-red" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-                <path d="M0,0 L0,6 L8,3 z" fill="#FF4444"/>
-              </marker>
-            </defs>
-            <rect width="900" height="520" fill="url(#worldOcean)"/>
-            <!-- Grid -->
-            <g stroke="rgba(255,255,255,0.03)" stroke-width="1">
-              <line x1="0" y1="130" x2="900" y2="130"/>
-              <line x1="0" y1="260" x2="900" y2="260"/>
-              <line x1="0" y1="390" x2="900" y2="390"/>
-              <line x1="150" y1="0" x2="150" y2="520"/>
-              <line x1="300" y1="0" x2="300" y2="520"/>
-              <line x1="450" y1="0" x2="450" y2="520"/>
-              <line x1="600" y1="0" x2="600" y2="520"/>
-              <line x1="750" y1="0" x2="750" y2="520"/>
-            </g>
-
-            <!-- ── WORLD LANDMASSES rendered by D3 + world-atlas ── -->
-            <g id="geo-2"></g>
-
-            <!-- ── OCEAN LABELS ── -->
-            <text x="175" y="440" fill="rgba(120,180,255,0.35)" font-size="13" font-family="DM Serif Display" font-style="italic">South Atlantic</text>
-            <text x="450" y="460" fill="rgba(120,180,255,0.35)" font-size="11" font-family="DM Serif Display" font-style="italic">Indian Ocean</text>
-            <text x="50" y="300" fill="rgba(120,180,255,0.3)" font-size="10" font-family="DM Serif Display" font-style="italic">Atlantic</text>
-            <text x="820" y="280" fill="rgba(120,180,255,0.3)" font-size="10" font-family="DM Serif Display" font-style="italic">Pacific</text>
-            <text x="340" y="320" fill="rgba(120,180,255,0.35)" font-size="10" font-family="DM Serif Display" font-style="italic">Arabian Sea</text>
-
-            <!-- ══ ROUTE 1: BLOCKED — NORMAL HORMUZ TO INDIA (Dashed Red) ══ -->
-            <path d="M490,148 Q540,155 565,170 Q590,188 610,208 Q628,228 638,245" fill="none" stroke="#FF4444" stroke-width="3" stroke-dasharray="8,5" opacity="0.8"/>
-            <!-- Blockade X marker -->
-            <g transform="translate(520,155)">
-              <circle r="10" fill="rgba(192,57,43,0.8)" stroke="#FF4444" stroke-width="1.5"/>
-              <text x="0" y="4" fill="white" font-size="12" font-family="sans-serif" text-anchor="middle" font-weight="700">✕</text>
-            </g>
-
-            <!-- ══ ROUTE 2: CAPE OF GOOD HOPE (Orange — main reroute) ══ -->
-            <!-- Gulf/West Africa → Cape → East Africa → India -->
-            <path d="M478,168 Q435,200 390,245 Q355,285 320,322 Q292,348 268,355 Q230,365 200,360 Q175,358 175,380 Q175,405 210,420 Q260,445 330,445 Q400,445 460,435 Q520,420 560,400 Q600,378 625,352 Q640,332 642,310 Q642,280 638,250" fill="none" stroke="#FF8C42" stroke-width="3.5" stroke-dasharray="none" opacity="0.9" marker-end="url(#arrow-orange)"/>
-            <!-- Cape of Good Hope marker -->
-            <circle cx="175" cy="380" r="7" fill="#FF8C42" stroke="rgba(255,140,66,0.4)" stroke-width="6"/>
-            <text x="125" y="375" fill="#FF8C42" font-size="8" font-family="DM Mono">Cape of</text>
-            <text x="125" y="385" fill="#FF8C42" font-size="8" font-family="DM Mono">Good Hope</text>
-            <!-- Route label -->
-            <rect x="298" y="428" width="155" height="16" rx="3" fill="rgba(255,140,66,0.2)"/>
-            <text x="375" y="440" fill="#FF8C42" font-size="8" font-family="DM Mono" text-anchor="middle">+15–25 days · +$3–4/bbl</text>
-
-            <!-- ══ ROUTE 3: RUSSIA PIPELINE + SEA (Blue dashed) ══ -->
-            <path d="M490,45 Q540,38 580,42 Q610,45 635,58" fill="none" stroke="#60A5FA" stroke-width="2.5" stroke-dasharray="6,4" opacity="0.85" marker-end="url(#arrow-blue)"/>
-            <text x="540" y="32" fill="#60A5FA" font-size="7.5" font-family="DM Mono">Russian Urals crude</text>
-            <text x="540" y="42" fill="rgba(96,165,250,0.7)" font-size="7" font-family="DM Mono">+$2–4 premium vs pre-war</text>
-
-            <!-- ══ ROUTE 4: US LPG (Far route, dashed green) ══ -->
-            <path d="M88,60 Q60,100 50,160 Q42,220 50,290 Q60,360 95,410 Q140,460 210,480 Q300,500 410,490 Q500,480 560,460 Q600,445 635,425 Q640,355 640,310" fill="none" stroke="#4ADE80" stroke-width="2" stroke-dasharray="7,4" opacity="0.75" marker-end="url(#arrow-green)"/>
-            <text x="42" y="230" fill="#4ADE80" font-size="8" font-family="DM Mono">US Gulf</text>
-            <text x="42" y="240" fill="#4ADE80" font-size="8" font-family="DM Mono">LPG</text>
-            <text x="38" y="252" fill="rgba(74,222,128,0.6)" font-size="7" font-family="DM Mono">2.2 MTPA deal</text>
-            <text x="38" y="262" fill="rgba(74,222,128,0.6)" font-size="7" font-family="DM Mono">~45 days transit</text>
-
-            <!-- US source point -->
-            <circle cx="88" cy="60" r="6" fill="#4ADE80" stroke="rgba(74,222,128,0.3)" stroke-width="5"/>
-            <text x="92" y="56" fill="#4ADE80" font-size="7.5" font-family="DM Mono">USA/Houston</text>
-
-            <!-- ══ ROUTE 5: AUSTRALIA LNG ══ -->
-            <path d="M775,380 Q740,350 700,310 Q668,275 650,245" fill="none" stroke="#A78BFA" stroke-width="2" stroke-dasharray="6,4" opacity="0.8" marker-end="url(#arrow-blue)"/>
-            <text x="760" y="345" fill="#A78BFA" font-size="7.5" font-family="DM Mono">Australia LNG</text>
-            <text x="760" y="355" fill="rgba(167,139,250,0.6)" font-size="7" font-family="DM Mono">+spot premium</text>
-
-            <!-- ══ SUEZ CANAL ══ -->
-            <circle cx="358" cy="82" r="6" fill="#F59E0B" stroke="rgba(245,158,11,0.4)" stroke-width="5"/>
-            <text x="330" y="72" fill="#F59E0B" font-size="7.5" font-family="DM Mono">Suez Canal</text>
-            <text x="330" y="82" fill="rgba(245,158,11,0.7)" font-size="6.5" font-family="DM Mono">Houthi risk ⚠</text>
-
-            <!-- ══ CHABAHAR (India-operated non-Hormuz port) ══ -->
-            <circle cx="548" cy="108" r="7" fill="#22C55E" stroke="rgba(34,197,94,0.4)" stroke-width="6" filter="url(#softglow)"/>
-            <text x="555" y="105" fill="#22C55E" font-size="8" font-family="DM Mono" font-weight="700">CHABAHAR</text>
-            <text x="555" y="115" fill="rgba(34,197,94,0.7)" font-size="6.5" font-family="DM Mono">India port · avoids Hormuz</text>
-
-            <!-- ══ HORMUZ BLOCKADE MARKER ══ -->
-            <circle cx="500" cy="145" r="12" fill="rgba(192,57,43,0.4)" stroke="#FF4444" stroke-width="2" class="choke-ring"/>
-            <circle cx="500" cy="145" r="6" fill="#FF2222" opacity="0.9"/>
-            <rect x="430" y="126" width="120" height="16" rx="3" fill="rgba(192,57,43,0.8)"/>
-            <text x="490" y="137" fill="white" font-size="8" font-family="DM Mono" font-weight="700" text-anchor="middle">HORMUZ BLOCKED</text>
-
-            <!-- India destination -->
-            <circle cx="645" cy="260" r="10" fill="#1F4068" stroke="#60A5FA" stroke-width="2" filter="url(#glow)"/>
-            <text x="655" y="257" fill="#93C5FD" font-size="9" font-family="DM Mono" font-weight="700">INDIA</text>
-
-            <!-- Distance/time callouts for cape route -->
-            <rect x="245" y="288" width="110" height="28" rx="4" fill="rgba(0,0,0,0.5)"/>
-            <text x="300" y="300" fill="white" font-size="8" font-family="DM Mono" text-anchor="middle">East Africa</text>
-            <text x="300" y="310" fill="rgba(255,140,66,0.9)" font-size="7.5" font-family="DM Mono" text-anchor="middle">Waypoint +12d</text>
-
-            <!-- Scale -->
-            <g transform="translate(20,490)">
-              <rect width="150" height="22" rx="3" fill="rgba(0,0,0,0.4)"/>
-              <line x1="10" y1="14" x2="140" y2="14" stroke="white" stroke-width="1.5"/>
-              <line x1="10" y1="10" x2="10" y2="18" stroke="white" stroke-width="1.5"/>
-              <line x1="140" y1="10" x2="140" y2="18" stroke="white" stroke-width="1.5"/>
-              <text x="75" y="12" fill="rgba(255,255,255,0.7)" font-size="7" font-family="DM Mono" text-anchor="middle">≈ 5,000 km</text>
-            </g>
-          </svg>
-        </div>
+        <div id="lmap-2" class="leaflet-map-container"></div>
         <div class="map-side-panel">
           <div>
             <div class="side-title">Map 2 — Shipping Reroutes</div>
@@ -1760,155 +1469,7 @@
     ════════════════════════════════════════════════════ -->
     <div class="map-panel" id="mp-commodities">
       <div class="map-insight-panel">
-        <div class="map-svg-wrap" style="min-height:440px">
-          <svg viewBox="0 0 900 480" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <radialGradient id="commOcean" cx="50%" cy="50%" r="60%">
-                <stop offset="0%" stop-color="#0D2A40"/>
-                <stop offset="100%" stop-color="#071520"/>
-              </radialGradient>
-            </defs>
-            <rect width="900" height="480" fill="url(#commOcean)"/>
-            <!-- Grid subtle -->
-            <g stroke="rgba(255,255,255,0.03)" stroke-width="1">
-              <line x1="0" y1="120" x2="900" y2="120"/><line x1="0" y1="240" x2="900" y2="240"/>
-              <line x1="0" y1="360" x2="900" y2="360"/>
-              <line x1="180" y1="0" x2="180" y2="480"/><line x1="360" y1="0" x2="360" y2="480"/>
-              <line x1="540" y1="0" x2="540" y2="480"/><line x1="720" y1="0" x2="720" y2="480"/>
-            </g>
-
-            <!-- Landmasses rendered by D3 + world-atlas -->
-            <g id="geo-3"></g>
-
-            <!-- Source country dot highlights -->
-            <!-- Saudi Arabia -->
-            <circle cx="455" cy="138" r="16" fill="rgba(255,100,0,0.2)" stroke="rgba(255,100,0,0.6)" stroke-width="1.5"/>
-            <text x="415" y="130" fill="#FFA94D" font-size="7.5" font-family="DM Mono" font-weight="700">SAUDI</text>
-            <text x="415" y="140" fill="rgba(255,169,77,0.7)" font-size="6.5" font-family="DM Mono">18% India crude</text>
-            <!-- Iraq -->
-            <circle cx="452" cy="92" r="12" fill="rgba(255,80,0,0.2)" stroke="rgba(255,80,0,0.5)" stroke-width="1.5"/>
-            <text x="418" y="88" fill="#FF8C42" font-size="7.5" font-family="DM Mono">IRAQ</text>
-            <text x="418" y="98" fill="rgba(255,140,66,0.7)" font-size="6.5" font-family="DM Mono">22% India crude</text>
-            <!-- UAE -->
-            <circle cx="508" cy="172" r="10" fill="rgba(255,150,0,0.2)" stroke="rgba(255,150,0,0.5)" stroke-width="1.5"/>
-            <text x="512" y="168" fill="#FFA94D" font-size="7.5" font-family="DM Mono">UAE</text>
-            <text x="512" y="178" fill="rgba(255,169,77,0.7)" font-size="6.5" font-family="DM Mono">9% crude</text>
-            <!-- Qatar -->
-            <circle cx="480" cy="165" r="9" fill="rgba(255,180,0,0.2)" stroke="#FFD700" stroke-width="1.5"/>
-            <text x="465" y="158" fill="#FFD700" font-size="7.5" font-family="DM Mono">QATAR</text>
-            <text x="462" y="168" fill="rgba(255,215,0,0.7)" font-size="6.5" font-family="DM Mono">LNG+Helium+Fert</text>
-            <!-- Iran -->
-            <circle cx="520" cy="88" r="10" fill="rgba(192,57,43,0.3)" stroke="#FF4444" stroke-width="1.5"/>
-            <text x="524" y="84" fill="#FF6B6B" font-size="7.5" font-family="DM Mono">IRAN</text>
-            <text x="524" y="94" fill="rgba(255,107,107,0.7)" font-size="6.5" font-family="DM Mono">Blockade control</text>
-            <!-- Russia -->
-            <circle cx="490" cy="35" r="12" fill="rgba(96,165,250,0.2)" stroke="#60A5FA" stroke-width="1.5"/>
-            <text x="478" y="28" fill="#60A5FA" font-size="7.5" font-family="DM Mono">RUSSIA</text>
-            <text x="478" y="38" fill="rgba(96,165,250,0.7)" font-size="6.5" font-family="DM Mono">Urals crude +waiver</text>
-            <!-- Australia -->
-            <circle cx="795" cy="378" r="10" fill="rgba(167,139,250,0.2)" stroke="#A78BFA" stroke-width="1.5"/>
-            <text x="755" y="372" fill="#A78BFA" font-size="7.5" font-family="DM Mono">AUSTRALIA</text>
-            <text x="755" y="382" fill="rgba(167,139,250,0.7)" font-size="6.5" font-family="DM Mono">LNG alt. source</text>
-            <!-- Canada/Morocco (fertilizer) -->
-            <circle cx="90" cy="55" r="10" fill="rgba(74,222,128,0.2)" stroke="#4ADE80" stroke-width="1.5"/>
-            <text x="95" y="50" fill="#4ADE80" font-size="7.5" font-family="DM Mono">CANADA</text>
-            <text x="95" y="60" fill="rgba(74,222,128,0.7)" font-size="6.5" font-family="DM Mono">Potash/Fertilizer</text>
-            <circle cx="242" cy="95" r="9" fill="rgba(74,222,128,0.2)" stroke="#4ADE80" stroke-width="1.5"/>
-            <text x="205" y="88" fill="#4ADE80" font-size="7.5" font-family="DM Mono">MOROCCO</text>
-            <text x="205" y="98" fill="rgba(74,222,128,0.7)" font-size="6.5" font-family="DM Mono">Phosphate</text>
-
-            <!-- ══ COMMODITY FLOW LINES ══ -->
-            <!-- CRUDE OIL flows (thick orange/red) — ALL DISRUPTED -->
-            <!-- Iraq → India (blocked) -->
-            <path d="M452,98 Q500,118 528,148 Q565,180 598,205 Q620,222 648,242" fill="none" stroke="#FF8C42" stroke-width="4" stroke-dasharray="10,5" opacity="0.7"/>
-            <text x="490" y="122" fill="#FF8C42" font-size="8" font-family="DM Mono" transform="rotate(35,490,122)">CRUDE ✕</text>
-            <!-- Saudi → India (blocked) -->
-            <path d="M455,138 Q500,148 528,158 Q565,178 648,242" fill="none" stroke="#FFA94D" stroke-width="3.5" stroke-dasharray="8,5" opacity="0.65"/>
-            <!-- UAE/Qatar → India (partially cleared) -->
-            <path d="M510,172 Q548,180 580,200 Q612,222 648,242" fill="none" stroke="#FFD700" stroke-width="2.5" stroke-dasharray="6,3" opacity="0.7"/>
-
-            <!-- LPG flows (bright yellow — critical disrupted) -->
-            <!-- Qatar LPG → India -->
-            <path d="M482,168 Q525,178 575,200 Q612,222 648,242" fill="none" stroke="#FBBF24" stroke-width="4" stroke-dasharray="8,4" opacity="0.8"/>
-            <!-- LPG label -->
-            <rect x="530" y="182" width="55" height="13" rx="3" fill="rgba(251,191,36,0.2)" stroke="#FBBF24" stroke-width="0.5"/>
-            <text x="558" y="191" fill="#FBBF24" font-size="7" font-family="DM Mono" text-anchor="middle">LPG ✕</text>
-
-            <!-- LNG flows (teal) — Qatar disrupted -->
-            <path d="M482,162 Q515,172 548,188 Q588,215 648,242" fill="none" stroke="#22D3EE" stroke-width="2.5" stroke-dasharray="6,4" opacity="0.65"/>
-            <text x="500" y="158" fill="#22D3EE" font-size="7" font-family="DM Mono">LNG ✕</text>
-
-            <!-- HELIUM (Magenta — Qatar offline) -->
-            <path d="M480,160 Q525,172 570,192 Q610,215 648,242" fill="none" stroke="#F472B6" stroke-width="2" stroke-dasharray="4,4" opacity="0.7"/>
-            <text x="555" y="210" fill="#F472B6" font-size="7" font-family="DM Mono">HELIUM ✕</text>
-            <text x="555" y="218" fill="rgba(244,114,182,0.6)" font-size="6.5" font-family="DM Mono">33% global supply</text>
-
-            <!-- FERTILIZER flows (green) — Gulf disrupted -->
-            <path d="M455,145 Q490,155 520,165 Q570,185 648,242" fill="none" stroke="#4ADE80" stroke-width="2" stroke-dasharray="5,4" opacity="0.65"/>
-            <!-- Fertilizer from Canada (active, long route) -->
-            <path d="M90,55 Q50,100 45,180 Q42,270 80,360 Q130,430 250,460 Q380,480 500,465 Q590,450 648,390 Q652,320 648,280 Q648,260 648,242" fill="none" stroke="#4ADE80" stroke-width="1.5" stroke-dasharray="6,5" opacity="0.5"/>
-            <!-- Morocco phosphate -->
-            <path d="M242,95 Q250,150 258,210 Q270,280 310,340 Q380,420 480,460 Q570,480 648,440 L648,242" fill="none" stroke="#4ADE80" stroke-width="1.5" stroke-dasharray="5,5" opacity="0.4"/>
-
-            <!-- RUSSIA crude (active/semi-active) -->
-            <path d="M490,38 Q540,45 575,58 Q610,72 650,75 Q660,88 660,115 L648,242" fill="none" stroke="#60A5FA" stroke-width="2.5" stroke-dasharray="7,4" opacity="0.75"/>
-
-            <!-- ══ BLOCKED ZONE OVERLAY ══ -->
-            <!-- Hormuz zone -->
-            <circle cx="525" cy="148" r="22" fill="rgba(192,57,43,0.25)" stroke="#FF4444" stroke-width="2" stroke-dasharray="4,3"/>
-            <circle cx="525" cy="148" r="8" fill="rgba(255,50,50,0.7)" stroke="#FF4444" stroke-width="1.5"/>
-            <text x="525" y="136" fill="#FF6B6B" font-size="8" font-family="DM Mono" font-weight="700" text-anchor="middle">HORMUZ</text>
-            <text x="525" y="144" fill="rgba(255,100,100,0.8)" font-size="7" font-family="DM Mono" text-anchor="middle">BLOCKED</text>
-
-            <!-- ══ PRODUCT IMPACT BOXES ══ -->
-            <!-- Crude Oil -->
-            <rect x="12" y="320" width="142" height="72" rx="6" fill="rgba(255,140,0,0.12)" stroke="#FF8C42" stroke-width="1"/>
-            <text x="22" y="335" fill="#FF8C42" font-size="9" font-family="DM Mono" font-weight="700">🛢 CRUDE OIL</text>
-            <text x="22" y="349" fill="rgba(255,255,255,0.75)" font-size="8" font-family="DM Sans">88% imports disrupted</text>
-            <text x="22" y="361" fill="rgba(255,255,255,0.75)" font-size="8" font-family="DM Sans">Iraq 22%, Saudi 18%,</text>
-            <text x="22" y="373" fill="rgba(255,255,255,0.75)" font-size="8" font-family="DM Sans">UAE 9% = all via Hormuz</text>
-            <text x="22" y="385" fill="#FF6B6B" font-size="8" font-family="DM Mono" font-weight="700">+57% price spike</text>
-
-            <!-- LPG -->
-            <rect x="12" y="400" width="142" height="60" rx="6" fill="rgba(251,191,36,0.12)" stroke="#FBBF24" stroke-width="1"/>
-            <text x="22" y="415" fill="#FBBF24" font-size="9" font-family="DM Mono" font-weight="700">⛽ LPG</text>
-            <text x="22" y="429" fill="rgba(255,255,255,0.75)" font-size="8" font-family="DM Sans">90% imports via Hormuz</text>
-            <text x="22" y="441" fill="rgba(255,255,255,0.75)" font-size="8" font-family="DM Sans">332M connections at risk</text>
-            <text x="22" y="453" fill="#FF6B6B" font-size="8" font-family="DM Mono" font-weight="700">Supply at 56% of normal</text>
-
-            <!-- Helium/Electronics -->
-            <rect x="165" y="400" width="148" height="60" rx="6" fill="rgba(244,114,182,0.1)" stroke="#F472B6" stroke-width="1"/>
-            <text x="175" y="415" fill="#F472B6" font-size="9" font-family="DM Mono" font-weight="700">🔬 HELIUM</text>
-            <text x="175" y="429" fill="rgba(255,255,255,0.75)" font-size="8" font-family="DM Sans">Qatar = 33% global supply</text>
-            <text x="175" y="441" fill="rgba(255,255,255,0.75)" font-size="8" font-family="DM Sans">MRI + semiconductor fab</text>
-            <text x="175" y="453" fill="#FF6B6B" font-size="8" font-family="DM Mono" font-weight="700">Spot price +90%</text>
-
-            <!-- Fertilizer -->
-            <rect x="165" y="320" width="148" height="72" rx="6" fill="rgba(74,222,128,0.1)" stroke="#4ADE80" stroke-width="1"/>
-            <text x="175" y="335" fill="#4ADE80" font-size="9" font-family="DM Mono" font-weight="700">🌾 FERTILIZER</text>
-            <text x="175" y="349" fill="rgba(255,255,255,0.75)" font-size="8" font-family="DM Sans">Qatar urea + Gulf ammonia</text>
-            <text x="175" y="361" fill="rgba(255,255,255,0.75)" font-size="8" font-family="DM Sans">35–40% India imports</text>
-            <text x="175" y="373" fill="rgba(255,255,255,0.75)" font-size="8" font-family="DM Sans">Kharif window: Apr 15</text>
-            <text x="175" y="385" fill="#FFA94D" font-size="8" font-family="DM Mono" font-weight="700">Prices +20% (Oxford Econ)</text>
-
-            <!-- Legend -->
-            <rect x="322" y="320" width="188" height="140" rx="6" fill="rgba(0,0,0,0.35)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-            <text x="332" y="336" fill="rgba(255,255,255,0.5)" font-size="8" font-family="DM Mono" font-weight="700">FLOW LEGEND</text>
-            <line x1="332" y1="348" x2="358" y2="348" stroke="#FF8C42" stroke-width="3" stroke-dasharray="6,3"/>
-            <text x="362" y="352" fill="rgba(255,255,255,0.75)" font-size="8" font-family="DM Sans">Crude oil (disrupted)</text>
-            <line x1="332" y1="364" x2="358" y2="364" stroke="#FBBF24" stroke-width="3" stroke-dasharray="6,3"/>
-            <text x="362" y="368" fill="rgba(255,255,255,0.75)" font-size="8" font-family="DM Sans">LPG (disrupted)</text>
-            <line x1="332" y1="380" x2="358" y2="380" stroke="#22D3EE" stroke-width="2.5" stroke-dasharray="5,3"/>
-            <text x="362" y="384" fill="rgba(255,255,255,0.75)" font-size="8" font-family="DM Sans">LNG (disrupted)</text>
-            <line x1="332" y1="396" x2="358" y2="396" stroke="#F472B6" stroke-width="2" stroke-dasharray="4,4"/>
-            <text x="362" y="400" fill="rgba(255,255,255,0.75)" font-size="8" font-family="DM Sans">Helium (offline)</text>
-            <line x1="332" y1="412" x2="358" y2="412" stroke="#4ADE80" stroke-width="2" stroke-dasharray="5,4"/>
-            <text x="362" y="416" fill="rgba(255,255,255,0.75)" font-size="8" font-family="DM Sans">Fertilizer (disrupted)</text>
-            <line x1="332" y1="428" x2="358" y2="428" stroke="#60A5FA" stroke-width="2.5" stroke-dasharray="7,4"/>
-            <text x="362" y="432" fill="rgba(255,255,255,0.75)" font-size="8" font-family="DM Sans">Russia crude (active)</text>
-            <text x="332" y="450" fill="rgba(255,100,100,0.8)" font-size="9" font-family="DM Mono" font-weight="700">✕ = currently disrupted</text>
-          </svg>
-        </div>
+        <div id="lmap-3" class="leaflet-map-container"></div>
         <div class="map-side-panel">
           <div>
             <div class="side-title">Map 3 — Commodity Flows</div>
@@ -1933,129 +1494,7 @@
     ════════════════════════════════════════════════════ -->
     <div class="map-panel" id="mp-diaspora">
       <div class="map-insight-panel">
-        <div class="map-svg-wrap" style="min-height:440px">
-          <svg viewBox="0 0 900 480" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <radialGradient id="diaOcean" cx="50%" cy="50%" r="60%">
-                <stop offset="0%" stop-color="#0A2030"/>
-                <stop offset="100%" stop-color="#050E18"/>
-              </radialGradient>
-            </defs>
-            <rect width="900" height="480" fill="url(#diaOcean)"/>
-            <g stroke="rgba(255,255,255,0.025)" stroke-width="1">
-              <line x1="0" y1="120" x2="900" y2="120"/><line x1="0" y1="240" x2="900" y2="240"/>
-              <line x1="0" y1="360" x2="900" y2="360"/>
-              <line x1="180" y1="0" x2="180" y2="480"/><line x1="360" y1="0" x2="360" y2="480"/>
-              <line x1="540" y1="0" x2="540" y2="480"/><line x1="720" y1="0" x2="720" y2="480"/>
-            </g>
-
-            <!-- Landmasses rendered by D3 + world-atlas -->
-            <g id="geo-4"></g>
-
-            <!-- ══ DIASPORA BUBBLES — sized by population ══ -->
-            <!-- UAE: 3.5M -->
-            <circle cx="492" cy="175" r="30" fill="rgba(251,191,36,0.15)" stroke="#FBBF24" stroke-width="1.5"/>
-            <text x="492" y="170" fill="#FBBF24" font-size="9" font-family="DM Mono" font-weight="700" text-anchor="middle">UAE</text>
-            <text x="492" y="180" fill="rgba(251,191,36,0.9)" font-size="8" font-family="DM Mono" text-anchor="middle">3.5M</text>
-            <text x="492" y="190" fill="rgba(251,191,36,0.6)" font-size="7" font-family="DM Mono" text-anchor="middle">Indians</text>
-
-            <!-- Saudi Arabia: 2.5M -->
-            <circle cx="432" cy="140" r="25" fill="rgba(255,140,0,0.15)" stroke="#FF8C42" stroke-width="1.5"/>
-            <text x="432" y="136" fill="#FF8C42" font-size="9" font-family="DM Mono" font-weight="700" text-anchor="middle">KSA</text>
-            <text x="432" y="146" fill="rgba(255,140,66,0.9)" font-size="8" font-family="DM Mono" text-anchor="middle">2.5M</text>
-
-            <!-- Kuwait: 1.0M -->
-            <circle cx="442" cy="110" r="16" fill="rgba(74,222,128,0.12)" stroke="#4ADE80" stroke-width="1.5"/>
-            <text x="442" y="107" fill="#4ADE80" font-size="8" font-family="DM Mono" text-anchor="middle">Kuwait</text>
-            <text x="442" y="117" fill="rgba(74,222,128,0.8)" font-size="8" font-family="DM Mono" text-anchor="middle">1M</text>
-
-            <!-- Qatar: 0.75M -->
-            <circle cx="470" cy="165" r="13" fill="rgba(96,165,250,0.12)" stroke="#60A5FA" stroke-width="1.5"/>
-            <text x="470" y="161" fill="#60A5FA" font-size="7.5" font-family="DM Mono" text-anchor="middle">Qatar</text>
-            <text x="470" y="171" fill="rgba(96,165,250,0.8)" font-size="7.5" font-family="DM Mono" text-anchor="middle">0.75M</text>
-
-            <!-- Oman: 0.8M -->
-            <circle cx="518" cy="192" r="14" fill="rgba(167,139,250,0.12)" stroke="#A78BFA" stroke-width="1.5"/>
-            <text x="518" y="188" fill="#A78BFA" font-size="7.5" font-family="DM Mono" text-anchor="middle">Oman</text>
-            <text x="518" y="198" fill="rgba(167,139,250,0.8)" font-size="7.5" font-family="DM Mono" text-anchor="middle">0.8M</text>
-
-            <!-- Bahrain: 0.4M -->
-            <circle cx="450" cy="155" r="10" fill="rgba(34,211,238,0.12)" stroke="#22D3EE" stroke-width="1.5"/>
-            <text x="450" y="152" fill="#22D3EE" font-size="7" font-family="DM Mono" text-anchor="middle">BHR</text>
-            <text x="450" y="161" fill="rgba(34,211,238,0.8)" font-size="7" font-family="DM Mono" text-anchor="middle">0.4M</text>
-
-            <!-- Total bubble context -->
-            <rect x="342" y="230" width="165" height="38" rx="6" fill="rgba(251,191,36,0.15)" stroke="#FBBF24" stroke-width="1.5"/>
-            <text x="425" y="245" fill="#FBBF24" font-size="10" font-family="DM Mono" font-weight="700" text-anchor="middle">9.1M Indians in Gulf</text>
-            <text x="425" y="258" fill="rgba(251,191,36,0.8)" font-size="8" font-family="DM Sans" text-anchor="middle">$50B annual remittances → India</text>
-
-            <!-- ══ REMITTANCE FLOW ARROWS ══ -->
-            <!-- Remittance flows back to India -->
-            <path d="M492,175 Q570,185 620,190 Q638,200 638,220 L640,240" fill="none" stroke="#FBBF24" stroke-width="2" stroke-dasharray="5,3" opacity="0.6"/>
-            <path d="M432,140 Q500,155 558,168 Q592,180 618,195 L635,215" fill="none" stroke="#FF8C42" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.5"/>
-            <!-- Remittance label -->
-            <text x="540" y="175" fill="rgba(251,191,36,0.7)" font-size="8" font-family="DM Mono">$50B/yr</text>
-            <text x="540" y="184" fill="rgba(251,191,36,0.5)" font-size="7" font-family="DM Mono">remittances ↗</text>
-
-            <!-- ══ STRANDED VESSELS MAP ══ -->
-            <!-- Persian Gulf stranded zone -->
-            <ellipse cx="462" cy="130" rx="48" ry="22" fill="rgba(255,50,50,0.08)" stroke="rgba(255,50,50,0.3)" stroke-width="1.5" stroke-dasharray="5,3"/>
-            <!-- Ship icons in gulf -->
-            <text x="430" y="122" fill="rgba(255,255,255,0.6)" font-size="10" font-family="DM Mono">⛵</text>
-            <text x="448" y="128" fill="rgba(255,255,255,0.6)" font-size="10" font-family="DM Mono">⛵</text>
-            <text x="464" y="122" fill="rgba(255,255,255,0.6)" font-size="10" font-family="DM Mono">⛵</text>
-            <text x="475" y="132" fill="rgba(255,255,255,0.5)" font-size="10" font-family="DM Mono">⛵</text>
-            <text x="448" y="138" fill="rgba(255,255,255,0.5)" font-size="10" font-family="DM Mono">⛵</text>
-            <rect x="408" y="148" width="140" height="14" rx="3" fill="rgba(192,57,43,0.6)"/>
-            <text x="478" y="158" fill="white" font-size="7.5" font-family="DM Mono" text-anchor="middle">38 Indian ships · 20,000 seafarers</text>
-
-            <!-- ══ INDIAN OCEAN SECURITY PERIMETER ══ -->
-            <!-- India's claimed "sphere of influence" -->
-            <circle cx="648" cy="320" r="130" fill="none" stroke="rgba(74,144,226,0.2)" stroke-width="2" stroke-dasharray="8,4"/>
-            <text x="640" y="450" fill="rgba(74,144,226,0.4)" font-size="8" font-family="DM Mono" text-anchor="middle">India's claimed IOR sphere</text>
-
-            <!-- Indian Navy deployment markers -->
-            <circle cx="580" cy="258" r="6" fill="#3B82F6" stroke="#93C5FD" stroke-width="1.5" filter="url(#glow)"/>
-            <text x="586" y="255" fill="#93C5FD" font-size="7" font-family="DM Mono">INS Kolkata</text>
-            <circle cx="600" cy="285" r="6" fill="#3B82F6" stroke="#93C5FD" stroke-width="1.5"/>
-            <text x="607" y="282" fill="#93C5FD" font-size="7" font-family="DM Mono">INS Visakhapatnam</text>
-            <text x="545" y="275" fill="rgba(59,130,246,0.6)" font-size="7" font-family="DM Mono">Op. Sankalp</text>
-            <text x="545" y="284" fill="rgba(59,130,246,0.5)" font-size="7" font-family="DM Mono">redeployed</text>
-
-            <!-- IRIS Dena sinking spot -->
-            <circle cx="656" cy="305" r="8" fill="rgba(192,57,43,0.5)" stroke="#FF4444" stroke-width="1.5" filter="url(#glow)"/>
-            <text x="618" y="295" fill="#FF6B6B" font-size="7.5" font-family="DM Mono">IRIS DENA</text>
-            <text x="618" y="304" fill="rgba(255,100,100,0.7)" font-size="6.5" font-family="DM Mono">sunk Mar 4 ↗</text>
-
-            <!-- IRIS Lavan at Kochi -->
-            <circle cx="630" cy="260" r="5" fill="#22C55E" stroke="#86EFAC" stroke-width="1.5"/>
-            <text x="636" y="257" fill="#86EFAC" font-size="6.5" font-family="DM Mono">IRIS Lavan</text>
-            <text x="636" y="265" fill="rgba(134,239,172,0.7)" font-size="6" font-family="DM Mono">Kochi (shelter)</text>
-
-            <!-- Key Indian ports for evacuees -->
-            <circle cx="625" cy="182" r="7" fill="#8B5CF6" stroke="#C4B5FD" stroke-width="1.5"/>
-            <text x="633" y="179" fill="#C4B5FD" font-size="7" font-family="DM Mono">Mundra</text>
-            <circle cx="628" cy="222" r="7" fill="#8B5CF6" stroke="#C4B5FD" stroke-width="1.5"/>
-            <text x="635" y="219" fill="#C4B5FD" font-size="7" font-family="DM Mono">Mumbai</text>
-            <circle cx="625" cy="262" r="7" fill="#8B5CF6" stroke="#C4B5FD" stroke-width="1.5"/>
-            <text x="632" y="260" fill="#C4B5FD" font-size="7" font-family="DM Mono">Kochi</text>
-
-            <!-- Evacuation flight paths -->
-            <path d="M468,168 Q545,175 618,185" fill="none" stroke="rgba(139,92,246,0.5)" stroke-width="1.5" stroke-dasharray="4,3"/>
-            <path d="M492,170 Q550,185 628,218" fill="none" stroke="rgba(139,92,246,0.4)" stroke-width="1.5" stroke-dasharray="4,3"/>
-            <text x="538" y="165" fill="rgba(139,92,246,0.6)" font-size="7" font-family="DM Mono">Evacuation</text>
-            <text x="538" y="174" fill="rgba(139,92,246,0.5)" font-size="7" font-family="DM Mono">flights active</text>
-
-            <!-- Scale -->
-            <g transform="translate(20,448)">
-              <rect width="130" height="22" rx="3" fill="rgba(0,0,0,0.4)"/>
-              <line x1="10" y1="14" x2="120" y2="14" stroke="white" stroke-width="1.5"/>
-              <line x1="10" y1="10" x2="10" y2="18" stroke="white" stroke-width="1.5"/>
-              <line x1="120" y1="10" x2="120" y2="18" stroke="white" stroke-width="1.5"/>
-              <text x="65" y="12" fill="rgba(255,255,255,0.7)" font-size="7" font-family="DM Mono" text-anchor="middle">≈ 2,000 km</text>
-            </g>
-          </svg>
-        </div>
+        <div id="lmap-4" class="leaflet-map-container"></div>
         <div class="map-side-panel">
           <div>
             <div class="side-title">Map 4 — Indian Diaspora &amp; Indian Ocean</div>
@@ -2085,154 +1524,7 @@
     ════════════════════════════════════════════════════ -->
     <div class="map-panel" id="mp-alternatives">
       <div class="map-insight-panel">
-        <div class="map-svg-wrap" style="min-height:440px">
-          <svg viewBox="0 0 900 480" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <radialGradient id="altOcean" cx="50%" cy="50%" r="60%">
-                <stop offset="0%" stop-color="#0C2238"/>
-                <stop offset="100%" stop-color="#060F1A"/>
-              </radialGradient>
-              <linearGradient id="chabaharGlow" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stop-color="rgba(34,197,94,0)"/>
-                <stop offset="50%" stop-color="rgba(34,197,94,0.3)"/>
-                <stop offset="100%" stop-color="rgba(34,197,94,0)"/>
-              </linearGradient>
-            </defs>
-            <rect width="900" height="480" fill="url(#altOcean)"/>
-            <g stroke="rgba(255,255,255,0.025)" stroke-width="1">
-              <line x1="0" y1="120" x2="900" y2="120"/><line x1="0" y1="240" x2="900" y2="240"/>
-              <line x1="0" y1="360" x2="900" y2="360"/>
-              <line x1="180" y1="0" x2="180" y2="480"/><line x1="360" y1="0" x2="360" y2="480"/>
-              <line x1="540" y1="0" x2="540" y2="480"/><line x1="720" y1="0" x2="720" y2="480"/>
-            </g>
-
-            <!-- Landmasses rendered by D3 + world-atlas -->
-            <g id="geo-5"></g>
-
-            <!-- ══ STRATEGIC ASSET CALLOUTS ══ -->
-
-            <!-- CHABAHAR PORT — PRIMARY FEATURE -->
-            <!-- Glow aura -->
-            <ellipse cx="548" cy="112" rx="55" ry="30" fill="url(#chabaharGlow)"/>
-            <circle cx="548" cy="112" r="14" fill="rgba(34,197,94,0.25)" stroke="#22C55E" stroke-width="2" filter="url(#glow)"/>
-            <circle cx="548" cy="112" r="7" fill="#22C55E" stroke="#86EFAC" stroke-width="1.5" filter="url(#glow)"/>
-            <!-- Chabahar badge -->
-            <rect x="488" y="90" width="130" height="36" rx="5" fill="rgba(22,163,74,0.25)" stroke="#22C55E" stroke-width="1.5"/>
-            <text x="553" y="103" fill="#86EFAC" font-size="9" font-family="DM Mono" font-weight="700" text-anchor="middle">CHABAHAR PORT</text>
-            <text x="553" y="113" fill="rgba(134,239,172,0.85)" font-size="8" font-family="DM Mono" text-anchor="middle">India-operated · Outside Hormuz</text>
-            <text x="553" y="122" fill="rgba(134,239,172,0.65)" font-size="7.5" font-family="DM Mono" text-anchor="middle">US waiver expires Apr 26, 2026</text>
-
-            <!-- INSTC CORRIDOR (International North-South Transport Corridor) -->
-            <!-- Chabahar → Zahedan → Ashgabat → Russia -->
-            <path d="M548,112 Q560,90 572,78 Q590,65 618,55 Q650,42 690,35 Q740,25 785,22" fill="none" stroke="#22C55E" stroke-width="3" stroke-dasharray="none" opacity="0.85"/>
-            <!-- INSTC label -->
-            <rect x="598" y="28" width="135" height="28" rx="4" fill="rgba(22,163,74,0.2)" stroke="#22C55E" stroke-width="1"/>
-            <text x="665" y="40" fill="#4ADE80" font-size="8.5" font-family="DM Mono" font-weight="700" text-anchor="middle">INSTC CORRIDOR</text>
-            <text x="665" y="50" fill="rgba(74,222,128,0.7)" font-size="7.5" font-family="DM Mono" text-anchor="middle">India → Iran → Russia (7,200km)</text>
-            <!-- Russia terminal -->
-            <circle cx="785" cy="22" r="7" fill="#22C55E" stroke="#86EFAC" stroke-width="1.5"/>
-            <text x="792" y="18" fill="#86EFAC" font-size="7.5" font-family="DM Mono">Moscow/Astrakhan</text>
-
-            <!-- Chabahar → Central Asia → Afghanistan -->
-            <path d="M548,112 Q570,95 590,82 Q618,70 650,65 Q680,60 710,58" fill="none" stroke="#22C55E" stroke-width="2" stroke-dasharray="6,4" opacity="0.7"/>
-            <!-- Central Asia label -->
-            <text x="612" y="62" fill="rgba(74,222,128,0.65)" font-size="7.5" font-family="DM Mono">→ Central Asia / Afghanistan</text>
-
-            <!-- Chabahar → India route (non-Hormuz) -->
-            <path d="M548,118 Q572,130 600,148 Q625,165 648,195 Q660,218 668,242" fill="none" stroke="#22C55E" stroke-width="3.5" opacity="0.9"/>
-            <!-- Arrow-like end -->
-            <text x="650" y="215" fill="#4ADE80" font-size="8" font-family="DM Mono">↓ to India</text>
-            <text x="650" y="225" fill="rgba(74,222,128,0.65)" font-size="7" font-family="DM Mono">bypasses Hormuz</text>
-
-            <!-- ══ SAUDI/UAE BYPASS PIPELINES ══ -->
-            <!-- Saudi East-West Pipeline (Yanbu) -->
-            <path d="M415,128 Q375,112 340,108 Q312,106 290,110" fill="none" stroke="#F59E0B" stroke-width="2.5" stroke-dasharray="none" opacity="0.85"/>
-            <circle cx="290" cy="110" r="7" fill="#F59E0B" stroke="rgba(245,158,11,0.4)" stroke-width="6"/>
-            <text x="240" y="104" fill="#F59E0B" font-size="8" font-family="DM Mono" font-weight="700">YANBU</text>
-            <text x="240" y="114" fill="rgba(245,158,11,0.7)" font-size="7" font-family="DM Mono">Saudi export port</text>
-            <text x="240" y="124" fill="rgba(245,158,11,0.6)" font-size="7" font-family="DM Mono">Red Sea bypass</text>
-            <!-- Pipeline label -->
-            <rect x="318" y="94" width="112" height="14" rx="3" fill="rgba(245,158,11,0.15)"/>
-            <text x="374" y="104" fill="#F59E0B" font-size="7.5" font-family="DM Mono" text-anchor="middle">East-West Pipeline</text>
-            <text x="374" y="114" fill="rgba(245,158,11,0.6)" font-size="7" font-family="DM Mono" text-anchor="middle">5M bbl/d max capacity</text>
-
-            <!-- UAE ADCO Pipeline to Fujairah -->
-            <path d="M488,172 Q510,190 532,202 Q558,218 588,228" fill="none" stroke="#F59E0B" stroke-width="2.5" stroke-dasharray="none" opacity="0.8"/>
-            <circle cx="588" cy="228" r="7" fill="#F59E0B" stroke="rgba(245,158,11,0.4)" stroke-width="6"/>
-            <text x="592" y="224" fill="#F59E0B" font-size="8" font-family="DM Mono" font-weight="700">FUJAIRAH</text>
-            <text x="592" y="234" fill="rgba(245,158,11,0.7)" font-size="7" font-family="DM Mono">UAE bypass terminal</text>
-            <text x="592" y="244" fill="rgba(245,158,11,0.6)" font-size="7" font-family="DM Mono">Gulf of Oman exit</text>
-            <!-- Pipeline label -->
-            <rect x="508" y="200" width="82" height="12" rx="2" fill="rgba(245,158,11,0.12)"/>
-            <text x="549" y="209" fill="#F59E0B" font-size="7" font-family="DM Mono" text-anchor="middle">ADCO Pipeline</text>
-
-            <!-- Red Sea route from Yanbu → around Africa or Suez -->
-            <path d="M290,110 Q275,135 265,165 Q258,200 262,240" fill="none" stroke="#F59E0B" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.6"/>
-            <!-- Suez Canal -->
-            <circle cx="272" cy="82" r="6" fill="#E879F9" stroke="rgba(232,121,249,0.4)" stroke-width="6"/>
-            <text x="238" y="76" fill="#E879F9" font-size="8" font-family="DM Mono">SUEZ CANAL</text>
-            <text x="238" y="86" fill="rgba(232,121,249,0.6)" font-size="7" font-family="DM Mono">Houthi threat ⚠</text>
-            <!-- Red sea path via suez -->
-            <path d="M290,110 Q280,98 272,88" fill="none" stroke="#E879F9" stroke-width="1.5" stroke-dasharray="4,4" opacity="0.6"/>
-            <!-- Then to India -->
-            <path d="M272,88 Q290,75 315,78 Q360,82 395,88 Q450,98 510,118 Q560,140 610,175 Q638,200 660,232" fill="none" stroke="#E879F9" stroke-width="1.5" stroke-dasharray="5,4" opacity="0.55"/>
-            <text x="388" y="78" fill="rgba(232,121,249,0.6)" font-size="7.5" font-family="DM Mono">Via Suez (if Houthi risk low)</text>
-
-            <!-- ══ CAPE OF GOOD HOPE (reference) ══ -->
-            <path d="M210,345 Q192,380 185,392" fill="none" stroke="#FF8C42" stroke-width="1.5" stroke-dasharray="5,4" opacity="0.5"/>
-            <circle cx="185" cy="392" r="5" fill="#FF8C42" opacity="0.7"/>
-            <text x="145" y="390" fill="rgba(255,140,66,0.6)" font-size="7.5" font-family="DM Mono">Cape</text>
-            <path d="M185,392 Q248,428 330,445 Q430,462 525,450 Q605,435 648,400 L660,368 L660,320" fill="none" stroke="#FF8C42" stroke-width="1.5" stroke-dasharray="6,4" opacity="0.45"/>
-
-            <!-- ══ KEY STATS BOX ══ -->
-            <rect x="12" y="300" width="200" height="165" rx="6" fill="rgba(0,0,0,0.4)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-            <text x="22" y="318" fill="rgba(255,255,255,0.5)" font-size="8" font-family="DM Mono" font-weight="700">ALTERNATIVE ROUTES COMPARED</text>
-            <!-- Chabahar -->
-            <rect x="18" y="325" width="188" height="42" rx="4" fill="rgba(34,197,94,0.1)"/>
-            <text x="24" y="337" fill="#4ADE80" font-size="8" font-family="DM Mono" font-weight="700">✅ CHABAHAR (India-operated)</text>
-            <text x="24" y="348" fill="rgba(255,255,255,0.7)" font-size="7.5" font-family="DM Sans">Avoids Hormuz entirely. INSTC access.</text>
-            <text x="24" y="358" fill="rgba(255,255,255,0.7)" font-size="7.5" font-family="DM Sans">Sanction waiver expires Apr 26 — renew NOW</text>
-            <!-- Saudi pipeline -->
-            <rect x="18" y="372" width="188" height="32" rx="4" fill="rgba(245,158,11,0.1)"/>
-            <text x="24" y="384" fill="#F59E0B" font-size="8" font-family="DM Mono" font-weight="700">⚠ SAUDI/UAE PIPELINES</text>
-            <text x="24" y="394" fill="rgba(255,255,255,0.7)" font-size="7.5" font-family="DM Sans">5.5M bbl/day cap vs 20M normal via Hormuz</text>
-            <!-- Cape -->
-            <rect x="18" y="408" width="188" height="32" rx="4" fill="rgba(255,140,0,0.08)"/>
-            <text x="24" y="420" fill="#FF8C42" font-size="8" font-family="DM Mono" font-weight="700">🔄 CAPE OF GOOD HOPE</text>
-            <text x="24" y="430" fill="rgba(255,255,255,0.7)" font-size="7.5" font-family="DM Sans">+15–25 days · +$3–4/bbl · No LPG solution</text>
-            <!-- Suez -->
-            <rect x="18" y="444" width="188" height="16" rx="4" fill="rgba(232,121,249,0.08)"/>
-            <text x="24" y="456" fill="#E879F9" font-size="7.5" font-family="DM Mono">⚠ SUEZ: Houthi threat limits viability</text>
-
-            <!-- Hormuz blocked reference -->
-            <circle cx="502" cy="148" r="15" fill="rgba(192,57,43,0.25)" stroke="#FF4444" stroke-width="1.5" stroke-dasharray="4,3"/>
-            <circle cx="502" cy="148" r="6" fill="#FF3333" opacity="0.9"/>
-            <text x="502" y="138" fill="#FF6B6B" font-size="8" font-family="DM Mono" text-anchor="middle" font-weight="700">HORMUZ</text>
-            <text x="502" y="145" fill="rgba(255,100,100,0.7)" font-size="7.5" font-family="DM Mono" text-anchor="middle">BLOCKED</text>
-
-            <!-- India destination -->
-            <circle cx="668" cy="280" r="10" fill="#1F4068" stroke="#60A5FA" stroke-width="2" filter="url(#glow)"/>
-            <text x="678" y="277" fill="#93C5FD" font-size="9" font-family="DM Mono" font-weight="700">India</text>
-
-            <!-- INSTC timeline callout -->
-            <rect x="700" y="282" width="188" height="100" rx="6" fill="rgba(22,163,74,0.12)" stroke="#22C55E" stroke-width="1"/>
-            <text x="710" y="297" fill="#4ADE80" font-size="9" font-family="DM Mono" font-weight="700">INSTC: The Strategic Prize</text>
-            <text x="710" y="310" fill="rgba(255,255,255,0.75)" font-size="7.5" font-family="DM Sans">7,200 km multimodal corridor</text>
-            <text x="710" y="322" fill="rgba(255,255,255,0.75)" font-size="7.5" font-family="DM Sans">India → Iran → Russia → Europe</text>
-            <text x="710" y="335" fill="rgba(255,255,255,0.75)" font-size="7.5" font-family="DM Sans">30% cheaper than Suez route</text>
-            <text x="710" y="348" fill="rgba(255,255,255,0.75)" font-size="7.5" font-family="DM Sans">Chabahar is its anchor port</text>
-            <text x="710" y="362" fill="#86EFAC" font-size="8" font-family="DM Mono" font-weight="700">Crisis = INSTC catalyst 🚀</text>
-
-            <!-- Scale -->
-            <g transform="translate(730,448)">
-              <rect width="140" height="22" rx="3" fill="rgba(0,0,0,0.4)"/>
-              <line x1="10" y1="14" x2="130" y2="14" stroke="white" stroke-width="1.5"/>
-              <line x1="10" y1="10" x2="10" y2="18" stroke="white" stroke-width="1.5"/>
-              <line x1="130" y1="10" x2="130" y2="18" stroke="white" stroke-width="1.5"/>
-              <text x="70" y="12" fill="rgba(255,255,255,0.7)" font-size="7" font-family="DM Mono" text-anchor="middle">≈ 3,000 km</text>
-            </g>
-          </svg>
-        </div>
+        <div id="lmap-5" class="leaflet-map-container"></div>
         <div class="map-side-panel">
           <div>
             <div class="side-title">Map 5 — Alternative Corridors</div>
@@ -3507,6 +2799,10 @@ function showMap(id, btn) {
   const panel = document.getElementById('mp-' + id);
   if (panel) panel.classList.add('active');
   btn.classList.add('active');
+  // Invalidate Leaflet map size after panel becomes visible
+  if (typeof L !== 'undefined' && lmaps[id]) {
+    setTimeout(() => lmaps[id].invalidateSize(), 50);
+  }
 }
 
 // ── SECTOR TABS ──
@@ -3761,80 +3057,278 @@ function makeNewMarketCharts() {
   });
 }
 
-// ── GEO MAP RENDERING (D3 + world-atlas) ──
-function initGeoMaps() {
-  if (typeof d3 === 'undefined' || typeof topojson === 'undefined') return;
-  fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
-    .then(r => r.json())
-    .then(world => {
-      const countries = topojson.feature(world, world.objects.countries);
+// ── LEAFLET INTERACTIVE MAPS ──
+const lmaps = {};
 
-      // Map 1: Persian Gulf / Indian Ocean — regional close-up
-      const proj1 = d3.geoMercator().center([61, 22]).scale(850).translate([420, 280]);
-      drawGeoBase('geo-1', proj1, countries, [
-        {lon:44.0, lat:33.5, label:'Iraq', size:8},
-        {lon:53.7, lat:32.4, label:'IRAN', size:10, weight:600, color:'rgba(180,210,255,0.9)'},
-        {lon:45.0, lat:24.0, label:'Saudi Arabia', size:8},
-        {lon:54.5, lat:23.4, label:'UAE', size:8},
-        {lon:57.0, lat:21.0, label:'Oman', size:8},
-        {lon:69.3, lat:30.4, label:'Pakistan', size:8},
-        {lon:79.0, lat:21.0, label:'INDIA', size:12, weight:400, font:'DM Serif Display', color:'rgba(200,230,255,0.95)'},
-        {lon:48.0, lat:15.5, label:'Yemen', size:7},
-      ]);
-
-      // Maps 2–5: wider Indian Ocean / world view
-      const mkWorldProj = (tx, ty) => d3.geoMercator().center([30, 8]).scale(190).translate([tx, ty]);
-      const worldLabels = [
-        {lon:15.0, lat:5.0,  label:'Africa', size:9},
-        {lon:10.0, lat:50.0, label:'Europe', size:8},
-        {lon:55.0, lat:32.0, label:'Iran', size:8},
-        {lon:45.0, lat:24.0, label:'Arabia', size:8},
-        {lon:79.0, lat:21.0, label:'INDIA', size:10, weight:400, font:'DM Serif Display', color:'rgba(200,230,255,0.9)'},
-        {lon:69.3, lat:30.4, label:'Pakistan', size:7},
-        {lon:108.0, lat:14.0, label:'SE Asia', size:7},
-        {lon:134.0, lat:-25.0, label:'Australia', size:8},
-        {lon:-55.0, lat:-15.0, label:'S.America', size:7},
-        {lon:-98.0, lat:42.0, label:'N.America', size:7},
-      ];
-      drawGeoBase('geo-2', mkWorldProj(450, 255), countries, worldLabels);
-      drawGeoBase('geo-3', mkWorldProj(450, 235), countries, worldLabels);
-      drawGeoBase('geo-4', mkWorldProj(450, 235), countries, worldLabels);
-      drawGeoBase('geo-5', mkWorldProj(450, 235), countries, worldLabels);
-    })
-    .catch(e => console.warn('World atlas load failed:', e));
+function mkIcon(html, w, h) {
+  return L.divIcon({ html, className:'', iconSize:[w,h], iconAnchor:[w/2,h/2] });
+}
+function redDot(r, label) {
+  return mkIcon(`<div style="position:relative">
+    <div style="width:${r*2}px;height:${r*2}px;border-radius:50%;background:rgba(192,57,43,0.85);border:2px solid #FF4444;box-shadow:0 0 ${r*3}px rgba(255,68,68,0.7)"></div>
+    ${label?`<div style="position:absolute;top:${r*2+2}px;left:50%;transform:translateX(-50%);white-space:nowrap;color:#FF6B6B;font-size:9px;font-family:'DM Mono',monospace;font-weight:700;text-shadow:0 0 4px #000">${label}</div>`:''}
+  </div>`, r*2, r*2);
+}
+function greenDot(r, label) {
+  return mkIcon(`<div style="position:relative">
+    <div style="width:${r*2}px;height:${r*2}px;border-radius:50%;background:#22C55E;border:2px solid #86EFAC;box-shadow:0 0 ${r*2}px rgba(34,197,94,0.7)"></div>
+    ${label?`<div style="position:absolute;top:${r*2+2}px;left:50%;transform:translateX(-50%);white-space:nowrap;color:#86EFAC;font-size:9px;font-family:'DM Mono',monospace;font-weight:700;text-shadow:0 0 4px #000">${label}</div>`:''}
+  </div>`, r*2, r*2);
+}
+function purpleDot(r, label) {
+  return mkIcon(`<div style="position:relative">
+    <div style="width:${r*2}px;height:${r*2}px;border-radius:50%;background:#8B5CF6;border:2px solid #C4B5FD;box-shadow:0 0 ${r*2}px rgba(139,92,246,0.5)"></div>
+    ${label?`<div style="position:absolute;top:${r*2+2}px;left:50%;transform:translateX(-50%);white-space:nowrap;color:#C4B5FD;font-size:9px;font-family:'DM Mono',monospace;text-shadow:0 0 4px #000">${label}</div>`:''}
+  </div>`, r*2, r*2);
+}
+function blueDot(r, label) {
+  return mkIcon(`<div style="position:relative">
+    <div style="width:${r*2}px;height:${r*2}px;border-radius:50%;background:#3B82F6;border:2px solid #93C5FD"></div>
+    ${label?`<div style="position:absolute;top:${r*2+2}px;left:50%;transform:translateX(-50%);white-space:nowrap;color:#93C5FD;font-size:9px;font-family:'DM Mono',monospace;text-shadow:0 0 4px #000">${label}</div>`:''}
+  </div>`, r*2, r*2);
+}
+function orangeDot(r, label) {
+  return mkIcon(`<div style="position:relative">
+    <div style="width:${r*2}px;height:${r*2}px;border-radius:50%;background:#F59E0B;border:2px solid #FCD34D"></div>
+    ${label?`<div style="position:absolute;top:${r*2+2}px;left:50%;transform:translateX(-50%);white-space:nowrap;color:#FCD34D;font-size:9px;font-family:'DM Mono',monospace;text-shadow:0 0 4px #000">${label}</div>`:''}
+  </div>`, r*2, r*2);
+}
+function labelIcon(text, color) {
+  return mkIcon(`<div style="color:${color||'rgba(180,210,255,0.85)'};font-size:10px;font-family:'DM Sans',sans-serif;font-weight:600;text-shadow:0 0 4px #000,0 0 8px #000;white-space:nowrap;pointer-events:none">${text}</div>`, 80, 16);
+}
+function darkTiles() {
+  return L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    subdomains:'abcd', maxZoom:19
+  });
 }
 
-function drawGeoBase(groupId, projection, countries, labels) {
-  const g = d3.select('#' + groupId);
-  if (g.empty()) return;
-  const path = d3.geoPath(projection);
+function initLeafletMaps() {
+  if (typeof L === 'undefined') return;
 
-  g.selectAll('path.geo-country')
-    .data(countries.features)
-    .enter()
-    .append('path')
-    .attr('class', 'geo-country')
-    .attr('d', path)
-    .attr('fill', d => d.id === 356 ? '#1F4068' : '#1A3550')
-    .attr('stroke', d => d.id === 356 ? '#3A6A9A' : '#2A527A')
-    .attr('stroke-width', d => d.id === 356 ? 1.5 : 0.8);
+  // ── MAP 1: THE BLOCKADE — Persian Gulf close-up ──
+  const m1 = L.map('lmap-1', { zoomControl:true, attributionControl:true }).setView([26, 56], 5);
+  darkTiles().addTo(m1);
+  lmaps['blockade'] = m1;
 
-  if (labels) {
-    labels.forEach(lbl => {
-      const pt = projection([lbl.lon, lbl.lat]);
-      if (!pt) return;
-      const [x, y] = pt;
-      g.append('text')
-        .attr('x', x).attr('y', y)
-        .attr('fill', lbl.color || 'rgba(180,210,255,0.6)')
-        .attr('font-size', lbl.size || 8)
-        .attr('font-family', lbl.font || 'DM Sans')
-        .attr('font-weight', lbl.weight || 400)
-        .attr('text-anchor', 'middle')
-        .attr('pointer-events', 'none')
-        .text(lbl.label);
-    });
-  }
+  // War zone overlay on Iran
+  L.circle([32, 53], {radius:600000, color:'rgba(200,0,0,0.5)', fillColor:'rgba(200,0,0,0.07)', fillOpacity:1, dashArray:'8,6', weight:1.5}).addTo(m1)
+    .bindTooltip('Active Conflict Zone — Iran', {permanent:false, className:'leaflet-dark-tip'});
+
+  // Strait of Hormuz — blockade marker
+  L.circle([26.6, 56.4], {radius:60000, color:'#FF4444', fillColor:'rgba(192,57,43,0.35)', fillOpacity:1, weight:2.5, dashArray:'6,4'}).addTo(m1);
+  L.marker([26.6, 56.4], {icon: redDot(10,'')}).addTo(m1)
+    .bindPopup('<b style="color:#FF6B6B">STRAIT OF HORMUZ — BLOCKADED</b><br>97% tanker traffic drop since Mar 1<br>IRGC enforcing closure 24/7');
+  L.marker([26.6, 56.4], {icon: mkIcon(`<div style="background:rgba(192,57,43,0.9);color:white;padding:3px 7px;border-radius:4px;font-size:9px;font-family:'DM Mono',monospace;font-weight:700;white-space:nowrap;text-align:center">STRAIT OF HORMUZ<br><span style="font-size:8px;opacity:0.85">BLOCKADED — 97% traffic drop</span></div>`,180,30)}).addTo(m1);
+
+  // Iranian strike targets
+  L.marker([35.7, 51.4], {icon: redDot(6,'Tehran')}).addTo(m1).bindPopup('<b style="color:#FF6B6B">Tehran</b><br>Capital — under US/Israel airstrike pressure');
+  L.marker([27.2, 56.3], {icon: redDot(7,'Bandar Abbas')}).addTo(m1).bindPopup('<b style="color:#FF6B6B">Bandar Abbas</b><br>IRGC Naval Base — enforcing Hormuz closure');
+  L.marker([25.9, 55.1], {icon: redDot(5,'Abu Musa')}).addTo(m1).bindPopup('<b style="color:#FF6B6B">Abu Musa Island</b><br>IRGC patrol base');
+  L.marker([29.3, 50.3], {icon: redDot(6,'Kharg Is. ⚡')}).addTo(m1).bindPopup('<b style="color:#FF6B6B">Kharg Island</b><br>Iran main oil terminal — struck');
+  L.marker([33.5, 51.9], {icon: mkIcon('<div style="color:#FFD700;font-size:10px;text-shadow:0 0 4px #000">⚛ NATANZ</div>',90,16)}).addTo(m1).bindPopup('<b style="color:#FFD700">Natanz</b><br>Nuclear facility — casus belli for US/Israel strikes');
+
+  // Gulf states
+  L.marker([25.9, 51.5], {icon: mkIcon('<div style="background:rgba(255,100,0,0.4);border:1.5px dashed #FF6600;border-radius:50%;width:20px;height:20px"></div>',20,20)}).addTo(m1);
+  L.marker([25.9, 51.5], {icon: mkIcon(`<div style="color:#FF8844;font-size:8px;font-family:'DM Mono',monospace;text-shadow:0 0 4px #000;white-space:nowrap">RAS LAFFAN ⚡</div>`,110,14)}).addTo(m1).bindPopup('<b style="color:#FF8844">Ras Laffan — Qatar</b><br>LNG terminal struck — 33% global helium offline');
+  L.marker([26.0, 50.6], {icon: blueDot(4,'Bahrain')}).addTo(m1);
+  L.marker([25.3, 51.2], {icon: blueDot(4,'Qatar')}).addTo(m1);
+
+  // Chabahar — India operated
+  L.marker([25.3, 60.6], {icon: greenDot(8,'CHABAHAR')}).addTo(m1).bindPopup('<b style="color:#86EFAC">Chabahar Port</b><br>India-operated · Outside Hormuz<br>US sanctions waiver expires Apr 26, 2026');
+
+  // Indian ports
+  L.marker([22.8, 69.7], {icon: purpleDot(7,'Mundra')}).addTo(m1).bindPopup('<b style="color:#C4B5FD">Mundra Port</b><br>Largest private port in India');
+  L.marker([19.1, 72.8], {icon: purpleDot(7,'Mumbai')}).addTo(m1).bindPopup('<b style="color:#C4B5FD">Mumbai</b><br>Key western India port');
+  L.marker([10.0, 76.3], {icon: purpleDot(6,'Kochi')}).addTo(m1).bindPopup('<b style="color:#C4B5FD">Kochi</b><br>Southern India logistics hub');
+  L.marker([13.1, 80.3], {icon: purpleDot(5,'Chennai')}).addTo(m1).bindPopup('<b style="color:#C4B5FD">Chennai</b><br>Eastern coast port');
+  L.marker([17.7, 83.3], {icon: blueDot(5,'Vizag (MILAN)')}).addTo(m1).bindPopup('<b style="color:#93C5FD">Visakhapatnam</b><br>MILAN naval exercise base');
+
+  // IRIS Dena sinking
+  L.marker([4.5, 80.5], {icon: redDot(6,'IRIS DENA ✕')}).addTo(m1).bindPopup('<b style="color:#FF6B6B">IRIS Dena — Sunk Mar 4</b><br>104 KIA · USS Charlotte · 40km off Sri Lanka');
+
+  // Blocked route
+  L.polyline([[26.6,56.4],[23,62],[20,67],[19.1,72.8]], {color:'#FF4444', weight:2.5, dashArray:'10,6', opacity:0.75}).addTo(m1);
+
+  // ── MAP 2: REROUTING — Indian Ocean & world routes ──
+  const m2 = L.map('lmap-2', { zoomControl:true, attributionControl:true }).setView([15, 50], 3);
+  darkTiles().addTo(m2);
+  lmaps['routes'] = m2;
+
+  // Hormuz blockade
+  L.circle([26.6, 56.4], {radius:120000, color:'#FF4444', fillColor:'rgba(192,57,43,0.3)', fillOpacity:1, weight:2}).addTo(m2);
+  L.marker([26.6, 56.4], {icon: mkIcon(`<div style="background:rgba(192,57,43,0.9);color:white;padding:3px 7px;border-radius:4px;font-size:9px;font-family:'DM Mono',monospace;font-weight:700;white-space:nowrap">HORMUZ BLOCKED</div>`,140,22)}).addTo(m2);
+
+  // Chabahar
+  L.marker([25.3, 60.6], {icon: greenDot(8,'CHABAHAR')}).addTo(m2).bindPopup('<b style="color:#86EFAC">Chabahar</b><br>India-operated · Bypasses Hormuz');
+
+  // Cape of Good Hope route (orange)
+  L.polyline([[26,56.4],[20,58],[10,54],[-5,42],[-15,28],[-25,18],[-34.4,18.5],[-30,32],[-15,40],[-5,42],[5,46],[10,52],[19.1,72.8]], {color:'#FF8C42', weight:3, opacity:0.9}).addTo(m2)
+    .bindTooltip('+15–25 days · +$3–4/bbl via Cape', {sticky:true});
+  L.marker([-34.4, 18.5], {icon: orangeDot(8,'Cape of Good Hope')}).addTo(m2).bindPopup('<b style="color:#FCD34D">Cape of Good Hope</b><br>Primary reroute — adds 15–25 days and $3–4/bbl');
+
+  // Blocked normal route (red dashed)
+  L.polyline([[26.6,56.4],[24,60],[22,65],[19.1,72.8]], {color:'#FF4444', weight:2.5, dashArray:'10,6', opacity:0.75}).addTo(m2);
+
+  // Russia crude route (blue dashed)
+  L.polyline([[55,50],[50,53],[40,52],[35,53],[30,55],[25.3,60.6],[22,66],[19.1,72.8]], {color:'#60A5FA', weight:2.5, dashArray:'8,5', opacity:0.85}).addTo(m2)
+    .bindTooltip('Russian Urals crude · +$2–4 premium', {sticky:true});
+  L.marker([55, 50], {icon: blueDot(6,'Russia (Urals crude)')}).addTo(m2);
+
+  // US LPG route (green dashed)
+  L.polyline([[29.8,-95.4],[20,-40],[0,-20],[-20,5],[-30,20],[-34.4,18.5],[-25,30],[-10,42],[5,50],[15,58],[19.1,72.8]], {color:'#4ADE80', weight:2, dashArray:'8,5', opacity:0.75}).addTo(m2)
+    .bindTooltip('US Gulf LPG · 2.2 MTPA deal · ~45 days', {sticky:true});
+  L.marker([29.8, -95.4], {icon: greenDot(6,'USA/Houston')}).addTo(m2).bindPopup('<b style="color:#4ADE80">Houston, USA</b><br>LPG source — 2.2 MTPA deal · ~45 days to India');
+
+  // Australia LNG route (purple dashed)
+  L.polyline([[-22,114],[-15,100],[-5,85],[5,75],[10,72],[15,70],[19.1,72.8]], {color:'#A78BFA', weight:2, dashArray:'7,5', opacity:0.8}).addTo(m2)
+    .bindTooltip('Australia LNG · spot premium', {sticky:true});
+  L.marker([-22, 114], {icon: purpleDot(6,'Australia LNG')}).addTo(m2);
+
+  // Suez Canal
+  L.marker([30.5, 32.3], {icon: orangeDot(6,'Suez ⚠')}).addTo(m2).bindPopup('<b style="color:#FCD34D">Suez Canal</b><br>Houthi threat limits viability');
+
+  // India destination
+  L.marker([19.1, 72.8], {icon: mkIcon(`<div style="background:rgba(31,64,104,0.9);border:2px solid #60A5FA;color:#93C5FD;padding:4px 8px;border-radius:6px;font-size:10px;font-family:'DM Mono',monospace;font-weight:700">INDIA</div>`,70,26)}).addTo(m2);
+
+  // ── MAP 3: COMMODITY FLOWS ──
+  const m3 = L.map('lmap-3', { zoomControl:true, attributionControl:true }).setView([18, 52], 3);
+  darkTiles().addTo(m3);
+  lmaps['commodities'] = m3;
+
+  // Hormuz
+  L.circle([26.6, 56.4], {radius:120000, color:'#FF4444', fillColor:'rgba(192,57,43,0.3)', fillOpacity:1, weight:2}).addTo(m3);
+  L.marker([26.6, 56.4], {icon: mkIcon(`<div style="background:rgba(192,57,43,0.9);color:white;padding:3px 7px;border-radius:4px;font-size:9px;font-family:'DM Mono',monospace;font-weight:700;white-space:nowrap">HORMUZ BLOCKED</div>`,140,22)}).addTo(m3);
+
+  // Source country highlights with popup details
+  const sources = [
+    {pos:[33.2, 43.7], label:'IRAQ', sub:'22% India crude', color:'#FF8C42'},
+    {pos:[24.7, 45.1], label:'SAUDI', sub:'18% India crude', color:'#FFA94D'},
+    {pos:[32.4, 53.7], label:'IRAN', sub:'Blockade control', color:'#FF6B6B'},
+    {pos:[25.3, 51.2], label:'QATAR', sub:'LNG+Helium+Fert', color:'#FFD700'},
+    {pos:[23.4, 54.4], label:'UAE', sub:'9% crude', color:'#FFA94D'},
+    {pos:[24.2, 56.0], label:'OMAN', sub:'Transit', color:'#FFA94D'},
+    {pos:[55, 50],     label:'RUSSIA', sub:'Urals crude +premium', color:'#60A5FA'},
+    {pos:[-25, 132],   label:'AUSTRALIA', sub:'LNG alt. source', color:'#A78BFA'},
+    {pos:[56, -95],    label:'CANADA', sub:'Potash/Fertilizer', color:'#4ADE80'},
+    {pos:[32, -5],     label:'MOROCCO', sub:'Phosphate', color:'#4ADE80'},
+  ];
+  sources.forEach(s => {
+    L.circle(s.pos, {radius:160000, color:s.color, fillColor:s.color, fillOpacity:0.12, weight:1.5}).addTo(m3);
+    L.marker(s.pos, {icon:mkIcon(`<div style="color:${s.color};font-size:9px;font-family:'DM Mono',monospace;font-weight:700;text-shadow:0 0 4px #000;white-space:nowrap;text-align:center">${s.label}<br><span style="font-size:8px;opacity:0.7">${s.sub}</span></div>`,120,24)}).addTo(m3);
+  });
+
+  // Crude oil flows — orange dashed (disrupted)
+  [[33.2,43.7],[25,55],[25,60],[22,66],[19.1,72.8]].reduce((a,b,i,arr)=>{ if(i>0) L.polyline([arr[i-1],arr[i]], {color:'#FF8C42',weight:3.5,dashArray:'10,5',opacity:0.7}).addTo(m3); return b; });
+  [[24.7,45.1],[25,55],[25,60],[22,66],[19.1,72.8]].reduce((a,b,i,arr)=>{ if(i>0) L.polyline([arr[i-1],arr[i]], {color:'#FFA94D',weight:3,dashArray:'8,5',opacity:0.65}).addTo(m3); return b; });
+  // LPG flow — yellow (disrupted)
+  L.polyline([[25.3,51.2],[25,56],[23,62],[20,68],[19.1,72.8]], {color:'#FBBF24', weight:4, dashArray:'10,5', opacity:0.8}).addTo(m3).bindTooltip('LPG — DISRUPTED · 90% via Hormuz', {sticky:true});
+  // LNG — teal (disrupted)
+  L.polyline([[25.3,51.2],[25,57],[22,64],[19.1,72.8]], {color:'#22D3EE', weight:2.5, dashArray:'7,4', opacity:0.65}).addTo(m3).bindTooltip('LNG — DISRUPTED', {sticky:true});
+  // Helium — magenta (disrupted)
+  L.polyline([[25.3,51.2],[25,58],[22,65],[19.1,72.8]], {color:'#F472B6', weight:2, dashArray:'5,4', opacity:0.7}).addTo(m3).bindTooltip('Helium — OFFLINE · 33% global supply', {sticky:true});
+  // Russia crude — blue (semi-active)
+  L.polyline([[55,50],[45,52],[35,53],[25.3,60.6],[22,66],[19.1,72.8]], {color:'#60A5FA', weight:2.5, dashArray:'8,4', opacity:0.75}).addTo(m3).bindTooltip('Russia crude — active (+premium)', {sticky:true});
+  // Fertilizer Canada
+  L.polyline([[56,-95],[40,-60],[20,-30],[0,0],[-10,20],[-20,38],[-10,50],[5,60],[19.1,72.8]], {color:'#4ADE80', weight:1.5, dashArray:'7,5', opacity:0.5}).addTo(m3);
+
+  // India
+  L.marker([19.1, 72.8], {icon: mkIcon(`<div style="background:rgba(31,64,104,0.9);border:2px solid #3A6A9A;color:rgba(200,230,255,0.95);padding:4px 8px;border-radius:6px;font-size:11px;font-family:'DM Serif Display',serif">INDIA</div>`,70,26)}).addTo(m3);
+
+  // ── MAP 4: DIASPORA & INDIAN OCEAN ──
+  const m4 = L.map('lmap-4', { zoomControl:true, attributionControl:true }).setView([22, 57], 5);
+  darkTiles().addTo(m4);
+  lmaps['diaspora'] = m4;
+
+  // Diaspora bubbles — sized by population (radius in metres)
+  const diaspora = [
+    {pos:[24.5, 54.4], pop:'3.5M', label:'UAE', color:'#FBBF24', r:280000},
+    {pos:[24.7, 45.1], pop:'2.5M', label:'Saudi Arabia', color:'#FF8C42', r:230000},
+    {pos:[29.5, 47.5], pop:'1.0M', label:'Kuwait', color:'#4ADE80', r:160000},
+    {pos:[22.0, 58.0], pop:'0.8M', label:'Oman', color:'#A78BFA', r:145000},
+    {pos:[25.3, 51.2], pop:'0.75M', label:'Qatar', color:'#60A5FA', r:140000},
+    {pos:[26.0, 50.6], pop:'0.4M', label:'Bahrain', color:'#22D3EE', r:105000},
+  ];
+  diaspora.forEach(d => {
+    L.circle(d.pos, {radius:d.r, color:d.color, fillColor:d.color, fillOpacity:0.15, weight:1.5}).addTo(m4)
+      .bindPopup(`<b style="color:${d.color}">${d.label}</b><br>${d.pop} Indians · annual remittances contribute to $50B/yr`);
+    L.marker(d.pos, {icon:mkIcon(`<div style="color:${d.color};font-size:9px;font-family:'DM Mono',monospace;font-weight:700;text-shadow:0 0 4px #000;text-align:center;white-space:nowrap">${d.label}<br><span style="font-size:10px">${d.pop}</span></div>`,120,28)}).addTo(m4);
+  });
+
+  // Stranded ships zone
+  L.rectangle([[24.5,48],[28.5,57.5]], {color:'rgba(255,50,50,0.6)',fillColor:'rgba(255,50,50,0.06)',fillOpacity:1,weight:1.5,dashArray:'6,4'}).addTo(m4)
+    .bindTooltip('38 Indian ships · 20,000 seafarers stranded', {sticky:true});
+
+  // Indian ports
+  L.marker([22.8, 69.7], {icon: purpleDot(7,'Mundra')}).addTo(m4);
+  L.marker([19.1, 72.8], {icon: purpleDot(7,'Mumbai')}).addTo(m4);
+  L.marker([10.0, 76.3], {icon: purpleDot(7,'Kochi')}).addTo(m4).bindPopup('<b style="color:#86EFAC">IRIS Lavan sheltering at Kochi</b>');
+
+  // IRIS Dena sinking
+  L.marker([4.5, 80.5], {icon: redDot(7,'IRIS DENA ✕')}).addTo(m4).bindPopup('<b style="color:#FF6B6B">IRIS Dena — Sunk Mar 4</b><br>104 KIA · USS Charlotte');
+
+  // Indian Navy deployments
+  L.marker([12, 61], {icon: blueDot(5,'INS Kolkata')}).addTo(m4).bindPopup('<b style="color:#93C5FD">INS Kolkata</b><br>Op. Sankalp redeployment');
+  L.marker([15, 65], {icon: blueDot(5,'INS Visakhapatnam')}).addTo(m4).bindPopup('<b style="color:#93C5FD">INS Visakhapatnam</b><br>Indian Ocean patrol');
+
+  // India sphere of influence circle
+  L.circle([10.0, 76.3], {radius:2500000, color:'rgba(74,144,226,0.3)', fillColor:'transparent', weight:2, dashArray:'10,6'}).addTo(m4)
+    .bindTooltip("India's claimed IOR sphere of influence", {sticky:true});
+
+  // Remittance flow arrows
+  L.polyline([[24.5,54.4],[22,65],[19.1,72.8]], {color:'#FBBF24', weight:2, dashArray:'6,4', opacity:0.6}).addTo(m4);
+  L.polyline([[24.7,45.1],[22,60],[19.1,72.8]], {color:'#FF8C42', weight:1.5, dashArray:'5,4', opacity:0.5}).addTo(m4);
+
+  // Total bubble callout
+  L.marker([22, 52], {icon: mkIcon(`<div style="background:rgba(251,191,36,0.15);border:1.5px solid #FBBF24;color:#FBBF24;padding:5px 10px;border-radius:6px;font-size:9px;font-family:'DM Mono',monospace;font-weight:700;text-align:center;white-space:nowrap">9.1M Indians in Gulf<br><span style="font-weight:400;font-size:8px">$50B annual remittances → India</span></div>`,220,38)}).addTo(m4);
+
+  // ── MAP 5: ALTERNATIVE CORRIDORS ──
+  const m5 = L.map('lmap-5', { zoomControl:true, attributionControl:true }).setView([27, 58], 4);
+  darkTiles().addTo(m5);
+  lmaps['alternatives'] = m5;
+
+  // Chabahar — primary feature
+  L.circle([25.3, 60.6], {radius:80000, color:'#22C55E', fillColor:'rgba(34,197,94,0.2)', fillOpacity:1, weight:2.5}).addTo(m5);
+  L.marker([25.3, 60.6], {icon: greenDot(10,'')}).addTo(m5);
+  L.marker([25.3, 60.6], {icon: mkIcon(`<div style="background:rgba(22,163,74,0.25);border:1.5px solid #22C55E;color:#86EFAC;padding:4px 10px;border-radius:6px;font-size:9px;font-family:'DM Mono',monospace;font-weight:700;text-align:center;white-space:nowrap;margin-top:22px">CHABAHAR PORT<br><span style="font-weight:400;font-size:8px">India-operated · Outside Hormuz<br>US waiver expires Apr 26, 2026</span></div>`,200,52)}).addTo(m5);
+
+  // INSTC corridor — Chabahar → Tehran → Ashgabat → Moscow
+  L.polyline([[25.3,60.6],[35.7,51.4],[37.9,58.4],[43.1,76.9],[55.8,49.1],[55.5,37.6]], {color:'#22C55E', weight:3, opacity:0.85}).addTo(m5)
+    .bindTooltip('INSTC: India → Iran → Russia (7,200km)', {sticky:true});
+  L.marker([55.5, 37.6], {icon: greenDot(7,'Moscow/Astrakhan')}).addTo(m5).bindPopup('<b style="color:#86EFAC">INSTC Northern Terminal</b><br>Moscow/Astrakhan — 7,200km multimodal corridor');
+
+  // Chabahar → India
+  L.polyline([[25.3,60.6],[22,65],[19.1,72.8]], {color:'#22C55E', weight:3.5, opacity:0.9}).addTo(m5)
+    .bindTooltip('Chabahar → India · Bypasses Hormuz entirely', {sticky:true});
+
+  // Saudi East-West Pipeline → Yanbu
+  L.polyline([[26.5, 50],[26,47],[24,43],[22,38],[24.1,38.1]], {color:'#F59E0B', weight:2.5, opacity:0.85}).addTo(m5)
+    .bindTooltip('Saudi East-West Pipeline · 5M bbl/d max', {sticky:true});
+  L.marker([24.1, 38.1], {icon: orangeDot(7,'YANBU')}).addTo(m5).bindPopup('<b style="color:#FCD34D">Yanbu</b><br>Saudi export port · Red Sea bypass · 5M bbl/d max');
+
+  // UAE ADCO pipeline → Fujairah
+  L.polyline([[24.5,54.4],[24,56.5],[25.2,56.3]], {color:'#F59E0B', weight:2.5, opacity:0.8}).addTo(m5)
+    .bindTooltip('UAE ADCO Pipeline · Gulf of Oman exit', {sticky:true});
+  L.marker([25.2, 56.3], {icon: orangeDot(7,'FUJAIRAH')}).addTo(m5).bindPopup('<b style="color:#FCD34D">Fujairah</b><br>UAE bypass terminal · Gulf of Oman exit');
+
+  // Via Suez
+  L.polyline([[24.1,38.1],[29,33],[30.5,32.3]], {color:'#E879F9', weight:1.5, dashArray:'6,4', opacity:0.6}).addTo(m5);
+  L.marker([30.5, 32.3], {icon: mkIcon(`<div style="color:#E879F9;font-size:9px;font-family:'DM Mono',monospace;font-weight:700;text-shadow:0 0 4px #000;white-space:nowrap">SUEZ ⚠ Houthi</div>`,130,14)}).addTo(m5);
+
+  // Cape (reference)
+  L.polyline([[-34.4,18.5],[-20,40],[-5,55],[10,65],[19.1,72.8]], {color:'#FF8C42', weight:1.5, dashArray:'8,5', opacity:0.45}).addTo(m5);
+  L.marker([-34.4, 18.5], {icon: orangeDot(5,'Cape')}).addTo(m5);
+
+  // Hormuz blocked
+  L.circle([26.6, 56.4], {radius:80000, color:'#FF4444', fillColor:'rgba(192,57,43,0.25)', fillOpacity:1, weight:2, dashArray:'6,4'}).addTo(m5);
+  L.marker([26.6, 56.4], {icon: mkIcon(`<div style="background:rgba(192,57,43,0.85);color:white;padding:2px 6px;border-radius:3px;font-size:8px;font-family:'DM Mono',monospace;font-weight:700">HORMUZ BLOCKED</div>`,130,18)}).addTo(m5);
+
+  // Chabahar → Central Asia
+  L.polyline([[25.3,60.6],[33,63],[37,65],[40,65.5]], {color:'#22C55E', weight:2, dashArray:'7,4', opacity:0.7}).addTo(m5)
+    .bindTooltip('→ Central Asia / Afghanistan', {sticky:true});
+
+  // India label
+  L.marker([20, 78], {icon: mkIcon(`<div style="background:rgba(31,64,104,0.85);border:2px solid #3A6A9A;color:rgba(200,230,255,0.95);padding:4px 8px;border-radius:6px;font-size:11px;font-family:'DM Serif Display',serif">INDIA</div>`,70,26)}).addTo(m5);
 }
 
 // ── INIT ──
@@ -3845,7 +3339,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   makeNewMarketCharts();
   makeLpgCharts();
   updateOilImpact(103);
-  initGeoMaps();
+  initLeafletMaps();
   // Auto-refresh every 5 minutes
   setInterval(()=>{ updateBanner(); makeCharts(); }, 300000);
 });
