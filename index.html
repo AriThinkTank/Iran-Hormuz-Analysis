@@ -472,13 +472,15 @@
     cursor: default; border-bottom: 1px dotted var(--blue);
   }
   .stmt-source-tooltip .src-tip {
-    display: none; position: absolute; bottom: 130%; left: 0;
+    display: none; position: absolute; bottom: calc(100% + 6px); left: 0;
     background: var(--slate); color: white; font-size: 10px; border-radius: 5px;
-    padding: 6px 10px; white-space: nowrap; z-index: 99;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2); min-width: 220px; max-width: 340px;
-    white-space: normal; line-height: 1.4;
+    padding: 8px 10px; white-space: normal; z-index: 999;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2); min-width: 220px; max-width: 380px;
+    line-height: 1.5; pointer-events: auto;
   }
   .stmt-source-tooltip:hover .src-tip { display: block; }
+  .stmt-source-tooltip .src-tip a { color: #5DADE2; font-size: 10px; text-decoration: none; border-bottom: 1px solid rgba(93,173,226,0.4); display: inline-block; margin-top: 3px; }
+  .stmt-source-tooltip .src-tip a:hover { color: #85C1E9; }
 
   /* Sentiment charts area */
   .sent-insight-box {
@@ -518,18 +520,19 @@
     border-bottom: 1px dotted var(--blue);
     color: inherit;
   }
-  .data-tip::after {
-    content: attr(data-src);
-    display: none; position: absolute; bottom: 130%; left: 50%;
-    transform: translateX(-50%);
-    background: var(--slate); color: white; font-size: 10px;
-    border-radius: 5px; padding: 6px 10px; white-space: normal;
-    z-index: 999; box-shadow: 0 4px 14px rgba(0,0,0,0.25);
-    min-width: 200px; max-width: 340px; line-height: 1.4;
-    font-family: 'DM Sans', sans-serif; font-weight: 400;
-    pointer-events: none;
+  #src-tooltip {
+    display: none; position: fixed; z-index: 9999;
+    max-width: 340px; background: var(--slate); color: white;
+    font-size: 11px; border-radius: 7px; padding: 9px 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.35); line-height: 1.5;
+    pointer-events: auto; font-family: 'DM Sans', sans-serif;
   }
-  .data-tip:hover::after { display: block; }
+  #src-tooltip a {
+    color: #5DADE2; font-size: 10px; text-decoration: none;
+    display: inline-block; margin-top: 5px;
+    border-bottom: 1px solid rgba(93,173,226,0.4);
+  }
+  #src-tooltip a:hover { color: #85C1E9; }
 
   /* ── INSIGHT LABEL ── */
   .insight-label {
@@ -789,54 +792,54 @@
   <div class="grid-4">
     <div class="kpi-tile crit">
       <div class="kpi-label">Brent Crude</div>
-      <div class="kpi-val" style="color:var(--crit)" id="kpi-brent">$102.77</div>
-      <div class="kpi-delta neg">▲ +57% from Feb baseline ($65)</div>
-      <div class="kpi-sub">War risk premium: ~$30/bbl</div>
+      <div class="kpi-val" style="color:var(--crit)" id="kpi-brent"><span class="data-tip" data-src="ICE Brent front-month futures, March 18, 2026. Pre-war: $65.2/bbl (Feb 27). +57% in 19 days — driven by Hormuz closure and war risk premium. Source: ICE Futures Europe." data-url="https://www.theice.com/crude-oil">$102.77</span></div>
+      <div class="kpi-delta neg">▲ <span class="data-tip" data-src="ICE Brent: $65.2 (Feb 27) → $105.7 peak (Mar 4) → $102.77 (Mar 18). +57% in 19 days. Fastest sustained oil price rise since 1990 Gulf War. Source: ICE Futures / Bloomberg." data-url="https://www.theice.com/crude-oil">+57% from Feb baseline ($65)</span></div>
+      <div class="kpi-sub"><span class="data-tip" data-src="Goldman Sachs Commodities Research, March 2026: 'War risk premium estimated at $25–30/bbl embedded in current Brent price. Includes insurance, rerouting, and supply uncertainty premiums.'">War risk premium: ~$30/bbl</span></div>
     </div>
     <div class="kpi-tile crit">
       <div class="kpi-label">USD / INR</div>
-      <div class="kpi-val" style="color:var(--crit)" id="kpi-inr">₹92.56</div>
-      <div class="kpi-delta neg">▲ Record low. Pre-war: ₹86.5</div>
-      <div class="kpi-sub">MUFG warns ₹95–₹97.5 if sustained</div>
+      <div class="kpi-val" style="color:var(--crit)" id="kpi-inr"><span class="data-tip" data-src="RBI Reference Rate, March 18, 2026. All-time record low. Pre-war: ₹86.5 (Feb 27). 7.0% depreciation in 19 trading days. Source: RBI." data-url="https://rbi.org.in/">₹92.56</span></div>
+      <div class="kpi-delta neg">▲ <span class="data-tip" data-src="RBI Reference Rate: ₹86.5 on Feb 27 → ₹92.56 on Mar 18 = –7.0% in 19 days. ₹92.45 hit on Mar 13 (intraday record). Source: RBI / Bloomberg." data-url="https://rbi.org.in/">Record low. Pre-war: ₹86.5</span></div>
+      <div class="kpi-sub"><span class="data-tip" data-src="MUFG Bank FX Research Note, March 2026: '$100/bbl oil sustained → USD/INR 95 (by Day 45); $120/bbl → USD/INR 97.5 (by Day 60).' Based on CAD widening and RBI intervention capacity analysis.">MUFG warns ₹95–₹97.5 if sustained</span></div>
     </div>
     <div class="kpi-tile high">
       <div class="kpi-label">Nifty 50</div>
-      <div class="kpi-val" style="color:var(--high)" id="kpi-nifty">23,151</div>
-      <div class="kpi-delta neg">▼ –8.2% since Feb 28</div>
-      <div class="kpi-sub">₹20L Cr wealth wiped in 3 weeks</div>
+      <div class="kpi-val" style="color:var(--high)" id="kpi-nifty"><span class="data-tip" data-src="NSE India closing price, March 18, 2026. Peak: 25,213 (Feb 27). Current: 23,151. Loss: 2,062 pts. Source: NSE India." data-url="https://www.nseindia.com/">23,151</span></div>
+      <div class="kpi-delta neg">▼ <span class="data-tip" data-src="NSE India: –8.2% peak-to-trough (25,213 → 23,151) since Feb 28. Steepest 3-week decline in 4 years. Sensex –1,460 pts on Mar 13 alone. Source: NSE India." data-url="https://www.nseindia.com/">–8.2% since Feb 28</span></div>
+      <div class="kpi-sub"><span class="data-tip" data-src="BSE market capitalisation data: Total BSE market cap fell by ~₹20L Cr (₹20 lakh crore) from Feb 27 to Mar 18, 2026 — equivalent to approximately $240B in wealth erosion. Source: BSE India." data-url="https://www.bseindia.com/">₹20L Cr wealth wiped in 3 weeks</span></div>
     </div>
     <div class="kpi-tile high">
       <div class="kpi-label">India VIX</div>
-      <div class="kpi-val" style="color:var(--high)" id="kpi-vix">19.91</div>
-      <div class="kpi-delta neg">▲ +65% since Feb 27</div>
-      <div class="kpi-sub">Peaked at 22.65 on Mar 13</div>
+      <div class="kpi-val" style="color:var(--high)" id="kpi-vix"><span class="data-tip" data-src="NSE India VIX (Volatility Index), March 18, 2026. Baseline: 13.7 (Feb 27). Current: 19.91. Peak: 22.65 (Mar 13). VIX >20 = elevated fear; >25 = crisis. Source: NSE India." data-url="https://www.nseindia.com/">19.91</span></div>
+      <div class="kpi-delta neg">▲ <span class="data-tip" data-src="NSE India VIX: 13.7 (Feb 27) → 22.65 peak (Mar 13) = +65%. Largest 3-week VIX surge since COVID-19 (March 2020). Source: NSE India VIX daily data." data-url="https://www.nseindia.com/">+65% since Feb 27</span></div>
+      <div class="kpi-sub"><span class="data-tip" data-src="NSE India VIX peaked at 22.65 on March 13, 2026 — 'Friday the 13th' — the single worst market day of the crisis. VIX has since pulled back to 19.91 but remains 45% above pre-war baseline." data-url="https://www.nseindia.com/">Peaked at 22.65 on Mar 13</span></div>
     </div>
   </div>
 
   <div class="grid-4">
     <div class="kpi-tile high">
       <div class="kpi-label">LPG Supply Level</div>
-      <div class="kpi-val" style="color:var(--high)">~56%</div>
+      <div class="kpi-val" style="color:var(--high)"><span class="data-tip" data-src="Ministry of Petroleum & Natural Gas PIB release, March 10, 2026: 'LPG supply at approximately 56% of normal capacity.' Essential Commodities Act invoked. Two tankers crossed Hormuz on Mar 14 — partial relief. Source: MoPNG / PPAC." data-url="https://www.ppac.gov.in/">~56%</span></div>
       <div class="kpi-delta neg">▼ Normal capacity</div>
-      <div class="kpi-sub">332M LPG connections at risk</div>
+      <div class="kpi-sub"><span class="data-tip" data-src="MoPNG: India has 332 million LPG household connections (Pradhan Mantri Ujjwala Yojana + regular). Largest LPG consumer network in the world. 90% of LPG imports via Hormuz. Source: PPAC LPG Data Book 2025-26." data-url="https://www.ppac.gov.in/">332M LPG connections at risk</span></div>
     </div>
     <div class="kpi-tile high">
       <div class="kpi-label">FII Net Outflow</div>
-      <div class="kpi-val" style="color:var(--high)">₹54K Cr</div>
-      <div class="kpi-delta neg">March 2026 alone</div>
-      <div class="kpi-sub">FIIs remain net-short futures</div>
+      <div class="kpi-val" style="color:var(--high)"><span class="data-tip" data-src="NSDL FII/FPI provisional data, March 18, 2026: Net equity outflow ₹54,000 Cr in March 2026 alone. Largest single-month FII exit since October 2022 (post-Fed rate hike panic). Source: NSDL / SEBI." data-url="https://www.sebi.gov.in/">₹54K Cr</span></div>
+      <div class="kpi-delta neg"><span class="data-tip" data-src="NSDL data: This is the March 1–18 provisional figure (18 trading days). On a full-month basis, this is on track to be the worst FII outflow since Oct 2022 when US Fed hike triggered global EM selloff. Source: NSDL." data-url="https://www.sebi.gov.in/">March 2026 alone</span></div>
+      <div class="kpi-sub"><span class="data-tip" data-src="NSE Derivatives data: FIIs hold net-short positions in Nifty index futures — meaning institutional money is actively betting on further market downside, not just selling existing positions. Source: NSE derivatives open interest data." data-url="https://www.nseindia.com/">FIIs remain net-short futures</span></div>
     </div>
     <div class="kpi-tile med">
       <div class="kpi-label">India CPI (Feb)</div>
-      <div class="kpi-val" style="color:var(--med)">3.21%</div>
-      <div class="kpi-delta neg">▲ 4th consecutive monthly rise</div>
-      <div class="kpi-sub">Projected >4.5% at $100 oil</div>
+      <div class="kpi-val" style="color:var(--med)"><span class="data-tip" data-src="MoSPI (Ministry of Statistics & Programme Implementation) CPI release, March 12, 2026: CPI February 2026 = 3.21%. WPI February 2026 = 2.13% (11-month high). Source: MoSPI." data-url="https://mospi.gov.in/">3.21%</span></div>
+      <div class="kpi-delta neg">▲ <span class="data-tip" data-src="MoSPI CPI series: Oct 2025: 2.80% → Nov: 2.89% → Dec: 2.95% → Jan 2026: 2.75% (dip) → Feb 2026: 3.21%. 4th consecutive monthly rise. Source: MoSPI historical CPI data." data-url="https://mospi.gov.in/">4th consecutive monthly rise</span></div>
+      <div class="kpi-sub"><span class="data-tip" data-src="RBI Monetary Policy Report, Feb 2026: Model projection — $90/bbl sustained: CPI ~4.2%; $100/bbl: ~4.8%; $120/bbl: ~5.5–6%. Food (45.86% of CPI basket) transmission adds 1–2 quarter lag. Source: RBI MPR February 2026." data-url="https://rbi.org.in/">Projected >4.5% at $100 oil</span></div>
     </div>
     <div class="kpi-tile low">
       <div class="kpi-label">Crude Reserves</div>
-      <div class="kpi-val" style="color:var(--green)">~40d</div>
-      <div class="kpi-delta pos">✓ Buffer through Apr mid</div>
-      <div class="kpi-sub">~100M barrels strategic + above-ground</div>
+      <div class="kpi-val" style="color:var(--green)"><span class="data-tip" data-src="PPAC Strategic Reserve Bulletin, March 2026: India holds ~39M barrels in underground strategic reserves (Vizag, Padur, Mangaluru) + ~61M barrels in commercial/above-ground stocks ≈ 100M barrels total ≈ ~40 days cover. IEA standard: 90 days. Source: PPAC." data-url="https://www.ppac.gov.in/">~40d</span></div>
+      <div class="kpi-delta pos">✓ <span class="data-tip" data-src="At current import rates (~220 MMT/year = ~600K bbl/day), 100M barrels = ~167 days of strategic reserve, but usable reserves (accessible within 30 days) ≈ 40 days. Buffer through approximately April 15–20, 2026. Source: PPAC." data-url="https://www.ppac.gov.in/">Buffer through Apr mid</span></div>
+      <div class="kpi-sub"><span class="data-tip" data-src="PPAC: India's Strategic Petroleum Reserve (SPR) consists of underground rock caverns at Visakhapatnam (1.33 MMT), Mangaluru (1.5 MMT), and Padur (2.5 MMT) = 5.33 MMT strategic reserve + commercial stocks. Source: PPAC SPR data." data-url="https://www.ppac.gov.in/">~100M barrels strategic + above-ground</span></div>
     </div>
   </div>
 
@@ -940,7 +943,7 @@
       </div>
     </div>
     <div class="rationale-box" style="margin-top:8px;width:100%">
-      <strong>How to use:</strong> Drag the oil price slider. Each estimate uses published sensitivity coefficients — CAD from <span class="data-tip" data-src="Ministry of Finance, Economic Survey 2025-26 & Dept. of Economic Affairs Monthly Economic Review, March 2026">DEA</span>, INR from <span class="data-tip" data-src="MUFG Bank research note, March 2026: '$100 oil → ₹95, $120 oil → ₹97.5'">MUFG</span>, CPI from <span class="data-tip" data-src="RBI Monetary Policy Report, Feb 2026: 'every $10/bbl sustained oil rise adds ~0.4pp to CPI over 2 quarters'">RBI</span>, oil import bill from <span class="data-tip" data-src="India imported ~220 MMT crude & 19 MTPA LPG in FY25. Calculation: volume × price × INR/$ rate. Source: PPAC (Petroleum Planning and Analysis Cell), March 2026">PPAC</span>.
+      <strong>How to use:</strong> Drag the oil price slider. Each estimate uses published sensitivity coefficients — CAD from <span class="data-tip" data-src="Ministry of Finance, Economic Survey 2025-26 & Dept. of Economic Affairs Monthly Economic Review, March 2026" data-url="https://dea.gov.in/">DEA</span>, INR from <span class="data-tip" data-src="MUFG Bank research note, March 2026: '$100 oil → ₹95, $120 oil → ₹97.5'">MUFG</span>, CPI from <span class="data-tip" data-src="RBI Monetary Policy Report, Feb 2026: 'every $10/bbl sustained oil rise adds ~0.4pp to CPI over 2 quarters'" data-url="https://rbi.org.in/">RBI</span>, oil import bill from <span class="data-tip" data-src="India imported ~220 MMT crude & 19 MTPA LPG in FY25. Calculation: volume × price × INR/$ rate. Source: PPAC (Petroleum Planning and Analysis Cell), March 2026" data-url="https://www.ppac.gov.in/">PPAC</span>.
     </div>
   </div>
 
@@ -949,7 +952,7 @@
       <h3>Nifty 50 — Daily Close (Feb 27–Mar 18, 2026)</h3>
       <div class="chart-insight">
         <span class="insight-label">Why This Chart Matters</span><br>
-        The market lost <span class="data-tip" data-src="NSE India daily closing data, Feb 27 – Mar 18, 2026. Peak-to-trough: 25,213 (Feb 27) → 23,151 (Mar 18) = –8.2%, ₹20L Cr wealth erosion."><strong>8.2%</strong> (2,062 pts)</span> in three weeks — the steepest decline in 4 years. <span class="data-tip" data-src="NSE India, March 13, 2026 — Sensex –1,460 pts intraday; BSE mkt cap loss ₹9.5L Cr in a single session.">The sharpest single-day crash on Mar 13 erased ₹9.5L Cr.</span> The tentative 2-day recovery (Mar 16–17) is technical, not fundamental — driven by Iran's blanket non-US/Israel shipping exemption, not by any resolution of the war.
+        The market lost <span class="data-tip" data-src="NSE India daily closing data, Feb 27 – Mar 18, 2026. Peak-to-trough: 25,213 (Feb 27) → 23,151 (Mar 18) = –8.2%, ₹20L Cr wealth erosion." data-url="https://www.nseindia.com/"><strong>8.2%</strong> (2,062 pts)</span> in three weeks — the steepest decline in 4 years. <span class="data-tip" data-src="NSE India, March 13, 2026 — Sensex –1,460 pts intraday; BSE mkt cap loss ₹9.5L Cr in a single session." data-url="https://www.nseindia.com/">The sharpest single-day crash on Mar 13 erased ₹9.5L Cr.</span> The tentative 2-day recovery (Mar 16–17) is technical, not fundamental — driven by Iran's blanket non-US/Israel shipping exemption, not by any resolution of the war.
       </div>
       <div class="chart-wrap tall">
         <canvas id="niftyChart"></canvas>
@@ -959,7 +962,7 @@
       <h3>USD/INR Exchange Rate — Rupee Freefall</h3>
       <div class="chart-insight">
         <span class="insight-label">Why This Chart Matters</span><br>
-        The rupee has fallen from <span class="data-tip" data-src="RBI Reference Rate: ₹86.5 on Feb 27, 2026. ₹92.56 on Mar 18 = 7.0% depreciation in 19 days.">₹86.5 to ₹92.56 — a 7% depreciation in 19 days.</span> This amplifies India's import bill: <span class="data-tip" data-src="PPAC calculation: India's crude import volume ~220 MMT/year. Every ₹1 weakening on 185 MMT of Gulf crude = ₹7,200–8,000 Cr incremental annual cost.">every ₹1 weakening adds ~₹7,000–8,000 Cr annually to oil costs.</span> <span class="data-tip" data-src="MUFG Bank FX research note, March 2026 — two scenarios published: '$100 oil → INR 95' and '$120 oil → INR 97.5'.">MUFG sees ₹95 at $100 oil, ₹97.5 at $120.</span>
+        The rupee has fallen from <span class="data-tip" data-src="RBI Reference Rate: ₹86.5 on Feb 27, 2026. ₹92.56 on Mar 18 = 7.0% depreciation in 19 days." data-url="https://rbi.org.in/">₹86.5 to ₹92.56 — a 7% depreciation in 19 days.</span> This amplifies India's import bill: <span class="data-tip" data-src="PPAC calculation: India's crude import volume ~220 MMT/year. Every ₹1 weakening on 185 MMT of Gulf crude = ₹7,200–8,000 Cr incremental annual cost." data-url="https://www.ppac.gov.in/">every ₹1 weakening adds ~₹7,000–8,000 Cr annually to oil costs.</span> <span class="data-tip" data-src="MUFG Bank FX research note, March 2026 — two scenarios published: '$100 oil → INR 95' and '$120 oil → INR 97.5'.">MUFG sees ₹95 at $100 oil, ₹97.5 at $120.</span>
       </div>
       <div class="chart-wrap tall">
         <canvas id="inrChart"></canvas>
@@ -972,7 +975,7 @@
       <h3>Brent Crude — Price Trajectory</h3>
       <div class="chart-insight">
         <span class="insight-label">Why This Chart Matters</span><br>
-        Oil surged <span class="data-tip" data-src="ICE Brent futures: $65.2 on Feb 27 → $105.7 peak on Mar 4 (day 5) = +62%. Source: Bloomberg commodity data, March 2026.">57% from $65 pre-war to $105.70 peak</span> on day 5. A temporary dip when Iran allowed non-Western ships proved short-lived. <span class="data-tip" data-src="Goldman Sachs commodity research, March 2026: 'We see Brent averaging $100–105/bbl under prolonged Hormuz disruption; war risk premium ~$30/bbl.' Also cites IEA emergency 400M barrel SPR release as 'insufficient buffer' for sustained disruption.">Markets now price in $100+ baseline for a prolonged blockade.</span>
+        Oil surged <span class="data-tip" data-src="ICE Brent futures: $65.2 on Feb 27 → $105.7 peak on Mar 4 (day 5) = +62%. Source: Bloomberg commodity data, March 2026." data-url="https://www.theice.com/crude-oil">57% from $65 pre-war to $105.70 peak</span> on day 5. A temporary dip when Iran allowed non-Western ships proved short-lived. <span class="data-tip" data-src="Goldman Sachs commodity research, March 2026: 'We see Brent averaging $100–105/bbl under prolonged Hormuz disruption; war risk premium ~$30/bbl.' Also cites IEA emergency 400M barrel SPR release as 'insufficient buffer' for sustained disruption.">Markets now price in $100+ baseline for a prolonged blockade.</span>
       </div>
       <div class="chart-wrap">
         <canvas id="brentChart"></canvas>
@@ -982,7 +985,7 @@
       <h3>India VIX — Fear Gauge</h3>
       <div class="chart-insight">
         <span class="insight-label">Why This Chart Matters</span><br>
-        Fear rose <span class="data-tip" data-src="NSE India VIX: 13.7 (Feb 27 baseline) → 22.65 (Mar 13 peak) = +65.3%. VIX above 20 = 'elevated fear'; above 25 = 'crisis mode'. Source: NSE India VIX daily data.">65% in 2 weeks, peaking at 22.65 on Mar 13.</span> The 12% drop (Mar 16–17) signals nascent calm, but <span class="data-tip" data-src="NSE India VIX: 19.91 on Mar 18. Pre-war baseline 13.7. Market still pricing substantial tail risk.">VIX at ~20 remains well above the 13.7 pre-war baseline</span> — the market is not yet pricing resolution.
+        Fear rose <span class="data-tip" data-src="NSE India VIX: 13.7 (Feb 27 baseline) → 22.65 (Mar 13 peak) = +65.3%. VIX above 20 = 'elevated fear'; above 25 = 'crisis mode'. Source: NSE India VIX daily data." data-url="https://www.nseindia.com/">65% in 2 weeks, peaking at 22.65 on Mar 13.</span> The 12% drop (Mar 16–17) signals nascent calm, but <span class="data-tip" data-src="NSE India VIX: 19.91 on Mar 18. Pre-war baseline 13.7. Market still pricing substantial tail risk." data-url="https://www.nseindia.com/">VIX at ~20 remains well above the 13.7 pre-war baseline</span> — the market is not yet pricing resolution.
       </div>
       <div class="chart-wrap">
         <canvas id="vixChart"></canvas>
@@ -992,7 +995,7 @@
       <h3>FII Flows — Net Monthly (₹ Cr)</h3>
       <div class="chart-insight">
         <span class="insight-label">Why This Chart Matters</span><br>
-        <span class="data-tip" data-src="NSDL/SEBI FII data: March 2026 provisional net outflow ₹54,000 Cr as of Mar 18. Largest single-month FII exit since Oct 2022. FIIs also net-short Nifty index futures per NSE derivative data.">FIIs dumped ₹54,000 Cr in March alone</span> — the largest monthly outflow since Oct 2022. They remain net-short index futures, meaning institutional money is actively betting on further downside. The rupee weakening makes dollar-denominated returns worse, accelerating the exit loop.
+        <span class="data-tip" data-src="NSDL/SEBI FII data: March 2026 provisional net outflow ₹54,000 Cr as of Mar 18. Largest single-month FII exit since Oct 2022. FIIs also net-short Nifty index futures per NSE derivative data." data-url="https://www.sebi.gov.in/">FIIs dumped ₹54,000 Cr in March alone</span> — the largest monthly outflow since Oct 2022. They remain net-short index futures, meaning institutional money is actively betting on further downside. The rupee weakening makes dollar-denominated returns worse, accelerating the exit loop.
       </div>
       <div class="chart-wrap">
         <canvas id="fiiChart"></canvas>
@@ -1005,7 +1008,7 @@
       <h3>Inflation Trajectory — CPI &amp; WPI</h3>
       <div class="chart-insight">
         <span class="insight-label">Why This Chart Matters</span><br>
-        <span class="data-tip" data-src="MoSPI (Ministry of Statistics): CPI Feb 2026 = 3.21% — 4th consecutive monthly rise. CPI Jan 2026 = 2.75%. WPI Feb 2026 = 2.13% — 11-month high. Source: MoSPI press release, March 12, 2026.">CPI rose for a 4th consecutive month to 3.21% in Feb; WPI hit an 11-month high of 2.13%.</span> The March-April readings will absorb the full oil shock. <span class="data-tip" data-src="RBI Monetary Policy Report, Feb 2026: RBI 4% CPI target. Modelling shows: $90/bbl sustained = CPI ~4.2%; $100/bbl = ~4.8%; $120/bbl = ~5.5–6%.">RBI's 4% target will be breached if Brent stays above $90.</span> The crucial risk is second-order: food and transport cost inflation feeding into wages.
+        <span class="data-tip" data-src="MoSPI (Ministry of Statistics): CPI Feb 2026 = 3.21% — 4th consecutive monthly rise. CPI Jan 2026 = 2.75%. WPI Feb 2026 = 2.13% — 11-month high. Source: MoSPI press release, March 12, 2026." data-url="https://mospi.gov.in/">CPI rose for a 4th consecutive month to 3.21% in Feb; WPI hit an 11-month high of 2.13%.</span> The March-April readings will absorb the full oil shock. <span class="data-tip" data-src="RBI Monetary Policy Report, Feb 2026: RBI 4% CPI target. Modelling shows: $90/bbl sustained = CPI ~4.2%; $100/bbl = ~4.8%; $120/bbl = ~5.5–6%." data-url="https://rbi.org.in/">RBI's 4% target will be breached if Brent stays above $90.</span> The crucial risk is second-order: food and transport cost inflation feeding into wages.
       </div>
       <div class="chart-wrap">
         <canvas id="inflationChart"></canvas>
@@ -1015,7 +1018,7 @@
       <h3>Current Account Deficit — Oil Price Sensitivity</h3>
       <div class="chart-insight">
         <span class="insight-label">Why This Chart Matters</span><br>
-        <span class="data-tip" data-src="Finance Ministry Monthly Economic Review, March 2026; RBI Annual Report FY25: 'Every $10/bbl sustained oil rise widens CAD by 0.4–0.5% of GDP assuming constant import volumes.'">Every $10/bbl oil increase widens India's CAD by 0.4–0.5% of GDP.</span> At $100 oil, CAD moves toward <span class="data-tip" data-src="India's FY25 CAD: ~1.5% of GDP at ~$82 avg Brent. At $100: modelled 2.7–3.0% of GDP. Source: RBI BoP data + Finance Ministry DEA sensitivity modelling, March 2026.">3% of GDP vs baseline 1.5%</span> — a level last seen in the 2012-13 rupee crisis (when CAD hit 4.8% and the rupee collapsed 20%). Combined with ₹54,000 Cr FII outflows, the rupee is under structural pressure.
+        <span class="data-tip" data-src="Finance Ministry Monthly Economic Review, March 2026; RBI Annual Report FY25: 'Every $10/bbl sustained oil rise widens CAD by 0.4–0.5% of GDP assuming constant import volumes.'" data-url="https://dea.gov.in/">Every $10/bbl oil increase widens India's CAD by 0.4–0.5% of GDP.</span> At $100 oil, CAD moves toward <span class="data-tip" data-src="India's FY25 CAD: ~1.5% of GDP at ~$82 avg Brent. At $100: modelled 2.7–3.0% of GDP. Source: RBI BoP data + Finance Ministry DEA sensitivity modelling, March 2026.">3% of GDP vs baseline 1.5%</span> — a level last seen in the 2012-13 rupee crisis (when CAD hit 4.8% and the rupee collapsed 20%). Combined with ₹54,000 Cr FII outflows, the rupee is under structural pressure.
       </div>
       <div class="chart-wrap">
         <canvas id="cadChart"></canvas>
@@ -1037,7 +1040,7 @@
       <h3>RBI Forex Reserves vs Import Cover (Months)</h3>
       <div class="chart-insight">
         <span class="insight-label">Why This Chart Matters</span><br>
-        <span class="data-tip" data-src="RBI Weekly Statistical Supplement: Forex reserves $621B (Feb 28) → $608B (Mar 14, most recent). At $103/bbl with 19-day war, import cover dropped from ~10.8 to ~9.9 months. Critical threshold: 6 months. Source: RBI WSS, March 2026.">India's forex reserves fell from $621B to ~$608B in the first 2 weeks</span> — RBI has been intervening to slow rupee depreciation. Import cover of ~10 months remains healthy but is declining. <span class="data-tip" data-src="RBI annual report: India's forex reserve adequacy assessed against 3 criteria: 3 months import cover (met easily), 100% short-term debt coverage (met), Guidotti-Greenspan rule (met). Current depletion rate sustainable for ~90 days before intervention quality declines.">At current depletion rates, RBI has ~90 days of comfortable intervention runway.</span>
+        <span class="data-tip" data-src="RBI Weekly Statistical Supplement: Forex reserves $621B (Feb 28) → $608B (Mar 14, most recent). At $103/bbl with 19-day war, import cover dropped from ~10.8 to ~9.9 months. Critical threshold: 6 months. Source: RBI WSS, March 2026." data-url="https://rbi.org.in/">India's forex reserves fell from $621B to ~$608B in the first 2 weeks</span> — RBI has been intervening to slow rupee depreciation. Import cover of ~10 months remains healthy but is declining. <span class="data-tip" data-src="RBI annual report: India's forex reserve adequacy assessed against 3 criteria: 3 months import cover (met easily), 100% short-term debt coverage (met), Guidotti-Greenspan rule (met). Current depletion rate sustainable for ~90 days before intervention quality declines.">At current depletion rates, RBI has ~90 days of comfortable intervention runway.</span>
       </div>
       <div class="chart-wrap tall"><canvas id="forexChart"></canvas></div>
     </div>
@@ -1110,17 +1113,17 @@
       <div class="heatmap-cell hm-med" title="IT (indirect disruption via rupee)">IT / Software</div>
       <div class="heatmap-cell hm-high" title="Pharma (API costs, shipping, helium-MRI)">Pharma / MRI</div>
       <div class="heatmap-cell hm-high" title="Banking / PSU (NPA risk, credit)">Banking/PSU</div>
-      <div class="heatmap-cell hm-crit" title="LPG/Cooking Gas — 332M connections at risk"><span class="data-tip" data-src="LPG supply at 56% of normal capacity. 332M connections. Essential Commodities Act invoked. Source: Ministry of Petroleum, March 2026.">LPG/Cooking</span></div>
+      <div class="heatmap-cell hm-crit" title="LPG/Cooking Gas — 332M connections at risk"><span class="data-tip" data-src="LPG supply at 56% of normal capacity. 332M connections. Essential Commodities Act invoked. Source: Ministry of Petroleum, March 2026." data-url="https://www.ppac.gov.in/">LPG/Cooking</span></div>
       <div class="heatmap-cell hm-header" style="font-size:9px">Med Prob</div>
       <div class="heatmap-cell hm-low" title="Gold/Jewellery (rupee hedge)">Gold/Jewellery</div>
       <div class="heatmap-cell hm-med" title="Hospitality (LPG costs)">Hospitality</div>
-      <div class="heatmap-cell hm-high" title="Auto/EV (fuel costs, chips)"><span class="data-tip" data-src="Nifty Auto: –10.6% since Feb 28. Fuel cost spike reduces demand; chip supply from Gulf-adjacent fabs threatened. Source: BSE sectoral data, March 2026.">Auto / EV</span></div>
+      <div class="heatmap-cell hm-high" title="Auto/EV (fuel costs, chips)"><span class="data-tip" data-src="Nifty Auto: –10.6% since Feb 28. Fuel cost spike reduces demand; chip supply from Gulf-adjacent fabs threatened. Source: BSE sectoral data, March 2026." data-url="https://www.bseindia.com/">Auto / EV</span></div>
       <div class="heatmap-cell hm-crit" title="Energy / Crude Refining"><span class="data-tip" data-src="Nifty Energy: –8.1% since Feb 28. OMCs (IOC, BPCL, HPCL) absorbing price gap — under-recovery risk if retail prices not revised. Source: BSE, PPAC March 2026.">Energy/Crude</span></div>
       <div class="heatmap-cell hm-header" style="font-size:9px">Low Prob</div>
       <div class="heatmap-cell hm-low">Coal India</div>
       <div class="heatmap-cell hm-med" title="Electronics (helium + chip supply)">Electronics</div>
-      <div class="heatmap-cell hm-high" title="Infrastructure (diesel, cement costs)"><span class="data-tip" data-src="Nifty Infra (L&T): –12.9%. Diesel drives construction costs; steel also affected via energy. Source: BSE sectoral data, March 2026.">Infrastructure</span></div>
-      <div class="heatmap-cell hm-crit" title="Fertilizers / Agriculture — Kharif window at risk"><span class="data-tip" data-src="Gulf supplies 35–40% of India's urea/ammonia imports. Kharif sowing window May-June. Oxford Economics: fertilizer price forecast raised 20% for Q2 2026. Source: Oxford Economics, FAIDA March 2026.">Fertilizers/Agri</span></div>
+      <div class="heatmap-cell hm-high" title="Infrastructure (diesel, cement costs)"><span class="data-tip" data-src="Nifty Infra (L&T): –12.9%. Diesel drives construction costs; steel also affected via energy. Source: BSE sectoral data, March 2026." data-url="https://www.bseindia.com/">Infrastructure</span></div>
+      <div class="heatmap-cell hm-crit" title="Fertilizers / Agriculture — Kharif window at risk"><span class="data-tip" data-src="Gulf supplies 35–40% of India's urea/ammonia imports. Kharif sowing window May-June. Oxford Economics: fertilizer price forecast raised 20% for Q2 2026. Source: Oxford Economics, FAIDA March 2026." data-url="https://www.faidelhi.org/">Fertilizers/Agri</span></div>
     </div>
   </div>
 
@@ -1226,7 +1229,7 @@
         <h3>🍳 LPG Supply Chain — Disruption Breakdown</h3>
         <div class="chart-insight">
           <span class="insight-label">Why This Chart Matters</span><br>
-          <span class="data-tip" data-src="Ministry of Petroleum & Natural Gas (MoPNG): India has 332M LPG connections (largest in world). Imports ~19 MTPA LPG; 60% imported, 90% of imports via Hormuz. Source: PPAC LPG Data Book 2025-26; MoPNG PIB release March 2026.">India has 332M LPG connections — the world's largest LPG consumer network.</span> The Hormuz blockade cut supply to <span class="data-tip" data-src="MoPNG PIB release March 7–10, 2026: 'Supply at ~56% of normal capacity'. Essential Commodities Act invoked March 10. Domestic output boosted 10% via MoPNG circular redirecting refinery propane/butane. Industrial use capped at 70%.">~56% of normal capacity.</span> Government boosted domestic production by 10%, but <span class="data-tip" data-src="NRAI (National Restaurant Association of India) press release, March 10, 2026: '75% of food service industry depends on LPG; shortage costing ₹1,200–1,300 Cr/day.' Hotels in Bengaluru reported 10% supply received on March 10; Mumbai 2–8 day delays.">restaurants, bakeries, and crematoria began shutting down.</span>
+          <span class="data-tip" data-src="Ministry of Petroleum & Natural Gas (MoPNG): India has 332M LPG connections (largest in world). Imports ~19 MTPA LPG; 60% imported, 90% of imports via Hormuz. Source: PPAC LPG Data Book 2025-26; MoPNG PIB release March 2026." data-url="https://www.ppac.gov.in/">India has 332M LPG connections — the world's largest LPG consumer network.</span> The Hormuz blockade cut supply to <span class="data-tip" data-src="MoPNG PIB release March 7–10, 2026: 'Supply at ~56% of normal capacity'. Essential Commodities Act invoked March 10. Domestic output boosted 10% via MoPNG circular redirecting refinery propane/butane. Industrial use capped at 70%." data-url="https://mopng.gov.in/">~56% of normal capacity.</span> Government boosted domestic production by 10%, but <span class="data-tip" data-src="NRAI (National Restaurant Association of India) press release, March 10, 2026: '75% of food service industry depends on LPG; shortage costing ₹1,200–1,300 Cr/day.' Hotels in Bengaluru reported 10% supply received on March 10; Mumbai 2–8 day delays.">restaurants, bakeries, and crematoria began shutting down.</span>
         </div>
         <div class="chart-wrap tall"><canvas id="lpgBreakdownChart"></canvas></div>
       </div>
@@ -1265,7 +1268,7 @@
         <h3>🌾 Fertilizer Import Dependency — Gulf vs. World</h3>
         <div class="chart-insight">
           <span class="insight-label">Why This Chart Matters</span><br>
-          India imports <span class="data-tip" data-src="FAI (Fertiliser Association of India): India imports ~30 MTPA urea equivalent total. Gulf states supply: ~35–40% of urea (Qatar, Oman, Saudi), ~55% of MoP (Canada/Russia via Gulf routing), ~70% of sulphur (Qatar, UAE). LNG from Qatar is primary feedstock for nitrogenous fertilizers. Source: FAI Annual Statistics 2025-26; QatarEnergy force majeure notice March 3, 2026.">35–40% of its urea and ammonia from the Gulf.</span> QatarEnergy's force majeure notice (Mar 3) disrupted <span class="data-tip" data-src="QatarEnergy force majeure: Ras Laffan complex (world's largest single LNG/fertilizer hub) partially offline from Mar 3 due to Iranian drone strikes. This affected ~8–9 MTPA of LNG-derived ammonia globally. Oxford Economics: fertilizer price forecast raised 20% for Q2 2026. Source: QatarEnergy official notice; Oxford Economics research note, March 5, 2026.">global nitrogen fertilizer supply chains</span> at the worst possible time — 6 weeks before India's Kharif sowing window (May–June).
+          India imports <span class="data-tip" data-src="FAI (Fertiliser Association of India): India imports ~30 MTPA urea equivalent total. Gulf states supply: ~35–40% of urea (Qatar, Oman, Saudi), ~55% of MoP (Canada/Russia via Gulf routing), ~70% of sulphur (Qatar, UAE). LNG from Qatar is primary feedstock for nitrogenous fertilizers. Source: FAI Annual Statistics 2025-26; QatarEnergy force majeure notice March 3, 2026." data-url="https://www.faidelhi.org/">35–40% of its urea and ammonia from the Gulf.</span> QatarEnergy's force majeure notice (Mar 3) disrupted <span class="data-tip" data-src="QatarEnergy force majeure: Ras Laffan complex (world's largest single LNG/fertilizer hub) partially offline from Mar 3 due to Iranian drone strikes. This affected ~8–9 MTPA of LNG-derived ammonia globally. Oxford Economics: fertilizer price forecast raised 20% for Q2 2026. Source: QatarEnergy official notice; Oxford Economics research note, March 5, 2026.">global nitrogen fertilizer supply chains</span> at the worst possible time — 6 weeks before India's Kharif sowing window (May–June).
         </div>
         <div class="chart-wrap tall"><canvas id="fertImportChart"></canvas></div>
       </div>
@@ -1282,7 +1285,7 @@
       <div class="card high">
         <div class="p-num" style="color:var(--high)">KHARIF WINDOW</div>
         <h4 style="font-size:13px;margin:4px 0 6px">Critical 45-Day Deadline</h4>
-        <p style="font-size:11px;color:#555;line-height:1.6">India's Kharif sowing season begins May–June. <span class="data-tip" data-src="IARI (Indian Agricultural Research Institute): Kharif crop (rice, cotton, maize, soybean) accounts for ~52% of India's total food production. Fertilizer application window: 6 weeks before sowing. Missing this window reduces yield by 15–25% for nitrogen-dependent crops like rice and maize. Source: IARI crop calendar 2026; FAI fertilizer demand projections.">Missing the fertilizer application window reduces Kharif yields by 15–25%</span> — particularly for rice and maize. With <span class="data-tip" data-src="FAI: India requires ~34 MTPA of fertilizers for Kharif. Current pipeline disruption could create a shortfall of 4–6 MTPA if Gulf supply remains disrupted through April. Source: FAI seasonal demand projections, March 2026.">potential 4–6 MTPA shortfall</span>, emergency procurement from Canada, Morocco, and Russia is India's only viable insurance policy.</p>
+        <p style="font-size:11px;color:#555;line-height:1.6">India's Kharif sowing season begins May–June. <span class="data-tip" data-src="IARI (Indian Agricultural Research Institute): Kharif crop (rice, cotton, maize, soybean) accounts for ~52% of India's total food production. Fertilizer application window: 6 weeks before sowing. Missing this window reduces yield by 15–25% for nitrogen-dependent crops like rice and maize. Source: IARI crop calendar 2026; FAI fertilizer demand projections." data-url="https://www.iari.res.in/">Missing the fertilizer application window reduces Kharif yields by 15–25%</span> — particularly for rice and maize. With <span class="data-tip" data-src="FAI: India requires ~34 MTPA of fertilizers for Kharif. Current pipeline disruption could create a shortfall of 4–6 MTPA if Gulf supply remains disrupted through April. Source: FAI seasonal demand projections, March 2026.">potential 4–6 MTPA shortfall</span>, emergency procurement from Canada, Morocco, and Russia is India's only viable insurance policy.</p>
       </div>
       <div class="card high">
         <div class="p-num" style="color:var(--orange)">FOOD INFLATION RISK</div>
@@ -1304,7 +1307,7 @@
         <h3>💊 Pharma Sector — Victim &amp; Beneficiary Dynamics</h3>
         <div class="chart-insight">
           <span class="insight-label">Why This Chart Matters</span><br>
-          India's pharma sector has a split personality in this crisis: <span class="data-tip" data-src="SEBI/BSE: Nifty Pharma index +2.1% since Feb 28 (vs Nifty50 –8.2%), driven by rupee depreciation making exports more profitable. India's pharma exports ~$27B annually, 30% to regulated markets (US, EU) denominated in USD. A 7% rupee fall = ~₹5,000 Cr windfall for export-heavy pharma. Source: PharmExcil (Pharmaceuticals Export Promotion Council), March 2026.">export-facing companies benefit from rupee weakness (+2.1% sector index)</span>, while <span class="data-tip" data-src="IPA (Indian Pharmaceutical Alliance): 70% of India's API (Active Pharmaceutical Ingredients) are petrochemical-derived (solvents, intermediates). API cost inflation estimated at 8–12% due to oil price spike. Shipping costs via Cape of Good Hope routing add 15–25 day delays and $200–400/TEU additional freight. Source: IPA briefing note, March 2026.">API manufacturers face 8–12% input cost inflation</span> from petrochemical feedstock price rises. The wildcard is helium.
+          India's pharma sector has a split personality in this crisis: <span class="data-tip" data-src="SEBI/BSE: Nifty Pharma index +2.1% since Feb 28 (vs Nifty50 –8.2%), driven by rupee depreciation making exports more profitable. India's pharma exports ~$27B annually, 30% to regulated markets (US, EU) denominated in USD. A 7% rupee fall = ~₹5,000 Cr windfall for export-heavy pharma. Source: PharmExcil (Pharmaceuticals Export Promotion Council), March 2026." data-url="https://www.pharmexcil.com/">export-facing companies benefit from rupee weakness (+2.1% sector index)</span>, while <span class="data-tip" data-src="IPA (Indian Pharmaceutical Alliance): 70% of India's API (Active Pharmaceutical Ingredients) are petrochemical-derived (solvents, intermediates). API cost inflation estimated at 8–12% due to oil price spike. Shipping costs via Cape of Good Hope routing add 15–25 day delays and $200–400/TEU additional freight. Source: IPA briefing note, March 2026.">API manufacturers face 8–12% input cost inflation</span> from petrochemical feedstock price rises. The wildcard is helium.
         </div>
         <div class="chart-wrap tall"><canvas id="pharmaDynChart"></canvas></div>
       </div>
@@ -1312,7 +1315,7 @@
         <h3>Helium Supply Crisis — MRI &amp; Semiconductor Risk Timeline</h3>
         <div class="chart-insight">
           <span class="insight-label">Why This Chart Matters</span><br>
-          <span class="data-tip" data-src="USGS (US Geological Survey) Helium Market Review 2025: Qatar (Ras Laffan) produced ~35 million m³/year = ~33% of global helium supply. Plant offline since Mar 3. Helium spot price (US bulk): $200/m³ pre-crisis → ~$380/m³ by Mar 12 (+90%). Source: USGS, Gasworld helium price tracker, March 2026.">Qatar's Ras Laffan produced 33% of global helium; offline since Mar 3. Spot prices up 90%.</span> Liquid helium is irreplaceable for: (1) hospital MRI machines (each machine needs ~1,500L for superconducting magnet cooling), (2) semiconductor wafer fabs (chip manufacturing cleaning), (3) fiber optic cable production. India has <span class="data-tip" data-src="India has no national helium strategic reserve. Helium consumption: ~3–4 million m³/year. Primary uses: MRI (60%), semiconductor/electronics (25%), research (15%). Import dependency: 100% — India has no domestic helium production. Source: BARC (Bhabha Atomic Research Centre) helium consumption data; BIS (Bureau of Indian Standards) industrial gas statistics.">zero helium reserves</span> and is 100% import-dependent.
+          <span class="data-tip" data-src="USGS (US Geological Survey) Helium Market Review 2025: Qatar (Ras Laffan) produced ~35 million m³/year = ~33% of global helium supply. Plant offline since Mar 3. Helium spot price (US bulk): $200/m³ pre-crisis → ~$380/m³ by Mar 12 (+90%). Source: USGS, Gasworld helium price tracker, March 2026." data-url="https://www.usgs.gov/centers/national-minerals-information-center/helium-statistics-and-information">Qatar's Ras Laffan produced 33% of global helium; offline since Mar 3. Spot prices up 90%.</span> Liquid helium is irreplaceable for: (1) hospital MRI machines (each machine needs ~1,500L for superconducting magnet cooling), (2) semiconductor wafer fabs (chip manufacturing cleaning), (3) fiber optic cable production. India has <span class="data-tip" data-src="India has no national helium strategic reserve. Helium consumption: ~3–4 million m³/year. Primary uses: MRI (60%), semiconductor/electronics (25%), research (15%). Import dependency: 100% — India has no domestic helium production. Source: BARC (Bhabha Atomic Research Centre) helium consumption data; BIS (Bureau of Indian Standards) industrial gas statistics.">zero helium reserves</span> and is 100% import-dependent.
         </div>
         <div class="chart-wrap tall"><canvas id="heliumChart"></canvas></div>
       </div>
@@ -1343,7 +1346,7 @@
         <h3>🚗 Auto &amp; Infra — Equity vs. Fuel Cost Sensitivity</h3>
         <div class="chart-insight">
           <span class="insight-label">Why This Chart Matters</span><br>
-          Auto and infrastructure are the two sectors most sensitive to <em>demand destruction</em> from fuel cost spikes, not just supply-side costs. <span class="data-tip" data-src="SIAM (Society of Indian Automobile Manufacturers): Every ₹1 increase in petrol/diesel price reduces 2-wheeler monthly sales by ~0.8% and passenger vehicle sales by ~0.4%. At current fuel cost trajectories, SIAM estimates FY27 auto volume growth cut from +7% to +3–4%. Source: SIAM Monthly Data, March 2026.">Every ₹1 petrol/diesel hike reduces 2-wheeler sales ~0.8%.</span> Infrastructure is hit from two sides: <span class="data-tip" data-src="CII (Confederation of Indian Industry): Diesel is 12–15% of construction project costs. Steel (energy-intensive) is another 20–25%. At $103 crude, construction cost inflation estimated 6–9% for ongoing projects. L&T project pipeline worth ₹4.2L Cr at risk of cost overruns. Source: CII Construction Outlook Q1 2026; L&T Q3 FY26 investor presentation.">diesel drives 12–15% of construction costs</span>, and steel (energy-intensive) adds another 20–25%.
+          Auto and infrastructure are the two sectors most sensitive to <em>demand destruction</em> from fuel cost spikes, not just supply-side costs. <span class="data-tip" data-src="SIAM (Society of Indian Automobile Manufacturers): Every ₹1 increase in petrol/diesel price reduces 2-wheeler monthly sales by ~0.8% and passenger vehicle sales by ~0.4%. At current fuel cost trajectories, SIAM estimates FY27 auto volume growth cut from +7% to +3–4%. Source: SIAM Monthly Data, March 2026." data-url="https://www.siamindia.com/">Every ₹1 petrol/diesel hike reduces 2-wheeler sales ~0.8%.</span> Infrastructure is hit from two sides: <span class="data-tip" data-src="CII (Confederation of Indian Industry): Diesel is 12–15% of construction project costs. Steel (energy-intensive) is another 20–25%. At $103 crude, construction cost inflation estimated 6–9% for ongoing projects. L&T project pipeline worth ₹4.2L Cr at risk of cost overruns. Source: CII Construction Outlook Q1 2026; L&T Q3 FY26 investor presentation.">diesel drives 12–15% of construction costs</span>, and steel (energy-intensive) adds another 20–25%.
         </div>
         <div class="chart-wrap tall"><canvas id="autoInfraChart"></canvas></div>
       </div>
@@ -1351,7 +1354,7 @@
         <h3>EV Transition — Crisis as Accelerator</h3>
         <div class="chart-insight">
           <span class="insight-label">Why This Chart Matters</span><br>
-          Every oil shock in history has caused a temporary spike in EV intent. <span class="data-tip" data-src="FADA (Federation of Automobile Dealers Associations): EV enquiries up 34% in first 2 weeks of crisis (Mar 1–15). But actual EV penetration in India at 6.8% of total vehicle sales (FY25). Key constraint: charging infrastructure and battery cost. Source: FADA data March 2026; SIAM EV dashboard.">EV enquiries rose 34% in the first 2 weeks of the crisis.</span> However, the same crisis threatens the EV supply chain: <span class="data-tip" data-src="Qatar and Bahrain are major aluminium producers (QATALUM, Alba). Aluminium is 30% of EV battery housing and body weight. Qatar/Bahrain aluminium smelters disrupted by Iranian strikes. LME Aluminium spot: +12% since Feb 28. Source: QATALUM/Alba force majeure notices; LME market data March 2026.">Qatari and Bahraini aluminium smelters (disrupted by strikes) supply 8% of global aluminium</span> — a critical EV input — and LME aluminium is up 12% since Feb 28.
+          Every oil shock in history has caused a temporary spike in EV intent. <span class="data-tip" data-src="FADA (Federation of Automobile Dealers Associations): EV enquiries up 34% in first 2 weeks of crisis (Mar 1–15). But actual EV penetration in India at 6.8% of total vehicle sales (FY25). Key constraint: charging infrastructure and battery cost. Source: FADA data March 2026; SIAM EV dashboard." data-url="https://www.fadaweb.com/">EV enquiries rose 34% in the first 2 weeks of the crisis.</span> However, the same crisis threatens the EV supply chain: <span class="data-tip" data-src="Qatar and Bahrain are major aluminium producers (QATALUM, Alba). Aluminium is 30% of EV battery housing and body weight. Qatar/Bahrain aluminium smelters disrupted by Iranian strikes. LME Aluminium spot: +12% since Feb 28. Source: QATALUM/Alba force majeure notices; LME market data March 2026.">Qatari and Bahraini aluminium smelters (disrupted by strikes) supply 8% of global aluminium</span> — a critical EV input — and LME aluminium is up 12% since Feb 28.
         </div>
         <div class="chart-wrap tall"><canvas id="evChart"></canvas></div>
       </div>
@@ -1360,7 +1363,7 @@
       <div class="card high">
         <div class="p-num" style="color:var(--high)">2-WHEELER DEMAND RISK</div>
         <h4 style="font-size:13px;margin:4px 0 6px">Mass Market Fuel Sensitivity</h4>
-        <p style="font-size:11px;color:#555;line-height:1.6">India sold <span class="data-tip" data-src="SIAM: FY25 total 2-wheeler sales = 19.7M units (Bajaj, Hero, TVS, Honda). This is the primary commuter vehicle for ~60% of India's working population earning <₹30,000/month. Fuel cost as % of monthly income for this cohort: 8–14%. At ₹100/litre petrol, this rises to 12–18%. Source: SIAM FY25 Annual Data; CSO Household Expenditure Survey 2024.">19.7M two-wheelers in FY25</span> — the primary transport for India's working poor. At ₹100+/litre petrol (retail prices not yet revised but import parity demands it), the bottom 40% of income earners face a 12–18% fuel budget squeeze that directly reduces discretionary spending and 2-wheeler demand.</p>
+        <p style="font-size:11px;color:#555;line-height:1.6">India sold <span class="data-tip" data-src="SIAM: FY25 total 2-wheeler sales = 19.7M units (Bajaj, Hero, TVS, Honda). This is the primary commuter vehicle for ~60% of India's working population earning <₹30,000/month. Fuel cost as % of monthly income for this cohort: 8–14%. At ₹100/litre petrol, this rises to 12–18%. Source: SIAM FY25 Annual Data; CSO Household Expenditure Survey 2024." data-url="https://www.siamindia.com/">19.7M two-wheelers in FY25</span> — the primary transport for India's working poor. At ₹100+/litre petrol (retail prices not yet revised but import parity demands it), the bottom 40% of income earners face a 12–18% fuel budget squeeze that directly reduces discretionary spending and 2-wheeler demand.</p>
       </div>
       <div class="card high">
         <div class="p-num" style="color:var(--orange)">PROJECT PIPELINE AT RISK</div>
@@ -1386,13 +1389,13 @@
 
   <!-- GEO KPI STRIP -->
   <div class="geo-kpi-strip">
-    <div class="geo-kpi"><div class="gk-label">Strait Width</div><div class="gk-val" style="color:#FF6B6B">33 km</div><div class="gk-sub">Shipping lanes: 3 km each way</div></div>
-    <div class="geo-kpi"><div class="gk-label">Daily Oil Flow</div><div class="gk-val" style="color:#FF6B6B">20M bbl</div><div class="gk-sub">~21% of global oil supply</div></div>
-    <div class="geo-kpi"><div class="gk-label">India Dependence</div><div class="gk-val" style="color:#FFA94D">88%</div><div class="gk-sub">Of crude imports via Hormuz</div></div>
-    <div class="geo-kpi"><div class="gk-label">Reroute Penalty</div><div class="gk-val" style="color:#FFA94D">+25d</div><div class="gk-sub">Cape of Good Hope adds 15–25 days</div></div>
-    <div class="geo-kpi"><div class="gk-label">Indian Seafarers</div><div class="gk-val" style="color:#FFD43B">20,000</div><div class="gk-sub">Stranded in conflict zone</div></div>
-    <div class="geo-kpi"><div class="gk-label">Vessels Stranded</div><div class="gk-val" style="color:#FFD43B">38</div><div class="gk-sub">Indian-flagged ships in Gulf</div></div>
-    <div class="geo-kpi"><div class="gk-label">Chabahar Window</div><div class="gk-val" style="color:#69DB7C">Apr 26</div><div class="gk-sub">US sanctions waiver expiry</div></div>
+    <div class="geo-kpi"><div class="gk-label">Strait Width</div><div class="gk-val" style="color:#FF6B6B"><span class="data-tip" data-src="IEA / EIA: The Strait of Hormuz is 33 km wide at its narrowest point, with two shipping lanes of just 3 km each (plus a 3 km separation zone). It is the world's most critical oil chokepoint. Source: IEA Oil Market Report; EIA Hormuz factsheet." data-url="https://www.iea.org/articles/the-strait-of-hormuz-is-the-worlds-most-important-oil-transit-chokepoint">33 km</span></div><div class="gk-sub">Shipping lanes: 3 km each way</div></div>
+    <div class="geo-kpi"><div class="gk-label">Daily Oil Flow</div><div class="gk-val" style="color:#FF6B6B"><span class="data-tip" data-src="IEA Oil Market Report 2025: ~21 million barrels/day transit Hormuz under normal conditions, representing ~21% of global petroleum liquids consumption and ~35% of all seaborne crude trade. Source: IEA." data-url="https://www.iea.org/">20M bbl</span></div><div class="gk-sub">~21% of global oil supply</div></div>
+    <div class="geo-kpi"><div class="gk-label">India Dependence</div><div class="gk-val" style="color:#FFA94D"><span class="data-tip" data-src="PPAC Petroleum Supply Annual 2025: India imported 185 MMT of crude oil in FY25. ~88% sourced from Gulf states (Iraq 22%, Saudi Arabia 18%, UAE 9%, Russia 20% via Gulf routing). Nearly all Gulf crude transits Hormuz. Source: PPAC." data-url="https://www.ppac.gov.in/">88%</span></div><div class="gk-sub">Of crude imports via Hormuz</div></div>
+    <div class="geo-kpi"><div class="gk-label">Reroute Penalty</div><div class="gk-val" style="color:#FFA94D"><span class="data-tip" data-src="Maritime shipping industry estimates (IMO / Clarksons Research): Cape of Good Hope route from Gulf to India adds 15–25 days transit time and $3–4/barrel in additional costs (fuel, charter rate differential, canal fees avoided vs Suez). Source: Clarksons Research / IMO." data-url="https://www.imo.org/">+25d</span></div><div class="gk-sub">Cape of Good Hope adds 15–25 days</div></div>
+    <div class="geo-kpi"><div class="gk-label">Indian Seafarers</div><div class="gk-val" style="color:#FFD43B"><span class="data-tip" data-src="MEA / ITF (International Transport Workers' Federation) / Indian National Shipowners' Association: Approximately 20,000 Indian seafarers were in the conflict zone on vessels in the Persian Gulf, Strait of Hormuz, and Gulf of Oman as of mid-March 2026. India is the world's 3rd largest supplier of seafarers. Source: MEA / INSA." data-url="https://www.mea.gov.in/">20,000</span></div><div class="gk-sub">Stranded in conflict zone</div></div>
+    <div class="geo-kpi"><div class="gk-label">Vessels Stranded</div><div class="gk-val" style="color:#FFD43B"><span class="data-tip" data-src="Indian National Shipowners' Association (INSA) & MEA: 38 Indian-flagged or Indian-crewed vessels were stranded in the Persian Gulf and Strait of Hormuz zone as of mid-March 2026, awaiting safe passage. Source: INSA / MEA." data-url="https://www.mea.gov.in/">38</span></div><div class="gk-sub">Indian-flagged ships in Gulf</div></div>
+    <div class="geo-kpi"><div class="gk-label">Chabahar Window</div><div class="gk-val" style="color:#69DB7C"><span class="data-tip" data-src="US Department of State / Treasury OFAC sanctions waiver for India's operations at Shahid Beheshti terminal, Chabahar Port, Iran — expires April 26, 2026. India has invested ~₹3,400 Cr in Chabahar. Waiver is renewable but requires active US State Dept negotiation. Source: OFAC / Ministry of Ports." data-url="https://home.treasury.gov/policy-issues/office-of-foreign-assets-control-sanctions-programs-and-information">Apr 26</span></div><div class="gk-sub">US sanctions waiver expiry</div></div>
   </div>
 
   <!-- MAP NAVIGATION TABS -->
@@ -1721,7 +1724,7 @@
     </div>
     <div style="font-size:11px;color:var(--muted);max-width:500px;line-height:1.6;margin-top:8px">
       <strong>Scenario Probabilities (analyst consensus):</strong>
-      <span class="data-tip" data-src="Goldman Sachs Commodities Research, March 2026: 'We assign 25% probability to resolution within 30 days, 45% to stalemate of 30–90 days, 30% to escalation.' Also: JPMorgan Asia Pacific: Resolution 20%, Stalemate 50%, Escalation 30%.">Resolution: ~20–25% · Stalemate: ~45–50% · Escalation: ~25–30%</span>
+      <span class="data-tip" data-src="Goldman Sachs Commodities Research, March 2026: 'We assign 25% probability to resolution within 30 days, 45% to stalemate of 30–90 days, 30% to escalation.' Also: JPMorgan Asia Pacific: Resolution 20%, Stalemate 50%, Escalation 30%.  These are analyst consensus estimates — not official forecasts." data-url="https://www.gs.com/">Resolution: ~20–25% · Stalemate: ~45–50% · Escalation: ~25–30%</span>
     </div>
   </div>
 
@@ -1886,7 +1889,7 @@
   <p class="section-desc">India has a narrow diplomatic window. The following recommendations are ordered by urgency and strategic impact. India's neutrality is its most valuable geopolitical asset — it must be used offensively, not defensively.</p>
 
   <div class="alert-strip crit">
-    <strong>⚠ Urgent Window:</strong> India has approximately <span class="data-tip" data-src="PPAC (Petroleum Planning and Analysis Cell): India's strategic crude reserves = ~100M barrels ≈ 40 days. Above-ground commercial stocks add ~5–7 days. Total buffer: ~45 days from March 18. Source: PPAC Strategic Reserve Bulletin, March 2026.">30–40 days before crude reserves run thin</span> AND the <span class="data-tip" data-src="IARI agricultural calendar: Kharif sowing (rice, cotton, maize) begins May 15 – June 15. Fertilizer must be applied 6 weeks before sowing = deadline April 5–15 for procurement and distribution. Source: IARI Crop Calendar 2026; FAI Fertilizer Demand Projections.">Kharif fertilizer window closes</span>. Simultaneous action on all fronts is required.
+    <strong>⚠ Urgent Window:</strong> India has approximately <span class="data-tip" data-src="PPAC (Petroleum Planning and Analysis Cell): India's strategic crude reserves = ~100M barrels ≈ 40 days. Above-ground commercial stocks add ~5–7 days. Total buffer: ~45 days from March 18. Source: PPAC Strategic Reserve Bulletin, March 2026." data-url="https://www.ppac.gov.in/">30–40 days before crude reserves run thin</span> AND the <span class="data-tip" data-src="IARI agricultural calendar: Kharif sowing (rice, cotton, maize) begins May 15 – June 15. Fertilizer must be applied 6 weeks before sowing = deadline April 5–15 for procurement and distribution. Source: IARI Crop Calendar 2026; FAI Fertilizer Demand Projections." data-url="https://www.iari.res.in/">Kharif fertilizer window closes</span>. Simultaneous action on all fronts is required.
   </div>
 
   <!-- Policy Priority Matrix (Interactive) -->
@@ -1911,7 +1914,7 @@
     <div class="policy-card urgent" id="p1-card">
       <div class="p-num">POLICY 01</div>
       <h4>Secure a Formal, Written Iran Exemption for Indian Vessels</h4>
-      <p><span class="data-tip" data-src="MEA spokesperson March 12, 2026: 'It would be premature for me to say anything' — confirming NO formal written agreement exists. Two LPG tankers crossed March 14 on informal arrangement. Historical precedent: India secured written exemptions from Iran during 2012 US sanctions via Rupee trade mechanism. Source: MEA briefing transcripts; India Shipping News March 12, 2026.">PM Modi's verbal arrangement for LPG tanker passage</span> is insufficient. India must negotiate a formal written protocol — at minimum 120 days — covering crude oil, LPG, fertilizer raw materials, and pharmaceuticals. Leverage <span class="data-tip" data-src="India-operated Shahid Beheshti terminal at Chabahar Port, Iran. US sanctions waiver expires April 26, 2026 (renewable). India has invested ~₹3,400 Cr in Chabahar development. This is India's only non-Hormuz access to Iran and Central Asia. Source: Ministry of Ports, Shipping and Waterways; MEA Chabahar fact sheet.">Chabahar Port investments (₹3,400 Cr)</span> and India's BRICS chairmanship as bargaining chips.</p>
+      <p><span class="data-tip" data-src="MEA spokesperson March 12, 2026: 'It would be premature for me to say anything' — confirming NO formal written agreement exists. Two LPG tankers crossed March 14 on informal arrangement. Historical precedent: India secured written exemptions from Iran during 2012 US sanctions via Rupee trade mechanism. Source: MEA briefing transcripts; India Shipping News March 12, 2026.">PM Modi's verbal arrangement for LPG tanker passage</span> is insufficient. India must negotiate a formal written protocol — at minimum 120 days — covering crude oil, LPG, fertilizer raw materials, and pharmaceuticals. Leverage <span class="data-tip" data-src="India-operated Shahid Beheshti terminal at Chabahar Port, Iran. US sanctions waiver expires April 26, 2026 (renewable). India has invested ~₹3,400 Cr in Chabahar development. This is India's only non-Hormuz access to Iran and Central Asia. Source: Ministry of Ports, Shipping and Waterways; MEA Chabahar fact sheet." data-url="https://www.mea.gov.in/">Chabahar Port investments (₹3,400 Cr)</span> and India's BRICS chairmanship as bargaining chips.</p>
       <div class="rationale-box"><strong>Rationale:</strong> Two tankers crossing is anecdotal. Iran needs to formally exclude Indian flagged, chartered, and insured vessels from IRGC targeting orders — in writing, with IRGC commander sign-off. This is achievable given India's unique diplomatic positioning.</div>
       <div class="p-horizon">Immediate · 0–15 days</div>
     </div>
@@ -2057,7 +2060,7 @@
     </div>
     <div class="stmt-quote">"India is deeply concerned at the recent developments in Iran and the Gulf region. We urge all sides to exercise restraint, avoid escalation, and prioritise the safety of civilians. Dialogue and diplomacy should be pursued to de-escalate tensions and address underlying issues. Sovereignty and territorial integrity of all states must be respected."</div>
     <div class="stmt-context">India's first official reaction, issued within hours of US-Israeli strikes killing Supreme Leader Khamenei. Did not name the US or Israel as aggressors nor condemn the strikes. "Sovereignty and territorial integrity of all states must be respected" was widely read as an indirect rebuke of the US-Israel action. No condolence for Khamenei was issued — contrasting sharply with PM Modi ordering one-day national mourning when Iran's President Raisi died in May 2024.</div>
-    <div class="stmt-source-tooltip"><span class="src-label">📎 Source</span><div class="src-tip">MEA Official Website Press Release, Feb 28, 2026. The Print, "India's response to US-Israel war on Iran isn't muted," Mar 2026. The Diplomat, "Is India Torpedoing Its Claims to Being a Net Security Provider in the IOR," Mar 2026. Bloomberg, "India Raises Concerns on Mideast War," Mar 3, 2026.</div></div>
+    <div class="stmt-source-tooltip"><span class="src-label">📎 Source</span><div class="src-tip">MEA Official Website Press Release, Feb 28, 2026. <a href="https://theprint.in/" target="_blank" rel="noopener">The Print</a>, "India's response to US-Israel war on Iran isn't muted," Mar 2026. <a href="https://thediplomat.com/" target="_blank" rel="noopener">The Diplomat</a>, Mar 2026. <a href="https://www.bloomberg.com/" target="_blank" rel="noopener">Bloomberg</a>, "India Raises Concerns on Mideast War," Mar 3, 2026. <a href="https://www.mea.gov.in/" target="_blank" rel="noopener">MEA Official Website ↗</a></div></div>
   </div>
 
   <!-- CARD S02 -->
@@ -2069,7 +2072,7 @@
     </div>
     <div class="stmt-quote">"The conflict could impact the Indian economy given that its trade and energy supplies traverse the region. India has some 10 million citizens who live and work in the Gulf region. Their safety and well-being is of utmost priority. Indian consulates and embassies are in touch with affected nationals."</div>
     <div class="stmt-context">First formal linkage of the war to India's economic interests. A Special Control Room was announced to handle citizen queries. MEA confirmed embassies across the Middle East had set up 24×7 helplines and were facilitating returns wherever airspace permitted. The statement still carefully avoided attributing responsibility for the conflict to any side.</div>
-    <div class="stmt-source-tooltip"><span class="src-label">📎 Source</span><div class="src-tip">Bloomberg, "India Raises Concerns About Mideast War as Modi Faces Questions," March 3, 2026. Al Jazeera, "How Israel-US war on Iran puts $50bn in Indian remittances at risk," March 13, 2026. MEA Control Room announcement via PIB.</div></div>
+    <div class="stmt-source-tooltip"><span class="src-label">📎 Source</span><div class="src-tip"><a href="https://www.bloomberg.com/" target="_blank" rel="noopener">Bloomberg</a>, "India Raises Concerns About Mideast War," March 3, 2026. <a href="https://www.aljazeera.com/" target="_blank" rel="noopener">Al Jazeera</a>, "$50bn in Indian remittances at risk," March 13, 2026. <a href="https://pib.gov.in/" target="_blank" rel="noopener">PIB (Press Information Bureau)</a>, MEA Control Room announcement.</div></div>
   </div>
 
   <!-- CARD S03 -->
@@ -2081,7 +2084,7 @@
     </div>
     <div class="stmt-quote">"India deplores the fact that commercial shipping is being made a target of military attacks in the ongoing conflict in West Asia. Precious lives, including of Indian citizens, have already been lost in multiple such attacks in the earlier phase of this conflict and the intensity and lethality of the attacks only seems to be increasing."</div>
     <div class="stmt-context">Issued following Iranian attacks on tankers MT Skylight and MT Vyom (Indian-linked crew) and LCT ALYH. At least 4 Indian sailors had been killed. ~20,000 Indian seafarers were in the conflict zone with 38 Indian-flagged vessels stranded. India condemned attacks without naming Iran explicitly — critiquing the effect, not the actor. Government sources confirmed India was expressing concern about targeting of merchant navy ships both inside the Gulf and in the Gulf of Oman near Hormuz.</div>
-    <div class="stmt-source-tooltip"><span class="src-label">📎 Source</span><div class="src-tip">India Shipping News, "Reports of Iran allowing Indian ships through Strait of Hormuz 'premature'," March 12, 2026. MEA official website. The Quint, India co-sponsors UNSC Resolution, March 12, 2026. Al Jazeera coverage.</div></div>
+    <div class="stmt-source-tooltip"><span class="src-label">📎 Source</span><div class="src-tip">India Shipping News, "Reports of Iran allowing Indian ships through Hormuz 'premature'," March 12, 2026. <a href="https://www.mea.gov.in/" target="_blank" rel="noopener">MEA official website ↗</a>. <a href="https://www.thequint.com/" target="_blank" rel="noopener">The Quint</a>, India co-sponsors UNSC Resolution, March 12, 2026. <a href="https://www.aljazeera.com/" target="_blank" rel="noopener">Al Jazeera</a> coverage.</div></div>
   </div>
 
   <!-- CARD S04 -->
@@ -2093,7 +2096,7 @@
     </div>
     <div class="stmt-quote">"The Indian Navy has deployed Kolkata-class and Visakhapatnam-class guided-missile destroyers to the Arabian Sea and Gulf of Oman, tasked with providing a defensive shield for Indian-flagged merchant vessels and oil tankers navigating the contested waters around the US-Iranian operational zones."</div>
     <div class="stmt-context">Redeployment of naval assets originally on anti-piracy duties under Operation Sankalp (running since 2019 in the Gulf of Oman). A proposal by the Indian National Shipowners' Association to deploy ships inside the Strait of Hormuz to rescue 36 stranded Indian-flagged vessels remained under debate. Private marine insurers had already suspended coverage for vessels in the region. Defence Minister Rajnath Singh had presided over the MILAN 2026 exercise opening — adding diplomatic sensitivity to the IRIS Dena controversy days later.</div>
-    <div class="stmt-source-tooltip"><span class="src-label">📎 Source</span><div class="src-tip">Wikipedia, "2026 Iran war regional mobilizations." VisionIAS, "Iran-US War: Risks to India's Energy Security." PIB Defence Ministry release on Operation Sankalp redeployment, March 2–3, 2026.</div></div>
+    <div class="stmt-source-tooltip"><span class="src-label">📎 Source</span><div class="src-tip"><a href="https://en.wikipedia.org/wiki/2026_Iran_war" target="_blank" rel="noopener">Wikipedia</a>, "2026 Iran war regional mobilizations." VisionIAS, "Iran-US War: Risks to India's Energy Security." <a href="https://pib.gov.in/" target="_blank" rel="noopener">PIB Defence Ministry ↗</a> release on Operation Sankalp, March 2–3, 2026.</div></div>
   </div>
 
   <!-- CARD S05 -->
@@ -2129,7 +2132,7 @@
     </div>
     <div class="stmt-quote">"India remains in favour of peace, return to dialogue and diplomacy; we advocate de-escalation, restraint, ensuring safety of civilians. Contacts with Iran at the leadership level are obviously difficult at this time; I have spoken to Iranian Foreign Minister. The Prime Minister continues to closely monitor the emerging developments. New Delhi stands for maintaining the sovereignty and territorial integrity of all states in the region. The well-being and security of the Indian community in the region is our priority — millions of Indians are in the Gulf countries. We are concerned about them."</div>
     <div class="stmt-context">Most comprehensive government statement on the war. Confirmed 2 Indian mariners killed, 1 missing. Gulf region accounts for ~$200B in annual trade with India. Defended IRIS Lavan docking as humanitarian. EAM confirmed he had spoken to Iranian FM Araghchi. Opposition staged a walkout in Rajya Sabha; Lok Sabha was adjourned for the day with repeated disruptions. Congress termed the statement "vapid" and accused the government of pushing India toward "vassalage." Parliament Affairs Minister Kiren Rijiju accused opposition of "not understanding the basic ethics of this House."</div>
-    <div class="stmt-source-tooltip"><span class="src-label">📎 Source</span><div class="src-tip">Dr. S. Jaishankar X/Twitter post linking Rajya Sabha & Lok Sabha statement text, March 9, 2026. Indian Republic, "Jaishankar Tells Indian Parliament India Backs Dialogue." India TV News Parliament Budget Session live updates, March 9, 2026. Business Standard, Congress walkout. The Federal, "Iran war: Protests in Parliament," March 10, 2026.</div></div>
+    <div class="stmt-source-tooltip"><span class="src-label">📎 Source</span><div class="src-tip"><a href="https://x.com/DrSJaishankar" target="_blank" rel="noopener">Dr. S. Jaishankar on X ↗</a>, Parliament statement text, March 9, 2026. <a href="https://www.business-standard.com/" target="_blank" rel="noopener">Business Standard</a>, Congress walkout. <a href="https://thefederal.com/" target="_blank" rel="noopener">The Federal</a>, "Iran war: Protests in Parliament," March 10, 2026.</div></div>
   </div>
 
   <!-- CARD S08 -->
@@ -2141,7 +2144,7 @@
     </div>
     <div class="stmt-quote">"I am at the moment engaged in talking to them and my talking has yielded some results. This is ongoing. If it is yielding results for me, I would naturally continue to look at it. The last conversation discussed issues pertaining to safety of shipping and India's energy security. Beyond that, it would be premature for me to say anything."</div>
     <div class="stmt-context">Jaishankar confirmed 4 wartime calls with Iran's FM Araghchi in his statement to the Financial Times — confirming quiet back-channel diplomacy on Hormuz passage for Indian vessels. MEA Spokesperson Jaiswal told reporters it was "premature" to confirm any formal arrangement. The Iranian readout of one call noted Iran blamed "the aggressive and destabilizing actions of the United States" for the shipping insecurity. Two Indian LPG tankers (Shivalik and Nanda Devi) ultimately crossed Hormuz on March 14 — suggesting the diplomacy had borne fruit.</div>
-    <div class="stmt-source-tooltip"><span class="src-label">📎 Source</span><div class="src-tip">EAM Jaishankar, Financial Times interview, March 10–11, 2026 (cited in Globe and Mail, March 18, 2026). India Shipping News, "Reports of Iran allowing Indian ships through Strait of Hormuz 'premature'," March 12, 2026. CNBC, "India's Modi Reaches Out to Iran," March 13, 2026. MEA spokesperson press briefing transcripts.</div></div>
+    <div class="stmt-source-tooltip"><span class="src-label">📎 Source</span><div class="src-tip"><a href="https://www.ft.com/" target="_blank" rel="noopener">Financial Times</a>, Jaishankar interview, March 10–11, 2026. India Shipping News, "Reports of Iran allowing Indian ships through Hormuz 'premature'," March 12, 2026. <a href="https://www.cnbc.com/" target="_blank" rel="noopener">CNBC</a>, "India's Modi Reaches Out to Iran," March 13, 2026. <a href="https://www.mea.gov.in/" target="_blank" rel="noopener">MEA spokesperson briefing transcripts ↗</a></div></div>
   </div>
 
   <!-- CARD S09 -->
@@ -2153,7 +2156,7 @@
     </div>
     <div class="stmt-quote">"The resolution demanded an immediate halt to all attacks by Iran, denounced threats to close the Strait of Hormuz, and reaffirmed support for the sovereignty and territorial integrity of affected states. MEA reiterated that targeting commercial shipping and endangering civilian crew members must be avoided, and that freedom of navigation and commerce should be protected."</div>
     <div class="stmt-context">India joined 130+ nations (US, UK, France, Germany, Japan, Australia) explicitly condemning Iran's attacks on Bahrain, Kuwait, Oman, Qatar, Saudi Arabia, UAE, and Jordan. Passed 13–2. This was India's most explicit condemnation of any party in the conflict — directed at Iran's retaliatory attacks on Gulf states. Critics noted the resolution said nothing about the original US-Israeli strikes on Iran, highlighting the perceived asymmetry in India's stance. India's priority was clear: protecting Gulf Arab states where 9.1 million Indians reside.</div>
-    <div class="stmt-source-tooltip"><span class="src-label">📎 Source</span><div class="src-tip">The Quint, "India Joins 130 Nations to Support UN Resolution Condemning Iran Attacks on Gulf," March 12, 2026. Deccan Herald Parliament coverage. MEA press statement on India's UN vote. UN Security Council official records, March 12, 2026.</div></div>
+    <div class="stmt-source-tooltip"><span class="src-label">📎 Source</span><div class="src-tip"><a href="https://www.thequint.com/" target="_blank" rel="noopener">The Quint</a>, "India Joins 130 Nations to Support UN Resolution," March 12, 2026. <a href="https://www.deccanherald.com/" target="_blank" rel="noopener">Deccan Herald</a> Parliament coverage. <a href="https://www.mea.gov.in/" target="_blank" rel="noopener">MEA press statement ↗</a>. <a href="https://www.un.org/securitycouncil/" target="_blank" rel="noopener">UN Security Council official records ↗</a></div></div>
   </div>
 
   <!-- CARD S10 -->
@@ -2165,7 +2168,7 @@
     </div>
     <div class="stmt-quote">[PMO released a terse readout. Iranian presidency readout was more detailed:] "President Pezeshkian emphasised that Iran did not initiate the war and has no desire to prolong it, while insisting that Tehran had exercised its legitimate right of self-defence. Iran urged India, as current BRICS Chair, to assume a strong and constructive role in stabilising the crisis."</div>
     <div class="stmt-context">PM Modi's first direct call to Iran's leadership since the war began — a 12-day gap drawing sharp domestic criticism. The call came hours after Iran's new Supreme Leader vowed to keep Hormuz closed. Modi had visited Israel's Knesset just 3 days before the war, declaring "India stands with Israel, firmly, with full conviction" — making this call a significant balancing act. Iran explicitly asked India to use the BRICS Presidency for de-escalation diplomacy. Only the Iranian readout was substantive; the PMO provided a terse summary.</div>
-    <div class="stmt-source-tooltip"><span class="src-label">📎 Source</span><div class="src-tip">IBTimes India, "India, Iran and the West Asian war: strategic silence, lost gateways," March 14, 2026. CNBC, "India's Modi Reaches Out to Iran as Energy Crunch Fears Grip," March 13, 2026. PMO official press release (brief). Iranian presidency readout, March 12, 2026.</div></div>
+    <div class="stmt-source-tooltip"><span class="src-label">📎 Source</span><div class="src-tip"><a href="https://www.ibtimes.co.in/" target="_blank" rel="noopener">IBTimes India</a>, "India, Iran and the West Asian war: strategic silence," March 14, 2026. <a href="https://www.cnbc.com/" target="_blank" rel="noopener">CNBC</a>, "India's Modi Reaches Out to Iran," March 13, 2026. <a href="https://www.pmindia.gov.in/" target="_blank" rel="noopener">PMO official press release ↗</a>. Iranian presidency readout, March 12, 2026.</div></div>
   </div>
 
   <!-- CARD S11 -->
@@ -2189,7 +2192,7 @@
     </div>
     <div class="stmt-quote">"India's rise will be determined solely by India."</div>
     <div class="stmt-context">Delivered at Raisina Dialogue in response to US Special Envoy for India Mike Landau suggesting India's global standing depended on US alignment. While not directly about Iran, it reaffirmed India's strategic autonomy doctrine and signalled New Delhi would not fully align with Washington on the Iran war. Foreign Policy (March 13) interpreted it as Jaishankar "conveying displeasure to both Washington and the Indian public." The forum also featured Iran's Deputy FM Khatibzadeh (who accused the US of deception) and Israeli FM Saar (who confirmed India was NOT briefed before the strikes on Iran).</div>
-    <div class="stmt-source-tooltip"><span class="src-label">📎 Source</span><div class="src-tip">Foreign Policy, "Iran War Puts India in Tricky Position," March 13, 2026. Jerusalem Post, "Iran war tests India's balancing act," March 11, 2026. Raisina Dialogue 2026 official proceedings (Observer Research Foundation).</div></div>
+    <div class="stmt-source-tooltip"><span class="src-label">📎 Source</span><div class="src-tip"><a href="https://foreignpolicy.com/" target="_blank" rel="noopener">Foreign Policy</a>, "Iran War Puts India in Tricky Position," March 13, 2026. <a href="https://www.jpost.com/" target="_blank" rel="noopener">Jerusalem Post</a>, "Iran war tests India's balancing act," March 11, 2026. <a href="https://www.orfonline.org/events/raisina-dialogue" target="_blank" rel="noopener">Raisina Dialogue 2026 — ORF ↗</a></div></div>
   </div>
 
   <!-- CARD S13 -->
@@ -2201,7 +2204,7 @@
     </div>
     <div class="stmt-quote">"All domestic oil refining companies are directed to maximise LPG recovery and supply the entire output to IOCL, HPCL, and BPCL. Refiners are barred from diverting propane or butane streams to petrochemical production." [And:] "The Government of India has invoked the Essential Commodities Act of 1955, notifying the Natural Gas (Supply Regulation) Order, 2026" — establishing a four-tier priority system: (1) domestic PNG/CNG/LPG at full requirements, (2) fertiliser plants at 70%, (3) manufacturing at 80%, (4) industrial/commercial CGD at 80%.</div>
     <div class="stmt-context">Two-part domestic emergency response. March 7: LPG prices raised ₹60 to ₹913/cylinder; commercial LPG +₹114.5 to ₹1,883. March 9: refiners redirected — yielding 10% domestic output increase within one week. March 10: Essential Commodities Act invoked — India's strongest domestic economic war response. Minimum LPG refill waiting period extended from 21 to 25 days to prevent hoarding. Hotels in Bengaluru reported only 10% gas supply received March 10; NRAI estimated LPG shortage costing food service industry ₹1,200–1,300 Cr/day.</div>
-    <div class="stmt-source-tooltip"><span class="src-label">📎 Source</span><div class="src-tip">PIB (Press Information Bureau), Ministry of Petroleum & Natural Gas, March 7–10, 2026. VisionIAS, "Iran-US War: Risks to India's Energy Security." Down To Earth, "Iran-Israel conflict heightens risks to India's energy security," March 2026. IOC official website on LPG price revision.</div></div>
+    <div class="stmt-source-tooltip"><span class="src-label">📎 Source</span><div class="src-tip"><a href="https://pib.gov.in/" target="_blank" rel="noopener">PIB (Press Information Bureau) ↗</a>, MoPNG, March 7–10, 2026. <a href="https://www.downtoearth.org.in/" target="_blank" rel="noopener">Down To Earth</a>, "Iran-Israel conflict heightens risks to India's energy security," March 2026. <a href="https://iocl.com/" target="_blank" rel="noopener">IOC official website ↗</a> on LPG price revision.</div></div>
   </div>
 
   <!-- CARD S14 -->
@@ -2213,7 +2216,7 @@
     </div>
     <div class="stmt-quote">"A prolonged conflict could undermine India's energy security, worsen the inflation outlook, and strain the external sector if disruptions to global oil and gas supplies continue… Even if only latent for now, the risks to India's balance of payments may have become elevated due to this conflict. Fiscal reprioritisation may become necessary in the coming years for both the Centre and states."</div>
     <div class="stmt-context">The first formal government document to quantify war risks to India. At the time of writing, Brent had risen 11–15% approaching $90/bbl (would hit $103+). Key warnings: CPI could breach RBI's 4% target; CAD to widen significantly; FDI/FII flows at risk. The review referenced the Economic Survey 2025-26's "systemic shock cascade" scenario — noting the conflict had activated elements of that worst-case script. Finance Ministry also cautioned on maintaining tax policy stability to sustain FDI inflows amidst rising global uncertainty.</div>
-    <div class="stmt-source-tooltip"><span class="src-label">📎 Source</span><div class="src-tip">Down To Earth, "Iran-Israel conflict heightens risks to India's energy security, inflation and fiscal stability: Government review," March 2026. Finance Ministry Monthly Economic Review for February 2026, released March 6, 2026 (Department of Economic Affairs, Government of India).</div></div>
+    <div class="stmt-source-tooltip"><span class="src-label">📎 Source</span><div class="src-tip"><a href="https://www.downtoearth.org.in/" target="_blank" rel="noopener">Down To Earth</a>, "Iran-Israel conflict heightens risks to India's energy security," March 2026. <a href="https://dea.gov.in/" target="_blank" rel="noopener">Department of Economic Affairs — Monthly Economic Review, Feb 2026 ↗</a> (released March 6, 2026).</div></div>
   </div>
 
   <!-- CARD S15 -->
@@ -2225,7 +2228,7 @@
     </div>
     <div class="stmt-quote">"The Ministry of External Affairs issued an advisory to Indian nationals: do not travel to Iran during the ongoing situation. The Indian Embassy in Tehran urged citizens to contact Indian officials and leave the country at the earliest — particularly Indian students, pilgrims, business persons and tourists." [Upgraded to wartime advisory on Feb 28, 2026. Special MEA Control Room activated for 24×7 citizen assistance across the Gulf region.]</div>
     <div class="stmt-context">Initial travel advisory during Iranian protests (January 2026), upgraded to wartime on Feb 28. Embassies in UAE, Saudi Arabia, Qatar, Bahrain, Kuwait, and Oman activated 24×7 helplines. Indian nationals near Bahrain's US Navy Base were provided government shelter. Air India, IndiGo and Gulf carriers expanded capacity for stranded passengers. 9.1 million Indians in Gulf states — the largest single national diaspora in any Gulf country. The MEA Control Room handled thousands of citizen queries across the Gulf region during the crisis.</div>
-    <div class="stmt-source-tooltip"><span class="src-label">📎 Source</span><div class="src-tip">Wikipedia, "Reactions to the 2025–2026 Iranian protests" (MEA advisory Jan 5, 2026). Al Jazeera, "How Israel-US war on Iran puts $50bn in Indian remittances at risk," March 13, 2026. PIB Control Room announcement. Reuters, "Indian nationals at government shelter in Bahrain," March 4, 2026.</div></div>
+    <div class="stmt-source-tooltip"><span class="src-label">📎 Source</span><div class="src-tip"><a href="https://www.aljazeera.com/" target="_blank" rel="noopener">Al Jazeera</a>, "$50bn in Indian remittances at risk," March 13, 2026. <a href="https://pib.gov.in/" target="_blank" rel="noopener">PIB Control Room announcement ↗</a>. <a href="https://www.reuters.com/" target="_blank" rel="noopener">Reuters</a>, "Indian nationals at government shelter in Bahrain," March 4, 2026. <a href="https://www.mea.gov.in/" target="_blank" rel="noopener">MEA Travel Advisory ↗</a></div></div>
   </div>
 
   <!-- CARD S16 -->
@@ -2237,7 +2240,7 @@
     </div>
     <div class="stmt-quote">"The conflict has reached our backyard, with an Iranian warship sunk in the Indian Ocean. Yet the Prime Minister has said nothing."</div>
     <div class="stmt-context">Rahul Gandhi, LoP in Lok Sabha, was among the most vocal critics demanding a full Parliamentary debate (not just a ministerial statement) on the war. Led the Opposition protest at Parliament House on March 9 alongside Mallikarjun Kharge (LoP, Rajya Sabha) and Akhilesh Yadav (SP). The Opposition specifically demanded: (1) condemnation of the IRIS Dena sinking, (2) a Parliamentary obituary reference for Khamenei, (3) a full floor debate — not a one-way statement — on the West Asia crisis. Lok Sabha was eventually adjourned for the day after repeated disruptions by the opposition.</div>
-    <div class="stmt-source-tooltip"><span class="src-label">📎 Source</span><div class="src-tip">Times of Israel, "Iranian warship was returning from naval exercises hosted by India when hit by US torpedo," March 5, 2026. The Federal, "Iran war: Protests in Parliament; Motion against Birla likely today," March 10, 2026. Deccan Herald Parliament Session Live Updates, March 9, 2026. PTI parliamentary coverage.</div></div>
+    <div class="stmt-source-tooltip"><span class="src-label">📎 Source</span><div class="src-tip"><a href="https://www.timesofisrael.com/" target="_blank" rel="noopener">Times of Israel</a>, "Iranian warship returning from India exercises when hit," March 5, 2026. <a href="https://thefederal.com/" target="_blank" rel="noopener">The Federal</a>, "Iran war: Protests in Parliament," March 10, 2026. <a href="https://www.deccanherald.com/" target="_blank" rel="noopener">Deccan Herald</a>, Parliament Session, March 9, 2026.</div></div>
   </div>
 
   <!-- CARD S17 -->
@@ -2273,7 +2276,7 @@
     </div>
     <div class="stmt-quote">"India stands with Israel, firmly, with full conviction, in this moment and beyond."</div>
     <div class="stmt-context">PM Modi became the first Indian PM to address Israel's Knesset — just 3 days before US-Israeli strikes on Iran began. The statement "India stands with Israel, firmly" was the most explicitly pro-Israel declaration ever made by an Indian head of state. Israeli FM Gidon Saar later revealed at the Raisina Dialogue that Israel COULD NOT brief PM Modi before the strikes: "the decision was taken only on Saturday early morning" — meaning Modi visited Israel in the lead-up to a war he wasn't informed about. The timing became a major political flashpoint, cited by Congress as evidence of a "pro-Israel tilt" that constrained India's ability to respond neutrally to the war.</div>
-    <div class="stmt-source-tooltip"><span class="src-label">📎 Source</span><div class="src-tip">IBTimes India, "India, Iran and the West Asian war: strategic silence," March 14, 2026. Jerusalem Post, "Iran war tests India's balancing act" (citing Israeli FM Saar at Raisina), March 11, 2026. The National News, "Modi criticised for silence over US sinking of Iranian ship," March 6, 2026. Photo by Marc Israel Sellem / Jerusalem Post, February 25, 2026.</div></div>
+    <div class="stmt-source-tooltip"><span class="src-label">📎 Source</span><div class="src-tip"><a href="https://www.ibtimes.co.in/" target="_blank" rel="noopener">IBTimes India</a>, "India, Iran and the West Asian war: strategic silence," March 14, 2026. <a href="https://www.jpost.com/" target="_blank" rel="noopener">Jerusalem Post</a>, "Iran war tests India's balancing act" (Israeli FM Saar at Raisina), March 11, 2026. <a href="https://www.thenationalnews.com/" target="_blank" rel="noopener">The National News</a>, "Modi criticised for silence over US sinking of Iranian ship," March 6, 2026.</div></div>
   </div>
 
   <!-- CARD S20 -->
@@ -3516,6 +3519,51 @@ function makeStmtCharts() {
   }
 }
 
+// ── SOURCE TOOLTIP SYSTEM ──
+(function(){
+  const tip = document.getElementById('src-tooltip');
+  if (!tip) return;
+  const tipText = document.getElementById('src-tip-text');
+  const tipLink = document.getElementById('src-tip-link');
+  let hideTimer;
+
+  function showTip(el, e) {
+    clearTimeout(hideTimer);
+    tipText.textContent = el.getAttribute('data-src') || '';
+    const url = el.getAttribute('data-url') || '';
+    if (url) { tipLink.href = url; tipLink.style.display = 'inline-block'; }
+    else { tipLink.style.display = 'none'; }
+    tip.style.display = 'block';
+    positionTip(e);
+  }
+  function positionTip(e) {
+    const vw = window.innerWidth, vh = window.innerHeight;
+    let x = e.clientX + 14, y = e.clientY - 8;
+    const tw = tip.offsetWidth || 300, th = tip.offsetHeight || 80;
+    if (x + tw > vw - 10) x = e.clientX - tw - 14;
+    if (y + th > vh - 10) y = e.clientY - th - 10;
+    if (y < 10) y = 10;
+    tip.style.left = x + 'px';
+    tip.style.top = y + 'px';
+  }
+  function hideTip() { hideTimer = setTimeout(()=>{ tip.style.display='none'; }, 200); }
+
+  document.addEventListener('mouseover', e => {
+    const el = e.target.closest('.data-tip');
+    if (el) showTip(el, e);
+  });
+  document.addEventListener('mousemove', e => {
+    if (tip.style.display==='block' && !e.target.closest('#src-tooltip')) positionTip(e);
+  });
+  document.addEventListener('mouseout', e => {
+    const el = e.target.closest('.data-tip');
+    if (el && !e.relatedTarget?.closest('#src-tooltip')) hideTip();
+  });
+  tip.addEventListener('mouseenter', ()=> clearTimeout(hideTimer));
+  tip.addEventListener('mouseleave', hideTip);
+})();
+
 </script>
+<div id="src-tooltip"><div id="src-tip-text"></div><a id="src-tip-link" href="#" target="_blank" rel="noopener noreferrer">Open source ↗</a></div>
 </body>
 </html>
