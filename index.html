@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>India & the Hormuz Blockade — Crisis Intelligence Dashboard</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -1443,15 +1445,10 @@
               <line x1="800" y1="0" x2="800" y2="500"/>
             </g>
 
-            <!-- ── LANDMASSES (accurate, detailed outlines) ── -->
-            <!-- Iraq -->
-            <path d="M390,52 L430,48 L460,60 L468,82 L455,100 L435,108 L415,105 L400,90 L388,72 Z" fill="#1E3A5F" stroke="#2E5A8A" stroke-width="1"/>
-            <text x="405" y="82" fill="rgba(180,210,255,0.7)" font-size="8" font-family="DM Sans">Iraq</text>
+            <!-- ── LANDMASSES rendered by D3 + world-atlas ── -->
+            <g id="geo-1"></g>
 
-            <!-- Iran — detailed -->
-            <path d="M468,48 L530,38 L580,42 L620,55 L650,72 L665,95 L662,118 L645,130 L618,135 L590,132 L565,140 L548,148 L530,145 L510,135 L495,118 L480,100 L465,82 Z" fill="#1A3550" stroke="#2A527A" stroke-width="1.2"/>
-            <text x="550" y="90" fill="rgba(180,210,255,0.9)" font-size="10" font-family="DM Sans" font-weight="600">IRAN</text>
-            <!-- War damage markers on Iran -->
+            <!-- War damage markers on Iran (overlays kept) -->
             <g filter="url(#glow)">
               <circle cx="540" cy="72" r="5" fill="#FF4444" opacity="0.9"/>
               <circle cx="565" cy="65" r="4" fill="#FF4444" opacity="0.8"/>
@@ -1461,44 +1458,9 @@
               <circle cx="510" cy="80" r="4" fill="#FF4444" opacity="0.7"/>
             </g>
 
-            <!-- Saudi Arabia -->
-            <path d="M310,120 L395,112 L430,108 L455,100 L460,130 L455,175 L445,205 L430,215 L400,220 L370,215 L350,200 L330,185 L318,160 L308,140 Z" fill="#1E3A5F" stroke="#2E5A8A" stroke-width="1"/>
-            <text x="355" y="172" fill="rgba(180,210,255,0.7)" font-size="8" font-family="DM Sans">Saudi Arabia</text>
-
-            <!-- Kuwait -->
-            <path d="M390,108 L410,105 L415,120 L400,125 L388,118 Z" fill="#1E3A5F" stroke="#2E5A8A" stroke-width="0.8"/>
-
-            <!-- UAE + Oman coast -->
-            <path d="M495,150 L530,145 L548,148 L568,162 L580,178 L575,198 L555,210 L530,215 L510,205 L500,185 L492,168 Z" fill="#1E3A5F" stroke="#2E5A8A" stroke-width="1"/>
-            <!-- Oman southern coast -->
-            <path d="M568,162 L605,158 L640,165 L660,180 L655,205 L635,218 L610,225 L585,218 L575,198 L580,178 Z" fill="#1E3A5F" stroke="#2E5A8A" stroke-width="1"/>
-            <text x="580" y="200" fill="rgba(180,210,255,0.6)" font-size="8" font-family="DM Sans">Oman</text>
-
-            <!-- Qatar -->
-            <circle cx="468" cy="162" r="5" fill="#2A5A8A" stroke="#4A8ABA" stroke-width="1"/>
-            <text x="474" y="158" fill="rgba(180,210,255,0.9)" font-size="8" font-family="DM Sans">Qatar</text>
-            <!-- Qatar Ras Laffan strike -->
+            <!-- Qatar Ras Laffan strike overlay -->
             <circle cx="472" cy="155" r="8" fill="rgba(255,100,0,0.3)" stroke="#FF6600" stroke-width="1.5" stroke-dasharray="3,2"/>
             <text x="478" y="148" fill="#FF8844" font-size="7" font-family="DM Mono">RAS LAFFAN ⚡</text>
-
-            <!-- Bahrain -->
-            <circle cx="445" cy="152" r="4" fill="#2A5A8A" stroke="#4A8ABA" stroke-width="1"/>
-            <text x="450" y="149" fill="rgba(180,210,255,0.8)" font-size="7" font-family="DM Sans">Bahrain</text>
-
-            <!-- UAE labels -->
-            <text x="510" y="195" fill="rgba(180,210,255,0.7)" font-size="8" font-family="DM Sans">UAE</text>
-
-            <!-- Pakistan -->
-            <path d="M665,72 L720,62 L748,78 L745,105 L725,118 L700,122 L678,118 L662,110 L662,90 Z" fill="#1A3550" stroke="#2A527A" stroke-width="1"/>
-            <text x="695" y="98" fill="rgba(180,210,255,0.6)" font-size="8" font-family="DM Sans">Pakistan</text>
-
-            <!-- India -->
-            <path d="M748,90 L800,82 L830,100 L840,130 L838,165 L830,200 L815,240 L798,278 L780,305 L762,325 L748,338 L742,330 L738,305 L728,270 L718,240 L712,210 L710,180 L712,150 L718,120 L730,102 Z" fill="#1F4068" stroke="#3A6A9A" stroke-width="1.5"/>
-            <text x="772" y="220" fill="rgba(200,230,255,0.95)" font-size="12" font-family="DM Serif Display" font-weight="400">INDIA</text>
-
-            <!-- Yemen / South Arabia coast -->
-            <path d="M310,215 L340,218 L380,220 L420,222 L450,218 L460,228 L450,245 L420,252 L380,255 L340,250 L305,242 L300,230 Z" fill="#1A3A5A" stroke="#2A527A" stroke-width="0.8"/>
-            <text x="360" y="238" fill="rgba(180,210,255,0.5)" font-size="7" font-family="DM Sans">Yemen</text>
 
             <!-- ── PERSIAN GULF BODY ── -->
             <path d="M395,112 L430,108 L460,115 L480,130 L495,150 L492,168 L475,172 L455,175 L440,168 L420,158 L398,145 L388,130 Z" fill="rgba(30,100,180,0.25)" stroke="rgba(60,140,200,0.3)" stroke-width="1"/>
@@ -1584,7 +1546,7 @@
             <text x="720" y="354" fill="rgba(255,100,100,0.7)" font-size="6.5" font-family="DM Mono">Sunk Mar 4</text>
 
             <!-- Sri Lanka -->
-            <ellipse cx="760" cy="335" rx="8" ry="12" fill="#1A3550" stroke="#2A527A" stroke-width="0.8"/>
+            <!-- Sri Lanka rendered by D3 geo base -->
             <text x="768" y="338" fill="rgba(180,210,255,0.6)" font-size="7" font-family="DM Sans">Sri Lanka</text>
 
             <!-- India ports -->
@@ -1684,48 +1646,8 @@
               <line x1="750" y1="0" x2="750" y2="520"/>
             </g>
 
-            <!-- ── WORLD LANDMASSES (simplified but geographically accurate) ── -->
-            <!-- Europe -->
-            <path d="M290,25 L360,20 L390,30 L400,50 L385,65 L360,70 L330,68 L310,55 L292,40 Z" fill="#1A3550" stroke="#2A527A" stroke-width="0.8"/>
-            <text x="335" y="50" fill="rgba(180,210,255,0.6)" font-size="8" font-family="DM Sans">Europe</text>
-
-            <!-- Russia/Central Asia -->
-            <path d="M360,20 L500,15 L580,22 L620,35 L610,55 L580,58 L550,55 L520,52 L490,55 L460,58 L430,55 L400,50 L390,30 Z" fill="#1A3550" stroke="#2A527A" stroke-width="0.8"/>
-            <text x="490" y="40" fill="rgba(180,210,255,0.5)" font-size="8" font-family="DM Sans">Russia</text>
-
-            <!-- Africa -->
-            <path d="M290,80 L340,75 L365,90 L370,120 L360,160 L345,200 L325,240 L305,275 L290,305 L275,330 L268,350 L260,350 L248,330 L240,305 L238,270 L242,235 L250,195 L258,155 L265,115 L275,90 Z" fill="#1A3550" stroke="#2A527A" stroke-width="0.8"/>
-            <text x="285" y="210" fill="rgba(180,210,255,0.55)" font-size="9" font-family="DM Sans">Africa</text>
-
-            <!-- Arabian Peninsula -->
-            <path d="M400,80 L455,75 L490,88 L510,110 L518,140 L510,165 L492,175 L468,178 L448,170 L432,155 L420,135 L408,110 Z" fill="#1A3550" stroke="#2A527A" stroke-width="0.8"/>
-
-            <!-- Iran -->
-            <path d="M455,58 L510,52 L545,62 L565,78 L562,105 L545,118 L520,120 L500,115 L485,100 L470,82 Z" fill="#1A3550" stroke="#2A527A" stroke-width="0.8"/>
-            <text x="500" y="90" fill="rgba(180,210,255,0.7)" font-size="8" font-family="DM Sans">Iran</text>
-
-            <!-- India -->
-            <path d="M612,75 L660,68 L682,85 L688,112 L682,145 L672,178 L658,208 L645,228 L635,240 L628,232 L620,210 L612,185 L608,158 L608,125 L610,100 Z" fill="#1F4068" stroke="#3A6A9A" stroke-width="1.2"/>
-            <text x="640" y="165" fill="rgba(200,230,255,0.9)" font-size="10" font-family="DM Serif Display">INDIA</text>
-
-            <!-- Pakistan -->
-            <path d="M565,72 L612,68 L612,100 L600,110 L580,112 L565,100 L560,85 Z" fill="#1A3550" stroke="#2A527A" stroke-width="0.8"/>
-
-            <!-- South/SE Asia -->
-            <path d="M682,85 L750,78 L785,90 L790,115 L775,125 L748,120 L725,118 L700,115 L688,112 Z" fill="#1A3550" stroke="#2A527A" stroke-width="0.8"/>
-            <text x="730" y="106" fill="rgba(180,210,255,0.5)" font-size="7" font-family="DM Sans">SE Asia</text>
-
-            <!-- Australia (bottom right) -->
-            <path d="M740,370 L810,360 L840,380 L845,415 L830,435 L795,445 L755,440 L730,420 L728,395 Z" fill="#1A3550" stroke="#2A527A" stroke-width="0.8"/>
-            <text x="775" y="405" fill="rgba(180,210,255,0.5)" font-size="8" font-family="DM Sans">Australia</text>
-
-            <!-- South America (left) -->
-            <path d="M140,180 L175,172 L195,190 L200,230 L195,275 L180,315 L160,350 L145,375 L135,370 L125,340 L120,305 L122,260 L128,215 Z" fill="#1A3550" stroke="#2A527A" stroke-width="0.8"/>
-            <text x="148" y="272" fill="rgba(180,210,255,0.4)" font-size="7" font-family="DM Sans">S.America</text>
-
-            <!-- North America (far left top) -->
-            <path d="M15,30 L90,22 L140,40 L150,70 L140,95 L110,100 L80,95 L45,88 L18,72 Z" fill="#1A3550" stroke="#2A527A" stroke-width="0.8"/>
-            <text x="70" y="65" fill="rgba(180,210,255,0.4)" font-size="7" font-family="DM Sans">N.America</text>
+            <!-- ── WORLD LANDMASSES rendered by D3 + world-atlas ── -->
+            <g id="geo-2"></g>
 
             <!-- ── OCEAN LABELS ── -->
             <text x="175" y="440" fill="rgba(120,180,255,0.35)" font-size="13" font-family="DM Serif Display" font-style="italic">South Atlantic</text>
@@ -1855,26 +1777,8 @@
               <line x1="540" y1="0" x2="540" y2="480"/><line x1="720" y1="0" x2="720" y2="480"/>
             </g>
 
-            <!-- Landmasses (same simplified style) -->
-            <!-- Africa -->
-            <path d="M200,75 L255,70 L278,88 L282,125 L272,168 L255,212 L238,255 L220,298 L205,332 L192,355 L182,355 L170,332 L163,298 L162,255 L168,210 L175,165 L180,120 L190,88 Z" fill="#1A3550" stroke="#2A527A" stroke-width="0.8"/>
-            <!-- Arabian Peninsula -->
-            <path d="M412,82 L468,76 L502,90 L520,114 L528,145 L520,170 L500,180 L478,183 L456,175 L440,160 L428,138 L415,112 Z" fill="#1A3550" stroke="#2A527A" stroke-width="0.8"/>
-            <!-- Iran -->
-            <path d="M468,58 L528,50 L562,62 L578,80 L575,108 L558,120 L530,122 L508,118 L492,102 L476,82 Z" fill="#1A3550" stroke="#2A527A" stroke-width="0.8"/>
-            <!-- Oman coast -->
-            <path d="M520,158 L558,152 L590,162 L608,182 L600,205 L578,218 L552,215 L532,200 L522,180 Z" fill="#1A3550" stroke="#2A527A" stroke-width="0.8"/>
-            <!-- Pakistan -->
-            <path d="M578,62 L628,56 L650,72 L648,98 L630,110 L608,112 L590,100 L575,82 Z" fill="#1A3550" stroke="#2A527A" stroke-width="0.8"/>
-            <!-- India (highlighted) -->
-            <path d="M650,68 L698,62 L720,78 L726,105 L720,138 L710,172 L696,205 L680,232 L665,252 L655,262 L648,255 L642,232 L635,205 L630,175 L628,145 L630,112 L638,85 Z" fill="#1F3A60" stroke="#3A6A9A" stroke-width="1.5"/>
-            <text x="668" y="175" fill="rgba(200,230,255,0.9)" font-size="11" font-family="DM Serif Display">INDIA</text>
-            <!-- Russia -->
-            <path d="M360,18 L500,12 L580,20 L620,35 L610,52 L580,55 L540,52 L500,55 L465,58 L430,55 L395,48 L362,35 Z" fill="#1A3550" stroke="#2A527A" stroke-width="0.8"/>
-            <!-- South/SE Asia -->
-            <path d="M720,62 L788,56 L815,72 L815,98 L795,108 L762,106 L740,100 L726,90 Z" fill="#1A3550" stroke="#2A527A" stroke-width="0.8"/>
-            <!-- Australia -->
-            <path d="M752,348 L822,338 L848,358 L852,392 L836,410 L800,420 L765,415 L742,395 L740,368 Z" fill="#1A3550" stroke="#2A527A" stroke-width="0.8"/>
+            <!-- Landmasses rendered by D3 + world-atlas -->
+            <g id="geo-3"></g>
 
             <!-- Source country dot highlights -->
             <!-- Saudi Arabia -->
@@ -2045,26 +1949,8 @@
               <line x1="540" y1="0" x2="540" y2="480"/><line x1="720" y1="0" x2="720" y2="480"/>
             </g>
 
-            <!-- Landmasses simplified -->
-            <!-- East Africa -->
-            <path d="M230,80 L272,75 L290,95 L292,135 L280,178 L265,218 L248,260 L232,298 L218,330 L205,352 L195,352 L185,330 L178,298 L178,255 L182,210 L188,165 L192,118 Z" fill="#1A3550" stroke="#2A527A" stroke-width="0.8"/>
-            <!-- Arabian Peninsula -->
-            <path d="M402,82 L458,76 L492,90 L510,114 L518,145 L510,168 L490,180 L468,183 L446,175 L430,158 L418,136 L405,112 Z" fill="#1A3550" stroke="#2A527A" stroke-width="0.8"/>
-            <!-- Iran -->
-            <path d="M458,58 L518,50 L552,62 L568,80 L565,108 L548,120 L520,122 L498,118 L482,102 L466,80 Z" fill="#1A3550" stroke="#2A527A" stroke-width="0.8"/>
-            <!-- Oman -->
-            <path d="M510,155 L548,150 L580,160 L598,180 L590,202 L568,215 L542,212 L522,198 L512,178 Z" fill="#1A3550" stroke="#2A527A" stroke-width="0.8"/>
-            <!-- Pakistan -->
-            <path d="M568,62 L618,56 L640,72 L638,98 L620,110 L598,112 L580,100 L565,82 Z" fill="#1A3550" stroke="#2A527A" stroke-width="0.8"/>
-            <!-- India highlighted BRIGHT -->
-            <path d="M640,68 L688,62 L710,78 L716,105 L710,138 L700,172 L686,205 L670,232 L655,252 L645,262 L638,255 L632,232 L625,205 L620,175 L618,145 L620,112 L628,85 Z" fill="#1E3A6A" stroke="#4A8ACA" stroke-width="2"/>
-            <text x="658" y="175" fill="rgba(200,230,255,0.95)" font-size="11" font-family="DM Serif Display">INDIA</text>
-            <!-- Sri Lanka -->
-            <ellipse cx="660" cy="272" rx="7" ry="11" fill="#1A3550" stroke="#2A527A" stroke-width="0.8"/>
-            <!-- Bangladesh/Myanmar -->
-            <path d="M710,88 L738,82 L755,95 L752,115 L738,122 L718,118 L710,105 Z" fill="#1A3550" stroke="#2A527A" stroke-width="0.8"/>
-            <!-- SE Asia roughly -->
-            <path d="M755,80 L800,74 L820,90 L818,115 L800,125 L775,122 L758,108 Z" fill="#1A3550" stroke="#2A527A" stroke-width="0.8"/>
+            <!-- Landmasses rendered by D3 + world-atlas -->
+            <g id="geo-4"></g>
 
             <!-- ══ DIASPORA BUBBLES — sized by population ══ -->
             <!-- UAE: 3.5M -->
@@ -2220,32 +2106,8 @@
               <line x1="540" y1="0" x2="540" y2="480"/><line x1="720" y1="0" x2="720" y2="480"/>
             </g>
 
-            <!-- Landmasses -->
-            <!-- Central Asia / Kazakhstan -->
-            <path d="M580,20 L700,15 L748,30 L750,58 L720,68 L685,65 L650,60 L618,55 L590,42 Z" fill="#1A3550" stroke="#2A527A" stroke-width="0.8"/>
-            <text x="660" y="45" fill="rgba(180,210,255,0.5)" font-size="8" font-family="DM Sans">Central Asia</text>
-            <!-- Afghanistan -->
-            <path d="M628,60 L688,55 L715,70 L710,92 L688,100 L665,95 L645,82 Z" fill="#1A3550" stroke="#2A527A" stroke-width="0.8"/>
-            <text x="660" y="82" fill="rgba(180,210,255,0.5)" font-size="7" font-family="DM Sans">Afgh.</text>
-            <!-- Iran -->
-            <path d="M458,58 L520,50 L558,62 L575,80 L572,108 L555,122 L525,124 L502,120 L485,102 L468,80 Z" fill="#1A3550" stroke="#2A527A" stroke-width="0.8"/>
-            <text x="505" y="92" fill="rgba(180,210,255,0.6)" font-size="9" font-family="DM Sans">IRAN</text>
-            <!-- Arabian Peninsula -->
-            <path d="M398,82 L458,76 L492,90 L510,115 L518,148 L510,172 L490,182 L468,185 L446,177 L428,158 L415,135 Z" fill="#1A3550" stroke="#2A527A" stroke-width="0.8"/>
-            <!-- Pakistan -->
-            <path d="M568,62 L628,56 L655,72 L652,100 L632,112 L608,114 L588,100 L572,80 Z" fill="#1A3550" stroke="#2A527A" stroke-width="0.8"/>
-            <text x="605" y="90" fill="rgba(180,210,255,0.55)" font-size="8" font-family="DM Sans">Pakistan</text>
-            <!-- India highlighted -->
-            <path d="M656,68 L705,62 L728,78 L732,108 L725,142 L715,178 L700,210 L685,238 L668,258 L658,268 L650,260 L644,238 L638,210 L633,178 L630,145 L632,112 L640,85 Z" fill="#1E3A6A" stroke="#4A8ACA" stroke-width="2"/>
-            <text x="675" y="180" fill="rgba(200,230,255,0.95)" font-size="11" font-family="DM Serif Display">INDIA</text>
-            <!-- Oman coast -->
-            <path d="M510,155 L548,150 L580,162 L598,182 L590,205 L568,218 L540,215 L520,200 L510,178 Z" fill="#1A3550" stroke="#2A527A" stroke-width="0.8"/>
-            <!-- Sri Lanka -->
-            <ellipse cx="672" cy="280" rx="7" ry="11" fill="#1A3550" stroke="#2A527A" stroke-width="0.8"/>
-            <!-- Maldives -->
-            <circle cx="638" cy="308" r="4" fill="#1A3550" stroke="#2A527A" stroke-width="0.8"/>
-            <!-- Africa coast -->
-            <path d="M200,78 L245,72 L262,92 L265,135 L252,178 L238,220 L222,262 L208,302 L195,332 L182,355 L172,352 L162,328 L158,292 L160,250 L165,205 L170,160 L175,118 L186,90 Z" fill="#1A3550" stroke="#2A527A" stroke-width="0.8"/>
+            <!-- Landmasses rendered by D3 + world-atlas -->
+            <g id="geo-5"></g>
 
             <!-- ══ STRATEGIC ASSET CALLOUTS ══ -->
 
@@ -3603,6 +3465,7 @@ function refreshDashboard(btn) {
   updateBanner();
   setTimeout(()=>{
     makeCharts();
+    makeStmtCharts();
     btn.classList.remove('spinning');
   }, 800);
 }
@@ -3898,6 +3761,82 @@ function makeNewMarketCharts() {
   });
 }
 
+// ── GEO MAP RENDERING (D3 + world-atlas) ──
+function initGeoMaps() {
+  if (typeof d3 === 'undefined' || typeof topojson === 'undefined') return;
+  fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
+    .then(r => r.json())
+    .then(world => {
+      const countries = topojson.feature(world, world.objects.countries);
+
+      // Map 1: Persian Gulf / Indian Ocean — regional close-up
+      const proj1 = d3.geoMercator().center([61, 22]).scale(850).translate([420, 280]);
+      drawGeoBase('geo-1', proj1, countries, [
+        {lon:44.0, lat:33.5, label:'Iraq', size:8},
+        {lon:53.7, lat:32.4, label:'IRAN', size:10, weight:600, color:'rgba(180,210,255,0.9)'},
+        {lon:45.0, lat:24.0, label:'Saudi Arabia', size:8},
+        {lon:54.5, lat:23.4, label:'UAE', size:8},
+        {lon:57.0, lat:21.0, label:'Oman', size:8},
+        {lon:69.3, lat:30.4, label:'Pakistan', size:8},
+        {lon:79.0, lat:21.0, label:'INDIA', size:12, weight:400, font:'DM Serif Display', color:'rgba(200,230,255,0.95)'},
+        {lon:48.0, lat:15.5, label:'Yemen', size:7},
+      ]);
+
+      // Maps 2–5: wider Indian Ocean / world view
+      const mkWorldProj = (tx, ty) => d3.geoMercator().center([30, 8]).scale(190).translate([tx, ty]);
+      const worldLabels = [
+        {lon:15.0, lat:5.0,  label:'Africa', size:9},
+        {lon:10.0, lat:50.0, label:'Europe', size:8},
+        {lon:55.0, lat:32.0, label:'Iran', size:8},
+        {lon:45.0, lat:24.0, label:'Arabia', size:8},
+        {lon:79.0, lat:21.0, label:'INDIA', size:10, weight:400, font:'DM Serif Display', color:'rgba(200,230,255,0.9)'},
+        {lon:69.3, lat:30.4, label:'Pakistan', size:7},
+        {lon:108.0, lat:14.0, label:'SE Asia', size:7},
+        {lon:134.0, lat:-25.0, label:'Australia', size:8},
+        {lon:-55.0, lat:-15.0, label:'S.America', size:7},
+        {lon:-98.0, lat:42.0, label:'N.America', size:7},
+      ];
+      drawGeoBase('geo-2', mkWorldProj(450, 255), countries, worldLabels);
+      drawGeoBase('geo-3', mkWorldProj(450, 235), countries, worldLabels);
+      drawGeoBase('geo-4', mkWorldProj(450, 235), countries, worldLabels);
+      drawGeoBase('geo-5', mkWorldProj(450, 235), countries, worldLabels);
+    })
+    .catch(e => console.warn('World atlas load failed:', e));
+}
+
+function drawGeoBase(groupId, projection, countries, labels) {
+  const g = d3.select('#' + groupId);
+  if (g.empty()) return;
+  const path = d3.geoPath(projection);
+
+  g.selectAll('path.geo-country')
+    .data(countries.features)
+    .enter()
+    .append('path')
+    .attr('class', 'geo-country')
+    .attr('d', path)
+    .attr('fill', d => d.id === 356 ? '#1F4068' : '#1A3550')
+    .attr('stroke', d => d.id === 356 ? '#3A6A9A' : '#2A527A')
+    .attr('stroke-width', d => d.id === 356 ? 1.5 : 0.8);
+
+  if (labels) {
+    labels.forEach(lbl => {
+      const pt = projection([lbl.lon, lbl.lat]);
+      if (!pt) return;
+      const [x, y] = pt;
+      g.append('text')
+        .attr('x', x).attr('y', y)
+        .attr('fill', lbl.color || 'rgba(180,210,255,0.6)')
+        .attr('font-size', lbl.size || 8)
+        .attr('font-family', lbl.font || 'DM Sans')
+        .attr('font-weight', lbl.weight || 400)
+        .attr('text-anchor', 'middle')
+        .attr('pointer-events', 'none')
+        .text(lbl.label);
+    });
+  }
+}
+
 // ── INIT ──
 document.addEventListener('DOMContentLoaded',()=>{
   updateBanner();
@@ -3906,6 +3845,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   makeNewMarketCharts();
   makeLpgCharts();
   updateOilImpact(103);
+  initGeoMaps();
   // Auto-refresh every 5 minutes
   setInterval(()=>{ updateBanner(); makeCharts(); }, 300000);
 });
